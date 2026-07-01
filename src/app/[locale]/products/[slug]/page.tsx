@@ -1,7 +1,8 @@
 import { getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
-import { getProductBySlug, getProductName, getProductDescription, getProductFlavorNotes, getProductImage, getProductPrice } from '@/lib/supabase/products'
+import { getProductBySlug } from '@/lib/supabase/products'
+import { getProductName, getProductDescription, getProductFlavorNotes, getProductImage, getProductPrice } from '@/lib/product-utils'
 import type { Locale, ProductWeight } from '@/types/shop'
 import AddToCartSection from '@/components/shop/AddToCartSection'
 import { fmtPrice } from '@/lib/pricing'
@@ -29,6 +30,19 @@ export default async function ProductPage({ params }: Props) {
     light: t('roast_light'), medium: t('roast_medium'),
     'medium-dark': t('roast_medium_dark'), dark: t('roast_dark'),
   }
+
+  // Process localisation map (EN term → locale display name)
+  const processLabel: Record<string, Record<Locale, string>> = {
+    'Pulped Natural': { ru: 'Мёдовый процесс', pl: 'Proces miodowy',   ua: 'Медовий процес' },
+    'Honey':          { ru: 'Мёдовый процесс', pl: 'Proces miodowy',   ua: 'Медовий процес' },
+    'Natural':        { ru: 'Натуральный',      pl: 'Naturalny',         ua: 'Натуральний'    },
+    'Washed':         { ru: 'Промытый',         pl: 'Płukany',           ua: 'Промитий'       },
+    'Anaerobic':      { ru: 'Анаэробный',       pl: 'Anaerobowy',        ua: 'Анаеробний'     },
+    'Wet-Hulled':     { ru: 'Влажный хулл',     pl: 'Wilgotne łuszczenie',ua:'Вологе лущення' },
+  }
+
+  const localizedProcess = (raw: string) =>
+    processLabel[raw]?.[locale] ?? raw
 
   return (
     <div className="container py-8 md:py-16">
@@ -84,7 +98,7 @@ export default async function ProductPage({ params }: Props) {
             )}
             {product.process && (
               <span className="rounded-full border border-brand-border px-3 py-1 text-xs text-brand-muted">
-                {t('process')}: {product.process}
+                {t('process')}: {localizedProcess(product.process)}
               </span>
             )}
           </div>

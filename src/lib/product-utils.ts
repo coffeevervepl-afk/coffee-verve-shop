@@ -1,29 +1,6 @@
-import { createServerSupabase } from './server'
+// Pure client-safe utility functions — no server imports
 import type { Locale, ShopProduct } from '@/types/shop'
 
-export async function getProducts(): Promise<ShopProduct[]> {
-  const sb = await createServerSupabase()
-  const { data, error } = await sb
-    .from('shop_products')
-    .select('*')
-    .eq('is_active', true)
-    .order('sort_order', { ascending: true })
-  if (error) throw error
-  return data ?? []
-}
-
-export async function getProductBySlug(slug: string): Promise<ShopProduct | null> {
-  const sb = await createServerSupabase()
-  const { data } = await sb
-    .from('shop_products')
-    .select('*')
-    .eq('slug', slug)
-    .eq('is_active', true)
-    .single()
-  return data
-}
-
-// Pure utility functions — no 'use server' needed
 export function getProductName(p: ShopProduct, locale: Locale): string {
   return (p as any)[`name_${locale}`] || p.name_ru
 }

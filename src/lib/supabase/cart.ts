@@ -102,6 +102,7 @@ export async function clearCart(): Promise<void> {
   await sb.from('shop_carts').delete().eq('session_id', sid)
 }
 
+// Pure utility — not a server action
 export function cartSubtotal(items: CartItem[]): number {
   return items.reduce((sum, i) => sum + i.unit_price * i.qty, 0)
 }

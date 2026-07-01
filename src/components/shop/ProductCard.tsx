@@ -6,7 +6,7 @@ import { Plus } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { useCartStore } from '@/hooks/useCartStore'
 import type { Locale, ShopProduct } from '@/types/shop'
-import { getProductName, getProductFlavorNotes, getProductImage } from '@/lib/supabase/products'
+import { getProductName, getProductFlavorNotes, getProductImage } from '@/lib/product-utils'
 import { fmtPrice } from '@/lib/pricing'
 
 interface Props {
