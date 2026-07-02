@@ -1,10 +1,5 @@
 {
-  "nav": {
-    "catalog": "Кофе",
-    "cart": "Корзина",
-    "about": "О нас",
-    "search": "Поиск"
-  },
+  "nav": { "catalog": "Кофе", "cart": "Корзина", "about": "О нас", "search": "Поиск" },
   "home": {
     "hero_title": "Свежеобжаренный кофе",
     "hero_subtitle": "Доставка по всей Польше",
@@ -14,76 +9,65 @@
     "filter_espresso": "Эспрессо",
     "filter_filter": "Фильтр"
   },
+  "lead": {
+    "headline": "−10% на первый заказ",
+    "subline": "Оставь email — пришлём персональный промокод",
+    "placeholder": "твой@email.com",
+    "title": "Твой промокод",
+    "copy": "Скопировать",
+    "copied": "Скопировано!",
+    "check_email": "Мы отправили подтверждение на {email}",
+    "valid_days": "Действует 30 дней",
+    "error": "Что-то пошло не так, попробуй снова"
+  },
+  "guarantee": {
+    "title": "Гарантия качества",
+    "body": "Не понравился сорт — обменяем или вернём деньги. Без вопросов, без бюрократии.",
+    "compact": "Не понравился — обменяем или вернём деньги ✓"
+  },
   "product": {
-    "add_to_cart": "В корзину",
-    "added": "Добавлено",
-    "choose_weight": "Вес",
-    "quantity": "Количество",
-    "flavor_notes": "Вкусовые ноты",
-    "origin": "Происхождение",
-    "process": "Обработка",
-    "roast": "Обжарка",
-    "brew": "Метод",
-    "roast_light": "Светлая",
-    "roast_medium": "Средняя",
-    "roast_medium_dark": "Средне-тёмная",
-    "roast_dark": "Тёмная"
+    "add_to_cart": "В корзину", "added": "Добавлено",
+    "choose_weight": "Вес", "quantity": "Количество",
+    "flavor_notes": "Вкусовые ноты", "origin": "Происхождение",
+    "process": "Обработка", "roast": "Обжарка", "brew": "Метод",
+    "roast_light": "Светлая", "roast_medium": "Средняя",
+    "roast_medium_dark": "Средне-тёмная", "roast_dark": "Тёмная"
   },
   "cart": {
-    "title": "Корзина",
-    "empty": "Корзина пуста",
-    "empty_cta": "Перейти к кофе",
-    "remove": "Удалить",
-    "subtotal": "Сумма",
-    "checkout": "Оформить заказ",
-    "continue": "Продолжить покупки",
+    "title": "Корзина", "empty": "Корзина пуста", "empty_cta": "Перейти к кофе",
+    "remove": "Удалить", "subtotal": "Сумма",
+    "checkout": "Оформить заказ", "continue": "Продолжить покупки",
     "free_delivery_hint": "Ещё {amount} до бесплатной доставки"
   },
   "checkout": {
-    "title": "Оформление заказа",
-    "contact": "Контакты",
-    "name": "Имя и фамилия",
-    "email": "Email",
-    "phone": "Телефон",
-    "delivery": "Доставка",
-    "paczkomat": "InPost Paczkomat",
-    "courier": "Курьер",
-    "pickup": "Самовывоз",
-    "choose_paczkomat": "Выбрать Paczkomat",
-    "paczkomat_chosen": "Выбран",
-    "street": "Улица, номер дома",
-    "city": "Город",
-    "postal": "Почтовый индекс",
+    "title": "Оформление заказа", "contact": "Контакты",
+    "name": "Имя и фамилия", "email": "Email", "phone": "Телефон",
+    "delivery": "Доставка", "paczkomat": "InPost Paczkomat",
+    "courier": "Курьер", "pickup": "Самовывоз",
+    "choose_paczkomat": "Выбрать Paczkomat", "paczkomat_chosen": "Выбран",
+    "street": "Улица, номер дома", "city": "Город", "postal": "Почтовый индекс",
     "notes": "Комментарий к заказу (не обязательно)",
-    "summary": "Итог заказа",
-    "subtotal": "Сумма товаров",
-    "discount": "Скидка зарегистрированного",
-    "delivery_cost": "Доставка",
-    "free": "Бесплатно",
-    "total": "Итого",
-    "pay": "Оплатить",
+    "summary": "Итог заказа", "subtotal": "Сумма товаров",
+    "discount": "Скидка", "delivery_cost": "Доставка",
+    "free": "Бесплатно", "total": "Итого", "pay": "Оплатить",
     "register_cta": "Зарегистрируйся и получи скидку",
     "register_desc": "−{pct}% сейчас и на все будущие заказы",
-    "guest_price": "Цена для гостей",
-    "member_price": "Ваша цена",
+    "guest_price": "Цена для гостей", "member_price": "Ваша цена",
     "register_checkbox": "Создать аккаунт со скидкой {pct}%",
-    "password": "Пароль",
-    "order_placed": "Заказ оформлен!",
-    "guest_hint": "Можно оформить без регистрации"
+    "password": "Пароль", "order_placed": "Заказ оформлен!",
+    "guest_hint": "Можно оформить без регистрации",
+    "promo_have": "Есть промокод?",
+    "promo_placeholder": "WELCOME-XXXXXX",
+    "promo_apply": "Применить",
+    "best_discount": "Применена лучшая скидка"
   },
   "success": {
-    "title": "Заказ принят! ☕",
-    "subtitle": "Номер заказа #{number}",
+    "title": "Заказ принят! ☕", "subtitle": "Номер заказа #{number}",
     "email_sent": "Подтверждение отправлено на {email}",
     "tracking": "Трек-номер появится после отправки",
     "register_cta": "Создать аккаунт",
     "register_desc": "Закрепи скидку {pct}% и отслеживай заказы",
     "continue": "Продолжить покупки"
   },
-  "common": {
-    "loading": "Загрузка...",
-    "error": "Ошибка",
-    "retry": "Попробовать снова",
-    "pln": "zł"
-  }
+  "common": { "loading": "Загрузка...", "error": "Ошибка", "retry": "Попробовать снова", "pln": "zł" }
 }

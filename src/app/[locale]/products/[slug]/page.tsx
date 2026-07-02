@@ -6,6 +6,7 @@ import { getProductName, getProductDescription, getProductFlavorNotes, getProduc
 import type { Locale, ProductWeight } from '@/types/shop'
 import AddToCartSection from '@/components/shop/AddToCartSection'
 import ReviewsSection from '@/components/shop/reviews/ReviewsSection'
+import GuaranteeBlock from '@/components/shop/GuaranteeBlock'
 import { fmtPrice } from '@/lib/pricing'
 
 interface Props {
@@ -111,6 +112,11 @@ export default async function ProductPage({ params, searchParams }: Props) {
           {desc && (
             <p className="mb-8 leading-relaxed text-brand-muted">{desc}</p>
           )}
+
+          {/* Guarantee UTP — compact, below add to cart */}
+          <div className="mt-4">
+            <GuaranteeBlock compact />
+          </div>
 
           {/* Add to cart (client) */}
           <AddToCartSection

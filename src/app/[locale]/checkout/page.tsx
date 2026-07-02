@@ -4,30 +4,34 @@ import { useTranslations } from 'next-intl'
 import { useRouter, useParams } from 'next/navigation'
 import { useCartStore } from '@/hooks/useCartStore'
 import { calcPricing, fmtPrice } from '@/lib/pricing'
+import type { PromoDiscount } from '@/lib/pricing'
 import type { CheckoutFormData, DeliveryType, Locale } from '@/types/shop'
 import OrderSummary from '@/components/shop/checkout/OrderSummary'
 import ContactForm from '@/components/shop/checkout/ContactForm'
 import DeliveryForm from '@/components/shop/checkout/DeliveryForm'
 import RegisterOffer from '@/components/shop/checkout/RegisterOffer'
+import PromoCodeField from '@/components/shop/checkout/PromoCodeField'
 
 const DISCOUNT_PCT = Number(process.env.NEXT_PUBLIC_REGISTERED_DISCOUNT_PCT ?? 5)
 
 export default function CheckoutPage() {
-  const t        = useTranslations('checkout')
-  const params   = useParams()
-  const locale   = params.locale as Locale
-  const router   = useRouter()
-  const items    = useCartStore(s => s.items)
-  const clearCart = useCartStore(s => () => { /* will call API */ })
+  const t         = useTranslations('checkout')
+  const params    = useParams()
+  const locale    = params.locale as Locale
+  const router    = useRouter()
+  const items     = useCartStore(s => s.items)
 
-  const [delivery,    setDelivery]    = useState<DeliveryType>('paczkomat')
-  const [register,    setRegister]    = useState(false)
-  const [loading,     setLoading]     = useState(false)
-  const [form,        setForm]        = useState<Partial<CheckoutFormData>>({})
+  const [delivery,  setDelivery]  = useState<DeliveryType>('paczkomat')
+  const [register,  setRegister]  = useState(false)
+  const [loading,   setLoading]   = useState(false)
+  const [form,      setForm]      = useState<Partial<CheckoutFormData>>({})
+  const [promo,     setPromo]     = useState<PromoDiscount | null>(null)
 
-  const pricing = calcPricing(items, delivery, register)
+  // loyalty pct: if registered, use DISCOUNT_PCT as base; promo may override
+  const loyaltyPct = register ? DISCOUNT_PCT : 0
+  const pricing    = calcPricing(items, delivery, register, loyaltyPct, promo)
+  const subtotal   = items.reduce((s, i) => s + i.unit_price * i.qty, 0)
 
-  // Redirect if cart empty
   useEffect(() => {
     if (items.length === 0) router.push(`/${locale}`)
   }, [items, locale, router])
@@ -35,25 +39,14 @@ export default function CheckoutPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-
     try {
       const res = await fetch('/api/checkout', {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items,
-          customer: form,
-          delivery,
-          register,
-          pricing,
-          locale,
-        }),
+        body:    JSON.stringify({ items, customer: form, delivery, register, pricing, promo, locale }),
       })
-
       if (!res.ok) throw new Error('Checkout failed')
       const { redirectUrl, orderId } = await res.json()
-
-      // Redirect to payment provider (Stripe, P24, etc.)
       if (redirectUrl) {
         window.location.href = redirectUrl
       } else {
@@ -72,7 +65,7 @@ export default function CheckoutPage() {
 
       <form onSubmit={handleSubmit} className="grid gap-8 md:grid-cols-[1fr_380px]">
 
-        {/* Left: form */}
+        {/* Left */}
         <div className="space-y-8">
           <ContactForm
             values={form}
@@ -84,6 +77,22 @@ export default function CheckoutPage() {
             values={form}
             onChange={v => setForm(prev => ({ ...prev, ...v }))}
           />
+
+          {/* Promo code */}
+          <section>
+            <PromoCodeField
+              email={(form as any).email ?? ''}
+              subtotal={subtotal}
+              onApply={setPromo}
+              applied={promo}
+            />
+            {pricing.discount_label && pricing.discount_source !== 'none' && (
+              <p className="mt-2 text-xs text-brand-gold font-medium">
+                ✓ {t('best_discount')}: {pricing.discount_label}
+              </p>
+            )}
+          </section>
+
           <RegisterOffer
             discountPct={DISCOUNT_PCT}
             register={register}
@@ -98,12 +107,9 @@ export default function CheckoutPage() {
             disabled={loading || items.length === 0}
             className="btn btn-primary w-full py-4 text-base disabled:opacity-60"
           >
-            {loading ? '...' : `${t('pay')} ${fmtPrice(pricing.total)}`}
+            {loading ? '…' : `${t('pay')} ${fmtPrice(pricing.total)}`}
           </button>
-
-          <p className="text-center text-xs text-brand-muted">
-            {t('guest_hint')}
-          </p>
+          <p className="text-center text-xs text-brand-muted">{t('guest_hint')}</p>
         </div>
 
         {/* Right: summary */}

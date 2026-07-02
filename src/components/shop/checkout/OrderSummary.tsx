@@ -2,11 +2,13 @@
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import type { CartItem, Locale, PricingSummary } from '@/types/shop'
+// pricing may include extra fields from calcPricing extended return
+type ExtendedSummary = PricingSummary & { discount_label?: string; discount_source?: string }
 import { fmtPrice } from '@/lib/pricing'
 
 interface Props {
   items:   CartItem[]
-  pricing: PricingSummary
+  pricing: ExtendedSummary
   locale:  Locale
 }
 

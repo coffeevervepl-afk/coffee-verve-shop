@@ -2,10 +2,12 @@ import { getTranslations } from 'next-intl/server'
 import { getProducts } from '@/lib/supabase/products'
 import type { Locale } from '@/types/shop'
 import ProductGrid from '@/components/shop/ProductGrid'
+import LeadCaptureBlock from '@/components/shop/LeadCaptureBlock'
+import GuaranteeBlock from '@/components/shop/GuaranteeBlock'
 
 export default async function HomePage({ params }: { params: { locale: Locale } }) {
   const { locale } = params
-  const t       = await getTranslations({ locale, namespace: 'home' })
+  const t        = await getTranslations({ locale, namespace: 'home' })
   const products = await getProducts()
 
   return (
@@ -19,6 +21,16 @@ export default async function HomePage({ params }: { params: { locale: Locale } 
         <p className="mx-auto max-w-md text-lg text-brand-muted">
           {t('hero_subtitle')}
         </p>
+      </section>
+
+      {/* ── Lead capture (−10% first order) ──────────────────────────── */}
+      <section className="container pb-8">
+        <LeadCaptureBlock />
+      </section>
+
+      {/* ── Guarantee UTP ────────────────────────────────────────────── */}
+      <section className="container pb-10">
+        <GuaranteeBlock />
       </section>
 
       {/* ── Products ─────────────────────────────────────────────────── */}
