@@ -5,12 +5,17 @@ import { getProductBySlug } from '@/lib/supabase/products'
 import { getProductName, getProductDescription, getProductFlavorNotes, getProductImage, getProductPrice } from '@/lib/product-utils'
 import type { Locale, ProductWeight } from '@/types/shop'
 import AddToCartSection from '@/components/shop/AddToCartSection'
+import ReviewsSection from '@/components/shop/reviews/ReviewsSection'
 import { fmtPrice } from '@/lib/pricing'
 
-interface Props { params: { locale: Locale; slug: string } }
+interface Props {
+  params:       { locale: Locale; slug: string }
+  searchParams: { email?: string }
+}
 
-export default async function ProductPage({ params }: Props) {
+export default async function ProductPage({ params, searchParams }: Props) {
   const { locale, slug } = params
+  const email = searchParams.email   // lightweight: passed via ?email= after checkout
   const t       = await getTranslations({ locale, namespace: 'product' })
   const product = await getProductBySlug(slug)
   if (!product) notFound()
@@ -117,6 +122,14 @@ export default async function ProductPage({ params }: Props) {
           />
         </div>
       </div>
+      </div>
+
+      {/* ── Reviews ─────────────────────────────────────────────────────── */}
+      <ReviewsSection
+        productId={product.id}
+        locale={locale}
+        email={email}
+      />
     </div>
   )
 }
