@@ -1,15 +1,17 @@
 'use client'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import { ShoppingBag, Search } from 'lucide-react'
+import { ShoppingBag, Search, User } from 'lucide-react'
 import LanguageSwitcher from './LanguageSwitcher'
 import { useCartStore } from '@/hooks/useCartStore'
+import { useAuth } from '@/hooks/useAuth'
 import type { Locale } from '@/types/shop'
 
 export default function Navbar({ locale }: { locale: Locale }) {
-  const t       = useTranslations('nav')
-  const count   = useCartStore(s => s.count)
+  const t        = useTranslations('nav')
+  const count    = useCartStore(s => s.count)
   const openCart = useCartStore(s => s.openDrawer)
+  const { user } = useAuth()
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-brand-border bg-brand-surface/80 backdrop-blur-md">
@@ -40,6 +42,17 @@ export default function Navbar({ locale }: { locale: Locale }) {
           >
             <Search size={20} />
           </button>
+
+          <Link
+            href={`/${locale}/account`}
+            aria-label="Личный кабинет"
+            className="relative btn-ghost rounded-full p-2 text-brand-muted hover:text-brand-text"
+          >
+            <User size={20} />
+            {user && (
+              <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-brand-gold" />
+            )}
+          </Link>
 
           <button
             onClick={openCart}

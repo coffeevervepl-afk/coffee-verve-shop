@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation'
 import '../globals.css'
 import Navbar from '@/components/layout/Navbar'
 import CartDrawer from '@/components/shop/CartDrawer'
+import RefCapture from '@/components/shop/RefCapture'
+import { Suspense } from 'react'
 import { Toaster } from 'react-hot-toast'
 
 const locales = ['ru', 'pl', 'ua'] as const
@@ -32,6 +34,7 @@ export default async function LocaleLayout({
       <body>
         <NextIntlClientProvider messages={messages}>
           <Navbar locale={locale as any} />
+          <Suspense fallback={null}><RefCapture /></Suspense>
           <main>{children}</main>
           <CartDrawer />
           <Toaster

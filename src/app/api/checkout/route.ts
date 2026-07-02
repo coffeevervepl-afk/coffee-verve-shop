@@ -12,14 +12,18 @@ export async function POST(req: NextRequest) {
     delivery,
     register,
     pricing,
+    promo,
     locale,
+    referralCode,     // from localStorage cv_ref
   }: {
-    items:    CartItem[]
-    customer: { name: string; email: string; phone?: string; password?: string; [k: string]: any }
-    delivery: DeliveryType
-    register: boolean
-    pricing:  PricingSummary
-    locale:   string
+    items:        CartItem[]
+    customer:     { name: string; email: string; phone?: string; password?: string; [k: string]: any }
+    delivery:     DeliveryType
+    register:     boolean
+    pricing:      PricingSummary
+    promo?:       { id: string; code: string } | null
+    locale:       string
+    referralCode?: string | null
   } = await req.json()
 
   // Validate
@@ -41,6 +45,17 @@ export async function POST(req: NextRequest) {
     if (existingUser) {
       shopUserId = existingUser.id
     } else {
+      // Check referral
+      let referredById: string | null = null
+      if (referralCode) {
+        const { data: refUser } = await sb
+          .from('shop_users')
+          .select('id')
+          .eq('referral_code', referralCode)
+          .single()
+        referredById = refUser?.id ?? null
+      }
+
       const { data: newUser } = await sb
         .from('shop_users')
         .insert({
@@ -50,11 +65,17 @@ export async function POST(req: NextRequest) {
           language:     locale as any,
           is_guest:     !register,
           discount_pct: register ? pricing.discount_pct : 0,
+          referred_by:  referredById,
         })
         .select('id')
         .single()
       shopUserId = newUser?.id ?? null
     }
+  }
+
+  // Mark promo code as used (if applied)
+  if (promo?.id && customer.email) {
+    await sb.from('shop_promo_codes').update({ used_count: (sb as any).sql`used_count + 1` }).eq('id', promo.id)
   }
 
   // 2. Build delivery_address snapshot
