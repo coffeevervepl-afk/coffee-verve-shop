@@ -1,0 +1,6 @@
+-- Migration: Loyalty System — Stage 1
+-- Tables: loyalty_config, shop_promo_codes, promo_code_uses, leads
+-- Extensions to: shop_users
+-- Functions: recalc_loyalty, generate_referral_code, validate_promo_code
+-- Applied via Supabase MCP on 2026-07-02
+-- See Supabase dashboard for full migration history
