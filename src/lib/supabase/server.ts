@@ -8,8 +8,9 @@ export async function createServerSupabase() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll:    ()       => cookieStore.getAll(),
-        setAll:    (pairs)  => pairs.forEach(({ name, value, options }) => cookieStore.set(name, value, options)),
+        getAll: () => cookieStore.getAll(),
+        setAll: (pairs: Array<{ name: string; value: string; options?: Record<string, unknown> }>) =>
+          pairs.forEach(({ name, value, options }) => cookieStore.set(name, value, options)),
       },
     },
   )
