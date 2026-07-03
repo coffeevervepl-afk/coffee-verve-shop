@@ -25,7 +25,7 @@ export function useAuth(): AuthState & {
     }
     const [userRes, configRes] = await Promise.all([
       sb.from('shop_users')
-        .select('id,email,name,loyalty_level,spent_12m,referral_code,taste_profile,birthday,is_b2b,b2b_discount')
+        .select('id,email,name,loyalty_level,spent_12m,referral_code,taste_profile,birthday,is_b2b,b2b_discount,min_discount_until,last_purchase_at')
         .eq('email', session.user.email)
         .single(),
       sb.from('loyalty_config').select('key,value'),

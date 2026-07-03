@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   // Check if shop_user already registered
   const { data: existing } = await sb
     .from('shop_users')
-    .select('id, is_guest, referral_code')
+    .select('id, is_guest, referral_code, min_discount_until')
     .eq('email', email)
     .single()
 
@@ -29,10 +29,17 @@ export async function POST(req: NextRequest) {
       .single()
     shopUserId = newUser?.id
   } else {
-    // Convert guest → registered
+    // Convert guest → registered; set min_discount_until = +6 months if not already active
+    const sixMonthsFromNow = new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000).toISOString()
+    const currentMin = existing?.min_discount_until
+    const needsMin   = !currentMin || new Date(currentMin) < new Date()
     await sb
       .from('shop_users')
-      .update({ name: name || undefined, is_guest: false })
+      .update({
+        name:               name || undefined,
+        is_guest:           false,
+        ...(needsMin ? { min_discount_until: sixMonthsFromNow } : {}),
+      })
       .eq('id', shopUserId)
   }
 

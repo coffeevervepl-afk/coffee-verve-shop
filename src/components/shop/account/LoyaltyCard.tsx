@@ -18,6 +18,14 @@ export default function LoyaltyCard({ user, config }: Props) {
     ? Math.min(100, Math.round((user.spent_12m / next.threshold) * 100))
     : 100
 
+  const minDiscountActive = user.min_discount_until
+    ? new Date(user.min_discount_until) > new Date()
+    : false
+
+  const minDiscountDate = user.min_discount_until
+    ? new Date(user.min_discount_until).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+    : null
+
   return (
     <div className="space-y-4">
       {/* Visual card */}
@@ -67,6 +75,16 @@ export default function LoyaltyCard({ user, config }: Props) {
         <div className="rounded-2xl border border-brand-border bg-brand-surface p-4 text-center">
           <p className="text-sm font-semibold">🏆 Вы на максимальном уровне Platinum!</p>
           <p className="text-xs text-brand-muted mt-1">Скидка {discount}% действует постоянно</p>
+        </div>
+      )}
+
+      {/* Guaranteed discount badge */}
+      {minDiscountActive && (
+        <div className="flex items-center gap-2.5 rounded-2xl border border-green-200 bg-green-50 px-4 py-3">
+          <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-green-500 text-white text-xs font-bold">✓</span>
+          <p className="text-sm text-green-800 font-medium">
+            Скидка {discount}% гарантирована до <span className="font-bold">{minDiscountDate}</span>
+          </p>
         </div>
       )}
     </div>
