@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     if (result.status === 'paid') {
       await sb
         .from('shop_orders')
-        .update({ payment_status: 'paid', status: 'confirmed', payment_ref: result.paymentRef })
+        .update({ payment_status: 'paid', status: 'processing', payment_ref: result.paymentRef })
         .eq('id', result.orderId)
 
       // Notify N8N

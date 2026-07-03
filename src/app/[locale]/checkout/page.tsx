@@ -39,11 +39,12 @@ export default function CheckoutPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
+    const referralCode = typeof window !== 'undefined' ? localStorage.getItem('cv_ref') : null
     try {
       const res = await fetch('/api/checkout', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ items, customer: form, delivery, register, pricing, promo, locale }),
+        body:    JSON.stringify({ items, customer: form, delivery, register, pricing, promo, locale, referralCode }),
       })
       if (!res.ok) throw new Error('Checkout failed')
       const { redirectUrl, orderId } = await res.json()
