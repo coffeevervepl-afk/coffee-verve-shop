@@ -128,7 +128,6 @@ export default async function ProductPage({ params, searchParams }: Props) {
           />
         </div>
       </div>
-      </div>
 
       {/* ── Reviews ─────────────────────────────────────────────────────── */}
       <ReviewsSection
