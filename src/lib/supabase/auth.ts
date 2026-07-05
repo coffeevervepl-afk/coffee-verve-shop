@@ -4,6 +4,7 @@ export interface SessionUser {
   id:                    string
   email:                 string
   name:                  string
+  telegram:              string | null
   loyalty_level:         'classic' | 'gold' | 'platinum'
   spent_12m:             number
   referral_code:         string | null
@@ -44,7 +45,7 @@ export async function getShopUser(email: string): Promise<SessionUser | null> {
   const sb = createClient()
   const { data } = await sb
     .from('shop_users')
-    .select('id,email,name,loyalty_level,spent_12m,referral_code,taste_profile,birthday,is_b2b,b2b_discount,min_discount_until,last_purchase_at')
+    .select('id,email,name,telegram,loyalty_level,spent_12m,referral_code,taste_profile,birthday,is_b2b,b2b_discount,min_discount_until,last_purchase_at')
     .eq('email', email)
     .single()
   return data as SessionUser | null

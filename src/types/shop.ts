@@ -65,6 +65,7 @@ export interface CheckoutFormData {
   name: string
   email: string
   phone: string
+  telegram?: string
   delivery: DeliveryAddress
   notes?: string
   register?: boolean
@@ -82,6 +83,7 @@ export interface ShopOrder {
   customer_name: string
   customer_email: string
   customer_phone: string | null
+  customer_telegram: string | null
   delivery_type: DeliveryType
   delivery_address: DeliveryAddress
   delivery_cost: number

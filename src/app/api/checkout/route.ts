@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { getPaymentProvider } from '@/lib/payment'
+import { normalizeTelegramUsername } from '@/lib/telegram'
 import type { CartItem, DeliveryType, PricingSummary } from '@/types/shop'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
     referralCode,     // from localStorage cv_ref
   }: {
     items:        CartItem[]
-    customer:     { name: string; email: string; phone?: string; password?: string; [k: string]: any }
+    customer:     { name: string; email: string; phone?: string; telegram?: string; password?: string; [k: string]: any }
     delivery:     DeliveryType
     register:     boolean
     pricing:      PricingSummary
@@ -32,6 +33,7 @@ export async function POST(req: NextRequest) {
   if (!customer?.name)      return NextResponse.json({ error: 'Name required' }, { status: 400 })
 
   const sb = await createServerSupabase()
+  const normalizedTelegram = normalizeTelegramUsername(customer.telegram)
 
   // 1. Create or find shop_user
   let shopUserId: string | null = null
@@ -44,6 +46,9 @@ export async function POST(req: NextRequest) {
 
     if (existingUser) {
       shopUserId = existingUser.id
+      if (customer.telegram !== undefined) {
+        await sb.from('shop_users').update({ telegram: normalizedTelegram ?? null }).eq('id', existingUser.id)
+      }
     } else {
       // Check referral
       let referredById: string | null = null
@@ -61,6 +66,7 @@ export async function POST(req: NextRequest) {
         .insert({
           email:        customer.email,
           phone:        customer.phone ?? null,
+          telegram:     normalizedTelegram ?? null,
           name:         customer.name,
           language:     locale as any,
           is_guest:     !register,
@@ -93,6 +99,7 @@ export async function POST(req: NextRequest) {
       customer_name:   customer.name,
       customer_email:  customer.email,
       customer_phone:  customer.phone ?? null,
+      customer_telegram: normalizedTelegram ?? null,
       delivery_type:   delivery,
       delivery_address: deliveryAddress,
       delivery_cost:   pricing.delivery_cost,

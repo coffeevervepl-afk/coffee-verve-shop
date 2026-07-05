@@ -41,7 +41,7 @@
   },
   "checkout": {
     "title": "Оформление заказа", "contact": "Контакты",
-    "name": "Имя и фамилия", "email": "Email", "phone": "Телефон",
+    "name": "Имя и фамилия", "email": "Email", "phone": "Телефон", "telegram": "Telegram", "telegram_placeholder": "@username", "telegram_help": "Для уведомлений о заказе", "telegram_invalid": "Используйте 5–32 символа: латиница, цифры и _",
     "delivery": "Доставка", "paczkomat": "InPost Paczkomat",
     "courier": "Курьер", "pickup": "Самовывоз",
     "choose_paczkomat": "Выбрать Paczkomat", "paczkomat_chosen": "Выбран",

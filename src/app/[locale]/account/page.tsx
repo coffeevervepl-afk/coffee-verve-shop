@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useAuth } from '@/hooks/useAuth'
 import { fmtPrice } from '@/lib/pricing'
 import LoyaltyCard from '@/components/shop/account/LoyaltyCard'
@@ -9,6 +10,7 @@ import ReferralBlock from '@/components/shop/account/ReferralBlock'
 import type { Locale } from '@/types/shop'
 import { getLoyaltyDiscount } from '@/lib/supabase/auth'
 import { createClient } from '@/lib/supabase/client'
+import { normalizeTelegramUsername } from '@/lib/telegram'
 import { toast } from 'react-hot-toast'
 import Link from 'next/link'
 
@@ -22,11 +24,14 @@ export default function AccountPage() {
   const params   = useParams()
   const locale   = params.locale as Locale
   const router   = useRouter()
+  const t        = useTranslations('checkout')
   const { user, config, loading, signOut } = useAuth()
 
-  const [orders,    setOrders]    = useState<Order[]>([])
-  const [birthday,  setBirthday]  = useState('')
-  const [savingBd,  setSavingBd]  = useState(false)
+  const [orders,        setOrders]        = useState<Order[]>([])
+  const [birthday,      setBirthday]      = useState('')
+  const [telegram,      setTelegram]      = useState('')
+  const [savingBd,      setSavingBd]      = useState(false)
+  const [savingTelegram, setSavingTelegram] = useState(false)
 
   useEffect(() => {
     if (!loading && !user) router.push(`/${locale}`)
@@ -35,6 +40,7 @@ export default function AccountPage() {
   useEffect(() => {
     if (!user) return
     setBirthday(user.birthday ?? '')
+    setTelegram(user.telegram ?? '')
     fetch(`/api/account?email=${encodeURIComponent(user.email)}`)
       .then(r => r.json())
       .then(d => setOrders(d.orders ?? []))
@@ -50,6 +56,25 @@ export default function AccountPage() {
     })
     toast.success('День рождения сохранён')
     setSavingBd(false)
+  }
+
+  async function saveTelegram() {
+    if (!user) return
+    const normalizedValue = normalizeTelegramUsername(telegram)
+    setSavingTelegram(true)
+    try {
+      await fetch('/api/account', {
+        method:  'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email: user.email, telegram: normalizedValue ?? telegram }),
+      })
+      setTelegram(normalizedValue ?? '')
+      toast.success(t('telegram_saved'))
+    } catch {
+      toast.error(t('error'))
+    } finally {
+      setSavingTelegram(false)
+    }
   }
 
   async function handleSignOut() {
@@ -87,6 +112,28 @@ export default function AccountPage() {
           onSave={() => {}}
         />
 
+        {/* Telegram */}
+        <div className="rounded-2xl border border-brand-border bg-brand-surface p-5">
+          <h3 className="font-semibold text-sm mb-3">{t('telegram')}</h3>
+          <p className="text-xs text-brand-muted mb-3">{t('telegram_help')}</p>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={telegram}
+              onChange={e => setTelegram(e.target.value)}
+              placeholder={t('telegram_placeholder')}
+              className="input flex-1"
+            />
+            <button
+              onClick={saveTelegram}
+              disabled={savingTelegram}
+              className="btn btn-outline text-sm"
+            >
+              {savingTelegram ? '…' : t('save')}
+            </button>
+          </div>
+        </div>
+
         {/* Birthday */}
         <div className="rounded-2xl border border-brand-border bg-brand-surface p-5">
           <h3 className="font-semibold text-sm mb-3">День рождения</h3>
@@ -105,7 +152,7 @@ export default function AccountPage() {
               disabled={savingBd}
               className="btn btn-outline text-sm"
             >
-              {savingBd ? '…' : 'Сохранить'}
+              {savingBd ? '…' : t('save')}
             </button>
           </div>
         </div>

@@ -37,7 +37,7 @@
   },
   "checkout": {
     "title": "Składanie zamówienia", "contact": "Dane kontaktowe",
-    "name": "Imię i nazwisko", "email": "Email", "phone": "Telefon",
+    "name": "Imię i nazwisko", "email": "Email", "phone": "Telefon", "telegram": "Telegram", "telegram_placeholder": "@username", "telegram_help": "Dla powiadomień o zamówieniu", "telegram_invalid": "Użyj 5–32 znaków: litery łacińskie, cyfry i _",
     "delivery": "Dostawa", "paczkomat": "InPost Paczkomat",
     "courier": "Kurier", "pickup": "Odbiór osobisty",
     "choose_paczkomat": "Wybierz Paczkomat", "paczkomat_chosen": "Wybrany",

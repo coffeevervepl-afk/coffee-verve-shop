@@ -37,7 +37,7 @@
   },
   "checkout": {
     "title": "Оформлення замовлення", "contact": "Контакти",
-    "name": "Ім'я та прізвище", "email": "Email", "phone": "Телефон",
+    "name": "Ім'я та прізвище", "email": "Email", "phone": "Телефон", "telegram": "Telegram", "telegram_placeholder": "@username", "telegram_help": "Для сповіщень про замовлення", "telegram_invalid": "Використовуйте 5–32 символи: латиниця, цифри та _",
     "delivery": "Доставка", "paczkomat": "InPost Paczkomat",
     "courier": "Кур'єр", "pickup": "Самовивіз",
     "choose_paczkomat": "Вибрати Paczkomat", "paczkomat_chosen": "Вибрано",

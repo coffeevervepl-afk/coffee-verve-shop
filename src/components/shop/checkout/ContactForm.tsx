@@ -1,5 +1,6 @@
 'use client'
 import { useTranslations } from 'next-intl'
+import { isTelegramUsernameValid, normalizeTelegramUsername } from '@/lib/telegram'
 
 interface Props {
   values:   Record<string, any>
@@ -8,6 +9,9 @@ interface Props {
 
 export default function ContactForm({ values, onChange }: Props) {
   const t = useTranslations('checkout')
+  const telegramValue = String(values.telegram ?? '')
+  const normalizedTelegram = normalizeTelegramUsername(telegramValue)
+  const showTelegramHint = telegramValue.trim() !== '' && !isTelegramUsernameValid(normalizedTelegram ?? undefined)
 
   return (
     <section>
@@ -36,6 +40,22 @@ export default function ContactForm({ values, onChange }: Props) {
           onChange={e => onChange({ phone: e.target.value })}
           className="input"
         />
+        <div>
+          <input
+            type="text"
+            placeholder={t('telegram_placeholder')}
+            value={telegramValue}
+            onChange={e => onChange({ telegram: e.target.value })}
+            className="input"
+            inputMode="text"
+            autoCapitalize="none"
+            autoCorrect="off"
+          />
+          <p className="mt-1 text-xs text-brand-muted">{t('telegram_help')}</p>
+          {showTelegramHint && (
+            <p className="mt-1 text-xs text-amber-600">{t('telegram_invalid')}</p>
+          )}
+        </div>
       </div>
     </section>
   )
