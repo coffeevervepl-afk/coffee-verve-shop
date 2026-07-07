@@ -25,10 +25,10 @@ export default function LanguageSwitcher({ locale }: { locale: Locale }) {
         <Link
           key={l.code}
           href={localizedHref(l.code)}
-          className={`rounded-full px-2 py-1 text-[13px] font-semibold transition-all ${
+          className={`rounded-full px-2 py-1 text-[13px] transition-all duration-150 hover:text-[#2C1810] hover:font-semibold ${
             l.code === locale
-              ? 'text-brand-text'
-              : 'text-[var(--gray-500)] hover:text-brand-text'
+              ? 'text-[#2C1810] font-bold'
+              : 'text-[#B8B7B2] font-normal'
           }`}
         >
           {l.label}

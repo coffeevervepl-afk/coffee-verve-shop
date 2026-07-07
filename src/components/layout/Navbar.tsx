@@ -154,6 +154,9 @@ export default function Navbar({ locale }: { locale: Locale }) {
             )}
           </button>
 
+          <div className="flex-1" />
+          <div className="w-px h-5 bg-gray-200 mx-3" />
+
           <LanguageSwitcher locale={locale} />
         </div>
       </nav>
