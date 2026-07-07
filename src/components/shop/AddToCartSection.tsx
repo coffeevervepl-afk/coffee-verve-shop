@@ -86,14 +86,14 @@ function WeightSelector({
           <button
             key={w}
             onClick={() => setWeight(w)}
-            className={`flex h-[52px] items-center justify-center rounded-xl border px-4 py-2 text-[15px] font-semibold transition ${
+            className={`flex h-[60px] items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] font-bold transition ${
               w === weight
                 ? 'border-brand-accent bg-brand-accent text-white'
                 : 'border-brand-border text-brand-text hover:border-brand-accent'
             }`}
           >
             {label}
-            <span className="ml-1.5 text-[13px] opacity-70">
+            <span className="ml-1.5 text-[15px] font-semibold opacity-70">
               {fmtPrice(getProductPrice(product, w))}
             </span>
           </button>
