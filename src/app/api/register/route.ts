@@ -3,9 +3,9 @@ import { createServerSupabase } from '@/lib/supabase/server'
 import { createClient } from '@supabase/supabase-js'
 
 export async function POST(req: NextRequest) {
-  const { email, password, name, orderId } = await req.json()
+  const { email, password, name, phone, language, orderId } = await req.json()
 
-  if (!email || !password || password.length < 8) {
+  if (!email || !password || password.length < 8 || !name) {
     return NextResponse.json({ error: 'invalid_params' }, { status: 400 })
   }
 
@@ -24,7 +24,15 @@ export async function POST(req: NextRequest) {
   if (!shopUserId) {
     const { data: newUser } = await sb
       .from('shop_users')
-      .insert({ email, name, is_guest: false, discount_pct: 5, loyalty_level: 'classic' })
+      .insert({
+        email,
+        name,
+        phone: phone ?? null,
+        language: language ?? 'ru',
+        is_guest: false,
+        discount_pct: 5,
+        loyalty_level: 'classic',
+      })
       .select('id')
       .single()
     shopUserId = newUser?.id
@@ -37,6 +45,8 @@ export async function POST(req: NextRequest) {
       .from('shop_users')
       .update({
         name:               name || undefined,
+        phone:              phone ?? undefined,
+        language:           language ?? undefined,
         is_guest:           false,
         ...(needsMin ? { min_discount_until: sixMonthsFromNow } : {}),
       })

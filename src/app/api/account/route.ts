@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  const { email, taste_profile, birthday, name, telegram } = await req.json()
+  const { email, taste_profile, birthday, name, telegram, phone, language } = await req.json()
   if (!email) return NextResponse.json({ error: 'no_email' }, { status: 400 })
 
   const sb = await createServerSupabase()
@@ -40,6 +40,8 @@ export async function PATCH(req: NextRequest) {
   if (birthday      !== undefined) update.birthday      = birthday || null
   if (name          !== undefined) update.name          = name
   if (telegram      !== undefined) update.telegram      = normalizeTelegramUsername(telegram) ?? null
+  if (phone !== undefined) update.phone = phone || null
+  if (language !== undefined) update.language = language || null
 
   const { error } = await sb.from('shop_users').update(update).eq('email', email)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })

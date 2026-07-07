@@ -10,6 +10,8 @@ export interface SessionUser {
   referral_code:         string | null
   taste_profile:         Record<string, string> | null
   birthday:              string | null
+  phone:                 string | null
+  language:              string | null
   is_b2b:                boolean
   b2b_discount:          number | null
   min_discount_until:    string | null

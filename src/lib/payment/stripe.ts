@@ -36,10 +36,16 @@ export const stripeProvider: PaymentProvider = {
   },
 
   async verifyWebhook(payload, signature): Promise<WebhookVerifyResult> {
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET?.trim()
+
+    if (!webhookSecret || /REPLACE|placeholder/i.test(webhookSecret)) {
+      throw new Error('STRIPE_WEBHOOK_SECRET is missing or still a placeholder. Set it to the real Stripe webhook signing secret from the Stripe Dashboard.')
+    }
+
     const event = stripe.webhooks.constructEvent(
       payload,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!,
+      webhookSecret,
     )
 
     if (event.type === 'checkout.session.completed') {

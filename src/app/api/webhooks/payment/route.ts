@@ -55,7 +55,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ ok: true })
   } catch (err) {
-    console.error('Webhook error:', err)
-    return NextResponse.json({ error: 'Webhook failed' }, { status: 400 })
+    const message = err instanceof Error ? err.message : 'Webhook failed'
+    console.error('Webhook error:', message, err)
+    return NextResponse.json({ error: message }, { status: 400 })
   }
 }
