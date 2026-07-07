@@ -49,10 +49,10 @@ export default function Navbar({ locale }: { locale: Locale }) {
 
         {/* Center links — hidden on mobile */}
         <div className="hidden md:flex items-center gap-8">
-          <Link href={`/${locale}`} className="text-[15px] text-brand-muted hover:text-brand-text transition-colors">
+          <Link href={`/${locale}`} className="text-[19px] text-brand-muted hover:text-brand-text transition-colors">
             {t('catalog')}
           </Link>
-          <Link href={`/${locale}/about`} className="text-[15px] text-brand-muted hover:text-brand-text transition-colors">
+          <Link href={`/${locale}/about`} className="text-[19px] text-brand-muted hover:text-brand-text transition-colors">
             {t('about')}
           </Link>
         </div>
@@ -72,13 +72,13 @@ export default function Navbar({ locale }: { locale: Locale }) {
             <div className="hidden md:flex items-center gap-2">
               <Link
                 href={`/${locale}/account/login`}
-                className="px-2 py-1 text-[15px] text-[var(--gray-700)] hover:text-brand-text transition-colors"
+                className="px-2 py-1 text-[19px] text-[var(--gray-700)] hover:text-brand-text transition-colors"
               >
                 {t('login')}
               </Link>
               <Link
                 href={`/${locale}/account/register`}
-                className="rounded-md border border-brand-border px-[14px] py-[6px] text-[15px] text-[var(--gray-700)] hover:text-brand-text transition-colors"
+                className="rounded-md border border-brand-border px-[14px] py-[6px] text-[19px] text-[var(--gray-700)] hover:text-brand-text transition-colors"
               >
                 {t('register')}
               </Link>

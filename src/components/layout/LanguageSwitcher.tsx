@@ -25,7 +25,7 @@ export default function LanguageSwitcher({ locale }: { locale: Locale }) {
         <Link
           key={l.code}
           href={localizedHref(l.code)}
-          className={`rounded-full px-2.5 py-1 text-[15px] font-semibold transition-all ${
+          className={`rounded-full px-2.5 py-1 text-[19px] font-semibold transition-all ${
             l.code === locale
               ? 'bg-brand-accent text-white'
               : 'text-brand-muted hover:text-brand-text'

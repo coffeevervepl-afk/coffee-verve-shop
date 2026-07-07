@@ -79,33 +79,33 @@ export default async function ProductPage({ params, searchParams }: Props) {
 
         {/* Details */}
         <div className="flex flex-col">
-          <h1 className="mb-4 text-3xl font-bold md:text-4xl">{name}</h1>
+          <h1 className="mb-4 text-5xl font-bold">{name}</h1>
 
           {notes && (
-            <p className="mb-6 text-[17px] font-medium text-[#3D3C39]">{notes}</p>
+            <p className="mb-6 text-[22px] font-medium text-[#3D3C39]">{notes}</p>
           )}
 
           {/* Attributes */}
           <div className="mb-6 flex flex-wrap gap-2">
             {product.roast_level && (
-              <span className="rounded-full border border-brand-border px-4 py-2 text-[15px] text-[#3D3C39]">
+              <span className="rounded-full border border-brand-border px-4 py-2 text-[19px] text-[#3D3C39]">
                 {t('roast')}: {roastLabel[product.roast_level]}
               </span>
             )}
             {product.brew_method && (
-              <span className="rounded-full border border-brand-border px-4 py-2 text-[15px] text-[#3D3C39]">
+              <span className="rounded-full border border-brand-border px-4 py-2 text-[19px] text-[#3D3C39]">
                 {t('brew')}: {product.brew_method}
               </span>
             )}
             {product.process && (
-              <span className="rounded-full border border-brand-border px-4 py-2 text-[15px] text-[#3D3C39]">
+              <span className="rounded-full border border-brand-border px-4 py-2 text-[19px] text-[#3D3C39]">
                 {t('process')}: {localizedProcess(product.process)}
               </span>
             )}
           </div>
 
           {desc && (
-            <p className="mb-8 text-[17px] leading-[1.7] text-brand-muted">{desc}</p>
+            <p className="mb-8 text-[22px] leading-[1.7] text-brand-muted">{desc}</p>
           )}
 
           {/* Guarantee UTP — compact, below add to cart */}
