@@ -110,7 +110,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
           </div>
 
           {desc && (
-            <p className="mb-8 leading-relaxed text-brand-muted">{desc}</p>
+            <p className="mb-8 text-base leading-[1.7] text-brand-muted">{desc}</p>
           )}
 
           {/* Guarantee UTP — compact, below add to cart */}
