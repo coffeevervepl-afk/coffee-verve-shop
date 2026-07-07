@@ -81,7 +81,7 @@ function WeightSelector({
   return (
     <div>
       <p className="mb-2 text-sm font-medium text-brand-muted">{t('choose_weight')}</p>
-      <div className="flex flex-wrap gap-2 rounded-2xl bg-[#2C1810] p-2">
+      <div className="flex flex-wrap gap-2 rounded-2xl bg-transparent p-0">
         {weights.map(({ w, label }) => (
           <button
             key={w}
