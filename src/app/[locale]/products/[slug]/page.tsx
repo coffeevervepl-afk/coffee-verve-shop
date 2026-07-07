@@ -55,7 +55,11 @@ export default async function ProductPage({ params, searchParams }: Props) {
       <div className="grid gap-8 md:grid-cols-2 md:gap-16">
 
         {/* Images */}
-        <ProductGallery images={product.images.length ? product.images : [image]} name={name} />
+        <ProductGallery
+          images={product.images.length ? product.images : [image]}
+          name={name}
+          video_url={product.video_url ?? undefined}
+        />
 
         {/* Details */}
         <div className="flex flex-col">

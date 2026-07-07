@@ -23,6 +23,7 @@ export interface ShopProduct {
   price_500: number | null
   price_1000: number | null
   images: string[]
+  video_url: string | null
   is_active: boolean
   is_featured: boolean
   sort_order: number
