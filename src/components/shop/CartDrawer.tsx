@@ -1,26 +1,42 @@
 'use client'
+import { useState } from 'react'
+import { useParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useCartStore } from '@/hooks/useCartStore'
+import { useAuth } from '@/hooks/useAuth'
 import { fmtPrice } from '@/lib/pricing'
+import type { PromoDiscount } from '@/lib/pricing'
+import type { Locale } from '@/types/shop'
+import PromoCodeField from './checkout/PromoCodeField'
 
 const FREE_THRESHOLD = Number(process.env.NEXT_PUBLIC_FREE_DELIVERY_THRESHOLD ?? 150)
 
 export default function CartDrawer() {
   const t          = useTranslations('cart')
-  const tCommon    = useTranslations('common')
+  const tCheckout  = useTranslations('checkout')
+  const params     = useParams()
+  const locale     = (params.locale as Locale) ?? 'ru'
+  const { user }   = useAuth()
   const drawerOpen = useCartStore(s => s.drawerOpen)
   const closeDrawer = useCartStore(s => s.closeDrawer)
   const items      = useCartStore(s => s.items)
+  const count      = useCartStore(s => s.count)
   const updateQty  = useCartStore(s => s.updateQty)
   const removeItem = useCartStore(s => s.removeItem)
   const subtotal   = useCartStore(s => s.subtotal)
+  const [promo, setPromo] = useState<PromoDiscount | null>(null)
 
   const total = subtotal()
-  const remaining = FREE_THRESHOLD - total
+  const promoDiscount = promo
+    ? promo.type === 'percent' ? Math.round(total * promo.value) / 100 : Math.min(promo.value, total)
+    : 0
+  const discountedSubtotal = Math.round((total - promoDiscount) * 100) / 100
+  const remaining = FREE_THRESHOLD - discountedSubtotal
+  const isFreeDelivery = discountedSubtotal >= FREE_THRESHOLD
 
   return (
     <AnimatePresence>
@@ -41,11 +57,13 @@ export default function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-            className="fixed bottom-0 right-0 top-0 z-50 flex w-full max-w-sm flex-col bg-brand-surface shadow-2xl"
+            className="fixed bottom-0 right-0 top-0 z-50 flex w-full flex-col bg-brand-surface shadow-2xl sm:max-w-sm"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-brand-border px-5 py-4">
-              <h2 className="text-base font-semibold">{t('title')}</h2>
+              <h2 className="text-base font-semibold">
+                {items.length > 0 ? t('title_count', { count }) : t('title')}
+              </h2>
               <button onClick={closeDrawer} className="btn-ghost rounded-full p-2">
                 <X size={20} />
               </button>
@@ -106,31 +124,68 @@ export default function CartDrawer() {
 
             {/* Footer */}
             {items.length > 0 && (
-              <div className="border-t border-brand-border px-5 py-4 space-y-3">
+              <div className="space-y-4 border-t border-brand-border px-5 py-4">
+                <div className="flex items-center gap-3 rounded-xl bg-brand-accent px-4 py-3 text-white">
+                  <span className="text-xl leading-none">🔄</span>
+                  <p className="text-xs font-medium leading-snug">{t('guarantee')}</p>
+                </div>
+
+                <PromoCodeField
+                  email={user?.email ?? ''}
+                  subtotal={total}
+                  onApply={setPromo}
+                  applied={promo}
+                />
+
                 {remaining > 0 && (
                   <div className="rounded-xl bg-brand-border/30 px-3 py-2 text-xs text-brand-muted">
                     {t('free_delivery_hint', { amount: fmtPrice(remaining) })}
                     <div className="mt-1.5 h-1 rounded-full bg-brand-border overflow-hidden">
                       <div
                         className="h-full rounded-full bg-brand-gold transition-all"
-                        style={{ width: `${Math.min(100, (total / FREE_THRESHOLD) * 100)}%` }}
+                        style={{ width: `${Math.min(100, (discountedSubtotal / FREE_THRESHOLD) * 100)}%` }}
                       />
                     </div>
                   </div>
                 )}
 
-                <div className="flex items-center justify-between text-sm font-semibold">
-                  <span>{t('subtotal')}</span>
-                  <span>{fmtPrice(total)}</span>
+                <div className="space-y-1.5 text-sm">
+                  <div className="flex items-center justify-between text-brand-muted">
+                    <span>{tCheckout('subtotal')}</span>
+                    <span>{fmtPrice(total)}</span>
+                  </div>
+                  {promoDiscount > 0 && (
+                    <div className="flex items-center justify-between text-brand-muted">
+                      <span>{tCheckout('discount')}</span>
+                      <span>−{fmtPrice(promoDiscount)}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between text-brand-muted">
+                    <span>{tCheckout('delivery_cost')}</span>
+                    <span>
+                      {isFreeDelivery ? tCheckout('free') : t('delivery_free_from', { amount: fmtPrice(FREE_THRESHOLD) })}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-brand-border pt-1.5 text-base font-semibold text-brand-text">
+                    <span>{tCheckout('total')}</span>
+                    <span>{fmtPrice(discountedSubtotal)}</span>
+                  </div>
                 </div>
 
                 <Link
-                  href="/ru/checkout"
+                  href={`/${locale}/checkout`}
                   onClick={closeDrawer}
                   className="btn btn-primary w-full text-base"
                 >
                   {t('checkout')}
                 </Link>
+
+                <button
+                  onClick={closeDrawer}
+                  className="w-full text-center text-sm text-brand-muted underline-offset-2 hover:text-brand-text hover:underline"
+                >
+                  {t('continue')}
+                </button>
               </div>
             )}
           </motion.aside>

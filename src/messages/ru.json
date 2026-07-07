@@ -45,10 +45,13 @@
     "roast_medium_dark": "Средне-тёмная", "roast_dark": "Тёмная"
   },
   "cart": {
-    "title": "Корзина", "empty": "Корзина пуста", "empty_cta": "Перейти к кофе",
+    "title": "Корзина", "title_count": "Корзина ({count})", "empty": "Корзина пуста", "empty_cta": "Перейти к кофе",
     "remove": "Удалить", "subtotal": "Сумма",
     "checkout": "Оформить заказ", "continue": "Продолжить покупки",
-    "free_delivery_hint": "Ещё {amount} до бесплатной доставки"
+    "free_delivery_hint": "Ещё {amount} до бесплатной доставки",
+    "delivery_free_from": "Бесплатно от {amount}",
+    "more_items": "и ещё {count} товаров",
+    "guarantee": "Не понравится — заменим или вернём деньги"
   },
   "checkout": {
     "title": "Оформление заказа", "contact": "Контакты",

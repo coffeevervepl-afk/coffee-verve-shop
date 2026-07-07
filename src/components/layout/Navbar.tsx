@@ -3,17 +3,15 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { ShoppingBag, Search, User } from 'lucide-react'
+import { Search, User } from 'lucide-react'
 import LanguageSwitcher from './LanguageSwitcher'
-import { useCartStore } from '@/hooks/useCartStore'
+import CartPreview from './CartPreview'
 import { useAuth } from '@/hooks/useAuth'
 import type { Locale } from '@/types/shop'
 
 export default function Navbar({ locale }: { locale: Locale }) {
   const t        = useTranslations('nav')
   const router   = useRouter()
-  const count    = useCartStore(s => s.count)
-  const openCart = useCartStore(s => s.openDrawer)
   const { user, signOut } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement | null>(null)
@@ -143,18 +141,7 @@ export default function Navbar({ locale }: { locale: Locale }) {
             )}
           </Link>
 
-          <button
-            onClick={openCart}
-            aria-label={t('cart')}
-            className="relative btn-ghost rounded-full p-2 text-brand-muted hover:text-brand-text"
-          >
-            <ShoppingBag size={20} />
-            {count > 0 && (
-              <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-accent text-[10px] font-bold text-white">
-                {count > 9 ? '9+' : count}
-              </span>
-            )}
-          </button>
+          <CartPreview locale={locale} />
         </div>
       </nav>
     </header>

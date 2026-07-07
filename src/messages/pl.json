@@ -41,10 +41,13 @@
     "roast_medium_dark": "Średnio-ciemne", "roast_dark": "Ciemne"
   },
   "cart": {
-    "title": "Koszyk", "empty": "Koszyk jest pusty", "empty_cta": "Przejdź do kawy",
+    "title": "Koszyk", "title_count": "Koszyk ({count})", "empty": "Koszyk jest pusty", "empty_cta": "Przejdź do kawy",
     "remove": "Usuń", "subtotal": "Suma",
     "checkout": "Złóż zamówienie", "continue": "Kontynuuj zakupy",
-    "free_delivery_hint": "Jeszcze {amount} do darmowej dostawy"
+    "free_delivery_hint": "Jeszcze {amount} do darmowej dostawy",
+    "delivery_free_from": "Bezpłatnie od {amount}",
+    "more_items": "i jeszcze {count} produktów",
+    "guarantee": "Nie spodoba się — wymienimy lub zwrócimy pieniądze"
   },
   "checkout": {
     "title": "Składanie zamówienia", "contact": "Dane kontaktowe",

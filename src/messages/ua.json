@@ -41,10 +41,13 @@
     "roast_medium_dark": "Середньо-темне", "roast_dark": "Темне"
   },
   "cart": {
-    "title": "Кошик", "empty": "Кошик порожній", "empty_cta": "Перейти до кави",
+    "title": "Кошик", "title_count": "Кошик ({count})", "empty": "Кошик порожній", "empty_cta": "Перейти до кави",
     "remove": "Видалити", "subtotal": "Сума",
     "checkout": "Оформити замовлення", "continue": "Продовжити покупки",
-    "free_delivery_hint": "Ще {amount} до безкоштовної доставки"
+    "free_delivery_hint": "Ще {amount} до безкоштовної доставки",
+    "delivery_free_from": "Безкоштовно від {amount}",
+    "more_items": "і ще {count} товарів",
+    "guarantee": "Не сподобається — замінимо або повернемо гроші"
   },
   "checkout": {
     "title": "Оформлення замовлення", "contact": "Контакти",
