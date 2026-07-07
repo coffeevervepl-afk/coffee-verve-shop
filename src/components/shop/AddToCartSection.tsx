@@ -16,9 +16,6 @@ interface Props {
   locale:   Locale
 }
 
-const CTA_CLASS =
-  'flex h-14 flex-1 items-center justify-center gap-2 rounded-[14px] bg-[#C47B2A] text-base font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-[#d98c37]'
-
 export default function AddToCartSection({ product, weights, name, image }: Props) {
   const t          = useTranslations('product')
   const [weight, setWeight] = useState<ProductWeight>(weights[0].w)
@@ -41,7 +38,7 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
         <QtySelector qty={qty} setQty={setQty} t={t} />
         <div className="flex items-center gap-4">
           <span className="text-2xl font-bold">{fmtPrice(price * qty)}</span>
-          <button onClick={handleAdd} className={CTA_CLASS}>
+          <button onClick={handleAdd} className="btn btn-primary flex-1 gap-2">
             <ShoppingBag size={18} />
             {t('add_to_cart')}
           </button>
@@ -58,7 +55,7 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-brand-border bg-brand-surface/95 px-4 py-3 backdrop-blur-sm md:hidden">
         <div className="flex items-center gap-3">
           <span className="text-xl font-bold">{fmtPrice(price * qty)}</span>
-          <button onClick={handleAdd} className={CTA_CLASS}>
+          <button onClick={handleAdd} className="btn btn-primary flex-1 gap-2 py-3">
             <ShoppingBag size={18} />
             {t('add_to_cart')}
           </button>
@@ -84,26 +81,23 @@ function WeightSelector({
   return (
     <div>
       <p className="mb-2 text-sm font-medium text-brand-muted">{t('choose_weight')}</p>
-      <div className="flex flex-wrap gap-[10px]">
-        {weights.map(({ w, label }) => {
-          const active = w === weight
-          return (
-            <button
-              key={w}
-              onClick={() => setWeight(w)}
-              className={`flex h-[52px] flex-col items-center justify-center rounded-xl px-5 transition-colors duration-150 ${
-                active
-                  ? 'bg-[#111110] text-white'
-                  : 'border-[1.5px] border-[#E8E7E3] bg-white text-[#111110] hover:border-[#111110]'
-              }`}
-            >
-              <span className="text-[15px] font-bold leading-tight">{label}</span>
-              <span className={`text-[13px] leading-tight ${active ? 'text-white/70' : 'text-[#6E6D68]'}`}>
-                {fmtPrice(getProductPrice(product, w))}
-              </span>
-            </button>
-          )
-        })}
+      <div className="flex flex-wrap gap-2">
+        {weights.map(({ w, label }) => (
+          <button
+            key={w}
+            onClick={() => setWeight(w)}
+            className={`rounded-xl border px-4 py-2 text-sm font-semibold transition ${
+              w === weight
+                ? 'border-brand-accent bg-brand-accent text-white'
+                : 'border-brand-border text-brand-text hover:border-brand-accent'
+            }`}
+          >
+            {label}
+            <span className="ml-1.5 text-xs opacity-70">
+              {fmtPrice(getProductPrice(product, w))}
+            </span>
+          </button>
+        ))}
       </div>
     </div>
   )
