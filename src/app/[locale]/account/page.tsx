@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { useAuth } from '@/hooks/useAuth'
 import { fmtPrice } from '@/lib/pricing'
@@ -22,6 +22,7 @@ interface Order {
 
 export default function AccountPage() {
   const params   = useParams()
+  const searchParams = useSearchParams()
   const locale   = params.locale as Locale
   const router   = useRouter()
   const t        = useTranslations('checkout')
@@ -36,6 +37,12 @@ export default function AccountPage() {
   useEffect(() => {
     if (!loading && !user) router.push(`/${locale}`)
   }, [loading, user, locale, router])
+
+  useEffect(() => {
+    if (searchParams.get('passwordChanged') === '1') {
+      toast.success('Пароль успешно изменён')
+    }
+  }, [searchParams])
 
   useEffect(() => {
     if (!user) return

@@ -1,31 +1,40 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'react-hot-toast'
 
-export default function LoginPage() {
+export default function ResetPasswordPage() {
   const params = useParams()
   const locale = params.locale as string
   const router = useRouter()
   const t = useTranslations('account')
-  const [email, setEmail] = useState('')
+
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (password.length < 6) {
+      toast.error(t('reset_password_min'))
+      return
+    }
+    if (password !== confirmPassword) {
+      toast.error(t('reset_mismatch'))
+      return
+    }
+
     setLoading(true)
     try {
       const sb = createClient()
-      const { error } = await sb.auth.signInWithPassword({ email, password })
+      const { error } = await sb.auth.updateUser({ password })
       if (error) throw error
-      router.push(`/${locale}/account`)
+      router.push(`/${locale}/account?passwordChanged=1`)
     } catch (err: any) {
-      toast.error(err?.message || t('login_error'))
+      toast.error(err?.message || t('reset_error'))
     } finally {
       setLoading(false)
     }
@@ -33,46 +42,40 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto max-w-md rounded-3xl border border-brand-border bg-brand-surface p-8 shadow-sm">
-      <h1 className="text-2xl font-semibold mb-4">{t('login_title')}</h1>
-      <p className="text-sm text-brand-muted mb-6">{t('login_subtitle')}</p>
+      <h1 className="text-2xl font-semibold mb-4">{t('reset_title')}</h1>
+      <p className="text-sm text-brand-muted mb-6">{t('reset_subtitle')}</p>
+
       <form className="space-y-4" onSubmit={handleSubmit}>
         <label className="block text-sm">
-          <span className="text-brand-muted">{t('email')}</span>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            className="input mt-2 w-full"
-            placeholder="you@example.com"
-          />
-        </label>
-        <label className="block text-sm">
-          <span className="text-brand-muted">{t('password')}</span>
+          <span className="text-brand-muted">{t('reset_new_password')}</span>
           <input
             type="password"
             required
+            minLength={6}
             value={password}
             onChange={e => setPassword(e.target.value)}
             className="input mt-2 w-full"
-            placeholder="••••••••"
+            placeholder="••••••"
           />
-          <div className="mt-2 text-right">
-            <Link href={`/${locale}/account/forgot-password`} className="text-xs text-brand-accent underline">
-              {t('forgot_password_link')}
-            </Link>
-          </div>
         </label>
+
+        <label className="block text-sm">
+          <span className="text-brand-muted">{t('reset_repeat_password')}</span>
+          <input
+            type="password"
+            required
+            minLength={6}
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+            className="input mt-2 w-full"
+            placeholder="••••••"
+          />
+        </label>
+
         <button type="submit" disabled={loading} className="btn btn-primary w-full">
-          {loading ? '…' : t('login_button')}
+          {loading ? '…' : t('reset_submit')}
         </button>
       </form>
-      <div className="mt-6 text-sm text-brand-muted">
-        {t('no_account')}{' '}
-        <Link href={`/${locale}/account/register`} className="text-brand-accent underline">
-          {t('register_link')}
-        </Link>
-      </div>
     </div>
   )
 }

@@ -10,7 +10,12 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   const params = useParams()
   const router = useRouter()
   const locale = params.locale as string
-  const authPage = pathname?.endsWith('/login') || pathname?.endsWith('/register')
+  const authPage =
+    pathname?.endsWith('/login') ||
+    pathname?.endsWith('/register') ||
+    pathname?.endsWith('/forgot-password') ||
+    pathname?.endsWith('/reset-password')
+  const isResetPasswordPage = pathname?.endsWith('/reset-password')
 
   useEffect(() => {
     if (!loading && !user && !authPage) {
@@ -19,10 +24,10 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   }, [loading, user, authPage, locale, router])
 
   useEffect(() => {
-    if (!loading && user && authPage) {
+    if (!loading && user && authPage && !isResetPasswordPage) {
       router.replace(`/${locale}/account`)
     }
-  }, [loading, user, authPage, locale, router])
+  }, [loading, user, authPage, isResetPasswordPage, locale, router])
 
   if (!authPage && loading) {
     return (
