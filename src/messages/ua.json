@@ -1,5 +1,16 @@
 {
-  "nav": { "catalog": "Кава", "cart": "Кошик", "about": "Про нас", "search": "Пошук" },
+  "nav": {
+    "catalog": "Кава",
+    "cart": "Кошик",
+    "about": "Про нас",
+    "search": "Пошук",
+    "login": "Увійти",
+    "register": "Реєстрація",
+    "my_account": "Мій акаунт",
+    "my_orders": "Мої замовлення",
+    "profile": "Профіль",
+    "logout": "Вийти"
+  },
   "home": {
     "hero_title": "Свіжообсмажена кава", "hero_subtitle": "Доставка по всій Польщі",
     "catalog_title": "Наша кава", "featured": "Рекомендуємо",

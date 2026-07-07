@@ -1,5 +1,16 @@
 {
-  "nav": { "catalog": "Кофе", "cart": "Корзина", "about": "О нас", "search": "Поиск" },
+  "nav": {
+    "catalog": "Кофе",
+    "cart": "Корзина",
+    "about": "О нас",
+    "search": "Поиск",
+    "login": "Войти",
+    "register": "Регистрация",
+    "my_account": "Мой аккаунт",
+    "my_orders": "Мои заказы",
+    "profile": "Профиль",
+    "logout": "Выйти"
+  },
   "home": {
     "hero_title": "Свежеобжаренный кофе",
     "hero_subtitle": "Доставка по всей Польше",

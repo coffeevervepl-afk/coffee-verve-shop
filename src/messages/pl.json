@@ -1,5 +1,16 @@
 {
-  "nav": { "catalog": "Kawa", "cart": "Koszyk", "about": "O nas", "search": "Szukaj" },
+  "nav": {
+    "catalog": "Kawa",
+    "cart": "Koszyk",
+    "about": "O nas",
+    "search": "Szukaj",
+    "login": "Zaloguj się",
+    "register": "Rejestracja",
+    "my_account": "Moje konto",
+    "my_orders": "Moje zamówienia",
+    "profile": "Profil",
+    "logout": "Wyloguj się"
+  },
   "home": {
     "hero_title": "Świeżo palona kawa", "hero_subtitle": "Dostawa w całej Polsce",
     "catalog_title": "Nasza kawa", "featured": "Polecamy",
