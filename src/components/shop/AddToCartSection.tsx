@@ -81,15 +81,15 @@ function WeightSelector({
   return (
     <div>
       <p className="mb-2 text-sm font-medium text-brand-muted">{t('choose_weight')}</p>
-      <div className="flex flex-wrap gap-[10px]">
+      <div className="flex flex-wrap gap-2 rounded-2xl bg-[#F5F0EA] p-2">
         {weights.map(({ w, label }) => (
           <button
             key={w}
             onClick={() => setWeight(w)}
-            className={`flex h-[60px] items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] backdrop-blur-[12px] transition ${
+            className={`flex h-[60px] items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] backdrop-blur-[12px] transition-all ${
               w === weight
-                ? 'border-[rgba(0,0,0,0.15)] bg-[rgba(255,255,255,0.95)] text-[#111110] font-bold shadow-[0_4px_16px_rgba(0,0,0,0.12)]'
-                : 'border-[rgba(255,255,255,0.8)] bg-[rgba(255,255,255,0.6)] text-[#3D3C39] shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]'
+                ? 'border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.95)] text-[#111110] font-bold shadow-[0_2px_12px_rgba(0,0,0,0.1)]'
+                : 'border-[rgba(255,255,255,0.7)] bg-[rgba(255,255,255,0.5)] text-[#3D3C39] hover:bg-[rgba(255,255,255,0.75)]'
             }`}
           >
             {label}
