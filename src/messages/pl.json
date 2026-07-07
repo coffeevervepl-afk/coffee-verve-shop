@@ -30,7 +30,8 @@
   "guarantee": {
     "title": "Gwarancja jakości",
     "body": "Nie smakuje? Wymienimy lub zwrócimy pieniądze. Bez pytań, bez biurokracji.",
-    "compact": "Nie smakuje — wymienimy lub zwrócimy pieniądze ✓"
+    "compact": "Nie smakuje — wymienimy lub zwrócimy pieniądze ✓",
+    "compact_title": "Gwarancja smaku"
   },
   "product": {
     "add_to_cart": "Do koszyka", "added": "Dodano",
