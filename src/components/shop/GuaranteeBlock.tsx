@@ -8,12 +8,9 @@ export default function GuaranteeBlock({ compact }: Props) {
 
   if (compact) {
     return (
-      <div className="flex items-center gap-3 rounded-[14px] bg-[#2C1A0E] px-5 py-4">
-        <ShieldCheck size={22} className="flex-shrink-0 text-brand-gold" />
-        <div>
-          <p className="text-[16px] font-bold text-[#E8D5BC]">{t('compact_title')}</p>
-          <p className="text-[14px] leading-snug text-[rgba(232,213,188,0.7)]">{t('compact')}</p>
-        </div>
+      <div className="w-full rounded-[12px] bg-[#2C1810] px-5 py-4">
+        <p className="text-[17px] font-bold text-white">{t('compact_title')}</p>
+        <p className="text-[15px] text-[rgba(255,255,255,0.8)]">{t('compact')}</p>
       </div>
     )
   }
