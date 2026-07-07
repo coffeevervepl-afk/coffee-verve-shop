@@ -55,6 +55,7 @@ export const stripeProvider: PaymentProvider = {
         paymentRef: s.id,
         status:     s.payment_status === 'paid' ? 'paid' : 'pending',
         amount:     (s.amount_total ?? 0) / 100,
+        metadata:   (s.metadata ?? {}) as Record<string, string>,
       }
     }
 

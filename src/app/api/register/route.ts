@@ -5,7 +5,7 @@ import { createClient } from '@supabase/supabase-js'
 export async function POST(req: NextRequest) {
   const { email, password, name, phone, language, orderId } = await req.json()
 
-  if (!email || !password || password.length < 8 || !name) {
+  if (!email || !password || password.length < 6 || !name) {
     return NextResponse.json({ error: 'invalid_params' }, { status: 400 })
   }
 

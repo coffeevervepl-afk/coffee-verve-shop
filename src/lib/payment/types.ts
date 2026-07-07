@@ -33,6 +33,7 @@ export interface WebhookVerifyResult {
   paymentRef:  string
   status:      'paid' | 'failed' | 'pending'
   amount:      number
+  metadata?:   Record<string, string>
 }
 
 export interface PaymentProvider {

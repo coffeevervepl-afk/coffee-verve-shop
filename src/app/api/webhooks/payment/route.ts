@@ -4,6 +4,8 @@ import { getPaymentProvider } from '@/lib/payment'
 
 export const runtime = 'nodejs'
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+
 export async function POST(req: NextRequest) {
   const body      = await req.text()
   const signature = req.headers.get('stripe-signature')
@@ -24,6 +26,29 @@ export async function POST(req: NextRequest) {
         .from('shop_orders')
         .update({ payment_status: 'paid', status: 'processing', payment_ref: result.paymentRef })
         .eq('id', result.orderId)
+
+      if (result.metadata?.register_intent === '1') {
+        const password = result.metadata.register_password ?? ''
+        if (password.length >= 6) {
+          try {
+            await fetch(`${SITE_URL}/api/register`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: result.metadata.register_email,
+                password,
+                name: result.metadata.register_name,
+                phone: result.metadata.register_phone,
+                language: result.metadata.locale ?? 'ru',
+                orderId: result.orderId,
+              }),
+            })
+            console.log(`Ваш аккаунт создан, войдите на coffeeverve.pl/ru/account/login (${result.metadata.register_email})`)
+          } catch (err) {
+            console.error('Auto register after paid failed:', err)
+          }
+        }
+      }
 
       // Notify N8N
       const order = await sb.from('shop_orders').select('*').eq('id', result.orderId).single()

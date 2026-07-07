@@ -44,7 +44,7 @@ export default function Navbar({ locale }: { locale: Locale }) {
           </button>
 
           <Link
-            href={`/${locale}/account`}
+            href={user ? `/${locale}/account` : `/${locale}/account/login`}
             aria-label="Личный кабинет"
             className="relative btn-ghost rounded-full p-2 text-brand-muted hover:text-brand-text"
           >

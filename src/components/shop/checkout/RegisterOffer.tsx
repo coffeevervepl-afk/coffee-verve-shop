@@ -53,7 +53,7 @@ export default function RegisterOffer({ discountPct, register, onToggle, pricing
             value={values.password ?? ''}
             onChange={e => onChange({ password: e.target.value })}
             className="input"
-            minLength={8}
+            minLength={6}
           />
         </div>
       )}

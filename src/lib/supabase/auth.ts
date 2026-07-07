@@ -4,6 +4,7 @@ export interface SessionUser {
   id:                    string
   email:                 string
   name:                  string
+  discount_pct:          number
   telegram:              string | null
   loyalty_level:         'classic' | 'gold' | 'platinum'
   spent_12m:             number

@@ -5,9 +5,10 @@ import { isTelegramUsernameValid, normalizeTelegramUsername } from '@/lib/telegr
 interface Props {
   values:   Record<string, any>
   onChange: (v: Record<string, string>) => void
+  onEmailBlur?: (email: string) => void
 }
 
-export default function ContactForm({ values, onChange }: Props) {
+export default function ContactForm({ values, onChange, onEmailBlur }: Props) {
   const t = useTranslations('checkout')
   const telegramValue = String(values.telegram ?? '')
   const normalizedTelegram = normalizeTelegramUsername(telegramValue)
@@ -31,6 +32,7 @@ export default function ContactForm({ values, onChange }: Props) {
           placeholder={t('email')}
           value={values.email ?? ''}
           onChange={e => onChange({ email: e.target.value })}
+          onBlur={e => onEmailBlur?.(e.target.value)}
           className="input"
         />
         <input

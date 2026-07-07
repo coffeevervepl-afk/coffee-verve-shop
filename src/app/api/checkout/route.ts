@@ -151,7 +151,15 @@ export async function POST(req: NextRequest) {
       items:         items.map(i => ({ name: `${i.name} ${i.weight}g`, amount: i.unit_price, quantity: i.qty })),
       successUrl,
       cancelUrl,
-      metadata:      { orderId: order.id, locale },
+      metadata:      {
+        orderId: order.id,
+        locale,
+        register_intent: register ? '1' : '0',
+        register_email: register ? customer.email : '',
+        register_name: register ? customer.name : '',
+        register_phone: register ? (customer.phone ?? '') : '',
+        register_password: register ? String(customer.password ?? '') : '',
+      },
     })
 
     // Save payment ref

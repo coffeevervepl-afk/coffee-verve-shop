@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
@@ -116,9 +117,9 @@ export default function RegisterPage() {
       </form>
       <div className="mt-6 text-sm text-brand-muted">
         {t('have_account')}{' '}
-        <a href={`/${locale}/account/login`} className="text-brand-accent underline">
+        <Link href={`/${locale}/account/login`} className="text-brand-accent underline">
           {t('login_link')}
-        </a>
+        </Link>
       </div>
     </div>
   )
