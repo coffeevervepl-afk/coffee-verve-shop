@@ -86,10 +86,10 @@ function WeightSelector({
           <button
             key={w}
             onClick={() => setWeight(w)}
-            className={`flex h-[60px] items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] font-bold backdrop-blur-[8px] transition ${
+            className={`flex h-[60px] items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] font-bold transition ${
               w === weight
-                ? 'border-[rgba(139,90,43,0.9)] bg-[rgba(139,90,43,0.85)] text-white'
-                : 'border-[rgba(139,90,43,0.25)] bg-[rgba(139,90,43,0.1)] text-[#7B4F2E]'
+                ? 'border-brand-accent bg-brand-accent text-white'
+                : 'border-brand-border text-brand-text hover:border-brand-accent'
             }`}
           >
             {label}
