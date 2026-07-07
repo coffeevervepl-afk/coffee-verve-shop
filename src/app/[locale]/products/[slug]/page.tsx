@@ -87,23 +87,23 @@ export default async function ProductPage({ params, searchParams }: Props) {
           <h1 className="mb-4 text-3xl font-bold md:text-4xl">{name}</h1>
 
           {notes && (
-            <p className="mb-6 text-brand-muted">{notes}</p>
+            <p className="mb-6 text-[15px] text-[#3D3C39]">{notes}</p>
           )}
 
           {/* Attributes */}
           <div className="mb-6 flex flex-wrap gap-2">
             {product.roast_level && (
-              <span className="rounded-full border border-brand-border px-3 py-1 text-xs text-brand-muted">
+              <span className="rounded-full border border-brand-border px-3 py-1 text-[14px] text-[#3D3C39]">
                 {t('roast')}: {roastLabel[product.roast_level]}
               </span>
             )}
             {product.brew_method && (
-              <span className="rounded-full border border-brand-border px-3 py-1 text-xs text-brand-muted">
+              <span className="rounded-full border border-brand-border px-3 py-1 text-[14px] text-[#3D3C39]">
                 {t('brew')}: {product.brew_method}
               </span>
             )}
             {product.process && (
-              <span className="rounded-full border border-brand-border px-3 py-1 text-xs text-brand-muted">
+              <span className="rounded-full border border-brand-border px-3 py-1 text-[14px] text-[#3D3C39]">
                 {t('process')}: {localizedProcess(product.process)}
               </span>
             )}
