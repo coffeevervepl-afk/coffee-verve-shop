@@ -10,7 +10,7 @@ export default function GuaranteeBlock({ compact }: Props) {
     return (
       <div className="w-full rounded-[12px] bg-[#2C1810] px-5 py-4">
         <p className="text-[17px] font-bold text-white">{t('compact_title')}</p>
-        <p className="text-[15px] text-[rgba(255,255,255,0.8)]">{t('compact')}</p>
+        <p className="text-[17px] text-[rgba(255,255,255,0.8)]">{t('compact')}</p>
       </div>
     )
   }
