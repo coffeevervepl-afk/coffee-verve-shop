@@ -59,8 +59,6 @@ export default function Navbar({ locale }: { locale: Locale }) {
 
         {/* Right: lang + search + cart */}
         <div className="flex items-center gap-2">
-          <LanguageSwitcher locale={locale} />
-
           <button
             aria-label={t('search')}
             className="btn-ghost rounded-full p-2 text-brand-muted hover:text-brand-text"
@@ -155,6 +153,8 @@ export default function Navbar({ locale }: { locale: Locale }) {
               </span>
             )}
           </button>
+
+          <LanguageSwitcher locale={locale} />
         </div>
       </nav>
     </header>

@@ -4,8 +4,8 @@ import { usePathname } from 'next/navigation'
 import type { Locale } from '@/types/shop'
 
 const LOCALES: { code: Locale; label: string }[] = [
-  { code: 'ru', label: 'RU' },
   { code: 'pl', label: 'PL' },
+  { code: 'ru', label: 'RU' },
   { code: 'ua', label: 'UA' },
 ]
 
@@ -20,15 +20,15 @@ export default function LanguageSwitcher({ locale }: { locale: Locale }) {
   }
 
   return (
-    <div className="flex items-center gap-0.5 rounded-full border border-brand-border p-0.5">
+    <div className="flex items-center gap-1">
       {LOCALES.map(l => (
         <Link
           key={l.code}
           href={localizedHref(l.code)}
-          className={`rounded-full px-2.5 py-1 text-[19px] font-semibold transition-all ${
+          className={`rounded-full px-2 py-1 text-[13px] font-semibold transition-all ${
             l.code === locale
-              ? 'bg-brand-accent text-white'
-              : 'text-brand-muted hover:text-brand-text'
+              ? 'text-brand-text'
+              : 'text-[var(--gray-500)] hover:text-brand-text'
           }`}
         >
           {l.label}
