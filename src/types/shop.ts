@@ -22,6 +22,7 @@ export interface ShopProduct {
   price_250: number
   price_500: number | null
   price_1000: number | null
+  old_price_1000: number | null
   images: string[]
   video_url: string | null
   is_active: boolean

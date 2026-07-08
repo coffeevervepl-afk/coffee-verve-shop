@@ -42,7 +42,7 @@
     "tooltip_line2": "✓ Или вернём 100% денег — без вопросов"
   },
   "product": {
-    "add_to_cart": "В корзину", "added": "Добавлено",
+    "add_to_cart": "В корзину", "added": "Добавлено", "save": "Выгодно",
     "choose_weight": "Вес", "quantity": "Количество",
     "flavor_notes": "Вкусовые ноты", "origin": "Происхождение",
     "process": "Обработка", "roast": "Обжарка", "brew": "Метод",

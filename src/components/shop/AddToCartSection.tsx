@@ -16,6 +16,10 @@ interface Props {
   locale:   Locale
 }
 
+function calcDiscountPct(original: number, current: number): number {
+  return Math.round((1 - current / original) * 100)
+}
+
 export default function AddToCartSection({ product, weights, name, image }: Props) {
   const t          = useTranslations('product')
   const [weight, setWeight] = useState<ProductWeight>(weights[0].w)
@@ -23,6 +27,9 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
   const addItem    = useCartStore(s => s.addItem)
   const openDrawer = useCartStore(s => s.openDrawer)
   const price      = getProductPrice(product, weight)
+
+  const isDiscounted = weight === 1000 && !!product.old_price_1000 && product.old_price_1000 > price
+  const discountPct  = isDiscounted ? calcDiscountPct(product.old_price_1000!, price) : 0
 
   function handleAdd() {
     addItem({ product_id: product.id, slug: product.slug, name, image, weight, unit_price: price, qty })
@@ -37,7 +44,18 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
         <WeightSelector product={product} weights={weights} weight={weight} setWeight={setWeight} />
         <QtySelector qty={qty} setQty={setQty} t={t} />
         <div className="flex items-center gap-4">
-          <span className="text-2xl font-bold">{fmtPrice(price * qty)}</span>
+          <div className="flex flex-col">
+            {isDiscounted && (
+              <div key={weight} className="price-pop mb-0.5 flex items-center gap-2">
+                <span className="text-xs font-semibold text-[#2D7A4F]">{t('save')}</span>
+                <span className="text-sm line-through text-[#999]">{fmtPrice(product.old_price_1000! * qty)}</span>
+                <span className="rounded-full bg-[#2D7A4F] px-2 py-[3px] text-[12px] font-bold text-white">
+                  −{discountPct}%
+                </span>
+              </div>
+            )}
+            <span className="text-2xl font-bold">{fmtPrice(price * qty)}</span>
+          </div>
           <button onClick={handleAdd} className="btn btn-primary flex-1 gap-2">
             <ShoppingBag size={18} />
             {t('add_to_cart')}
@@ -54,7 +72,18 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
       {/* Sticky bottom bar — mobile only */}
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-brand-border bg-brand-surface/95 px-4 py-3 backdrop-blur-sm md:hidden">
         <div className="flex items-center gap-3">
-          <span className="text-xl font-bold">{fmtPrice(price * qty)}</span>
+          <div className="flex flex-col">
+            {isDiscounted && (
+              <div key={weight} className="price-pop mb-0.5 flex items-center gap-2">
+                <span className="text-xs font-semibold text-[#2D7A4F]">{t('save')}</span>
+                <span className="text-sm line-through text-[#999]">{fmtPrice(product.old_price_1000! * qty)}</span>
+                <span className="rounded-full bg-[#2D7A4F] px-2 py-[3px] text-[12px] font-bold text-white">
+                  −{discountPct}%
+                </span>
+              </div>
+            )}
+            <span className="text-xl font-bold">{fmtPrice(price * qty)}</span>
+          </div>
           <button onClick={handleAdd} className="btn btn-primary flex-1 gap-2 py-3">
             <ShoppingBag size={18} />
             {t('add_to_cart')}
@@ -64,6 +93,16 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
 
       {/* Spacer so page content isn't hidden behind sticky bar on mobile */}
       <div className="h-20 md:hidden" />
+
+      <style jsx>{`
+        .price-pop {
+          animation: priceScaleIn 200ms ease;
+        }
+        @keyframes priceScaleIn {
+          from { transform: scale(1.05); opacity: 0; }
+          to   { transform: scale(1); opacity: 1; }
+        }
+      `}</style>
     </>
   )
 }
@@ -86,12 +125,17 @@ function WeightSelector({
           <button
             key={w}
             onClick={() => setWeight(w)}
-            className={`flex h-[60px] flex-1 items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] backdrop-blur-[12px] transition-all ${
+            className={`relative flex h-[60px] flex-1 items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] backdrop-blur-[12px] transition-all ${
               w === weight
                 ? 'border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.95)] text-[#111110] font-bold shadow-[0_2px_12px_rgba(0,0,0,0.1)]'
                 : 'border-[rgba(255,255,255,0.7)] bg-[rgba(255,255,255,0.5)] text-[#3D3C39] hover:bg-[rgba(255,255,255,0.75)]'
             }`}
           >
+            {w === 1000 && product.old_price_1000 && product.old_price_1000 > getProductPrice(product, w) && (
+              <span className="absolute -right-1.5 -top-2.5 rounded-full bg-[#2D7A4F] px-[7px] py-0.5 text-[11px] font-bold text-white">
+                −{calcDiscountPct(product.old_price_1000, getProductPrice(product, w))}%
+              </span>
+            )}
             {label}
             <span className="ml-1.5 text-[15px] font-semibold opacity-70">
               {fmtPrice(getProductPrice(product, w))}
