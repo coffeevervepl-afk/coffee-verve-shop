@@ -144,13 +144,13 @@ export default function ProductCard({ product, locale }: Props) {
           )}
 
           {has1kg && (
-            <div className="mt-2 flex gap-2 rounded-xl bg-[#2C1810] p-1">
+            <div className="mt-2 flex gap-2 rounded-full bg-[#F4F3F0] p-1">
               {([250, 1000] as const).map(w => (
                 <button
                   key={w}
                   onClick={e => selectWeight(e, w)}
-                  className={`flex-1 rounded-lg py-1 text-xs font-semibold transition ${
-                    weight === w ? 'bg-white text-[#2C1810]' : 'text-white/70 hover:text-white'
+                  className={`flex-1 rounded-full py-1 text-xs font-semibold transition-all duration-200 ${
+                    weight === w ? 'bg-white text-[#2C1810] shadow-sm' : 'text-[#6E6D68]'
                   }`}
                 >
                   {w === 250 ? '250г' : '1кг'}
@@ -159,11 +159,11 @@ export default function ProductCard({ product, locale }: Props) {
             </div>
           )}
 
-          <div className="mt-2 flex gap-2 rounded-xl bg-[#2C1810] p-1">
+          <div className="mt-2 flex gap-2 rounded-full bg-[#F4F3F0] p-1">
             <button
               onClick={e => selectGrind(e, 'whole')}
-              className={`flex-1 rounded-lg py-1.5 text-xs font-semibold transition ${
-                effectiveGrind === 'whole' ? 'bg-white text-[#2C1810]' : 'text-white/70 hover:text-white'
+              className={`flex-1 rounded-full py-1.5 text-xs font-semibold transition-all duration-200 ${
+                effectiveGrind === 'whole' ? 'bg-white text-[#2C1810] shadow-sm' : 'text-[#6E6D68]'
               }`}
             >
               {t('grind_whole')}
@@ -173,10 +173,10 @@ export default function ProductCard({ product, locale }: Props) {
               <button
                 onClick={e => selectGrind(e, 'ground')}
                 disabled={groundDisabled}
-                className={`w-full rounded-lg py-1.5 text-xs font-semibold transition ${
+                className={`w-full rounded-full py-1.5 text-xs font-semibold transition-all duration-200 ${
                   groundDisabled
-                    ? 'cursor-not-allowed text-white/70 opacity-40'
-                    : effectiveGrind === 'ground' ? 'bg-white text-[#2C1810]' : 'text-white/70 hover:text-white'
+                    ? 'cursor-not-allowed text-[#6E6D68] opacity-40'
+                    : effectiveGrind === 'ground' ? 'bg-white text-[#2C1810] shadow-sm' : 'text-[#6E6D68]'
                 }`}
               >
                 {t('grind_ground')}
