@@ -54,6 +54,8 @@
     "choose_weight": "Waga", "quantity": "Ilość", "body": "Gęstość", "acidity": "Kwasowość",
     "grind_whole": "W ziarnach", "grind_ground": "Mielona",
     "grind_tooltip": "Kawę mieloną sprzedajemy tylko w opakowaniu 250g — dłużej zachowuje aromat",
+    "grind_espresso": "Espresso", "grind_aeropress": "Aeropress", "grind_pourover": "Drip / Chemex",
+    "grind_frenchpress": "French press", "grind_turka": "Tygielek",
     "flavor_notes": "Nuty smakowe", "origin": "Pochodzenie",
     "process": "Obróbka", "roast": "Palenie", "brew": "Metoda",
     "roast_light": "Jasne", "roast_medium": "Średnie",

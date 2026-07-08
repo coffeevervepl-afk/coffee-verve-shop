@@ -16,11 +16,20 @@ interface Props {
 }
 
 export default function ProductCard({ product, locale }: Props) {
+  const GRIND_OPTIONS = [
+    { value: 'espresso',    labelKey: 'product.grind_espresso' },
+    { value: 'aeropress',   labelKey: 'product.grind_aeropress' },
+    { value: 'pourover',    labelKey: 'product.grind_pourover' },
+    { value: 'frenchpress', labelKey: 'product.grind_frenchpress' },
+    { value: 'turka',       labelKey: 'product.grind_turka' },
+  ]
+
   const t    = useTranslations('product')
   const add  = useCartStore(s => s.addItem)
   const open = useCartStore(s => s.openDrawer)
-  const [weight, setWeight] = useState<250 | 1000>(250)
-  const [grind, setGrind]   = useState<'whole' | 'ground'>('whole')
+  const [weight, setWeight]           = useState<250 | 1000>(250)
+  const [grind, setGrind]             = useState<'whole' | 'ground'>('whole')
+  const [grindOption, setGrindOption] = useState('espresso')
 
   const name   = getProductName(product, locale)
   const notes  = getProductFlavorNotes(product, locale)
@@ -28,21 +37,23 @@ export default function ProductCard({ product, locale }: Props) {
   const price  = getProductPrice(product, weight)
   const has1kg = !!product.price_1000
 
-  const isDiscounted   = weight === 1000 && !!product.old_price_1000 && product.old_price_1000 > price
-  const groundDisabled = weight === 1000
-  const effectiveGrind = groundDisabled ? 'whole' : grind
+  const isDiscounted      = weight === 1000 && !!product.old_price_1000 && product.old_price_1000 > price
+  const groundDisabled    = weight === 1000
+  const effectiveGrind    = groundDisabled ? 'whole' : grind
+  const showGrindOptions  = weight === 250 && grind === 'ground'
 
   function handleAddToCart(e: React.MouseEvent) {
     e.preventDefault()
     add({
-      product_id: product.id,
-      slug:       product.slug,
+      product_id:  product.id,
+      slug:        product.slug,
       name,
       image,
       weight,
-      grind:      effectiveGrind,
-      unit_price: price,
-      qty:        1,
+      grind:       effectiveGrind,
+      grindOption: effectiveGrind === 'ground' ? grindOption : undefined,
+      unit_price:  price,
+      qty:         1,
     })
     toast.success(`${name} — добавлено`)
     open()
@@ -51,11 +62,18 @@ export default function ProductCard({ product, locale }: Props) {
   function selectWeight(e: React.MouseEvent, w: 250 | 1000) {
     e.preventDefault()
     setWeight(w)
+    if (w === 1000) setGrindOption('espresso')
   }
 
   function selectGrind(e: React.MouseEvent, g: 'whole' | 'ground') {
     e.preventDefault()
     setGrind(g)
+    if (g === 'whole') setGrindOption('espresso')
+  }
+
+  function selectGrindOption(e: React.MouseEvent, value: string) {
+    e.preventDefault()
+    setGrindOption(value)
   }
 
   return (
@@ -145,6 +163,28 @@ export default function ProductCard({ product, locale }: Props) {
                   {t('grind_tooltip')}
                 </div>
               )}
+            </div>
+          </div>
+
+          <div
+            className={`overflow-hidden transition-all duration-300 ${
+              showGrindOptions ? 'mt-2 max-h-40 opacity-100' : 'max-h-0 opacity-0'
+            }`}
+          >
+            <div className="flex flex-wrap gap-1.5">
+              {GRIND_OPTIONS.map(opt => (
+                <button
+                  key={opt.value}
+                  onClick={e => selectGrindOption(e, opt.value)}
+                  className={`rounded-full border px-3 py-1 text-[11px] font-medium transition ${
+                    grindOption === opt.value
+                      ? 'border-[#2C1810] bg-[#2C1810] text-white'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-[#2C1810]'
+                  }`}
+                >
+                  {t(opt.labelKey.replace(/^product\./, ''))}
+                </button>
+              ))}
             </div>
           </div>
 

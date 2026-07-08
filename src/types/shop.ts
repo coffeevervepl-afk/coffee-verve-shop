@@ -39,6 +39,7 @@ export interface CartItem {
   image: string
   weight: ProductWeight
   grind?: 'whole' | 'ground'
+  grindOption?: string
   unit_price: number
   qty: number
 }
