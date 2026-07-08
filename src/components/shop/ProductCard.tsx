@@ -111,23 +111,19 @@ export default function ProductCard({ product, locale }: Props) {
         <div className="flex flex-1 flex-col p-3 md:p-4">
           <h3 className="text-sm font-semibold leading-snug md:text-base">{name}</h3>
           {notes && (
-            <div className="mt-1 flex min-h-[2.5rem] flex-wrap gap-1.5">
-              {noteList.map((note, i) => {
-                const color = getFlavorColor(note)
-                return (
+            <p className="mt-1 line-clamp-2 min-h-[2.5rem] text-xs md:text-sm">
+              {noteList.map((note, i) => (
+                <span key={i}>
                   <span
-                    key={i}
-                    className="rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors duration-300"
-                    style={{
-                      backgroundColor: isHovered ? color.bg   : '#F4F3F0',
-                      color:           isHovered ? color.text : '#6E6D68',
-                    }}
+                    className="transition-colors duration-300"
+                    style={{ color: isHovered ? getFlavorColor(note).text : '#6E6D68' }}
                   >
                     {note}
                   </span>
-                )
-              })}
-            </div>
+                  {i < noteList.length - 1 && <span style={{ color: '#6E6D68' }}> • </span>}
+                </span>
+              ))}
+            </p>
           )}
 
           {product.body != null && product.acidity != null && (
