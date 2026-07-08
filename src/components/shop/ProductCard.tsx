@@ -9,6 +9,7 @@ import { useCartStore } from '@/hooks/useCartStore'
 import type { Locale, ShopProduct } from '@/types/shop'
 import { getProductName, getProductFlavorNotes, getProductImage, getProductPrice } from '@/lib/product-utils'
 import { fmtPrice } from '@/lib/pricing'
+import { getFlavorColor } from '@/lib/flavorColors'
 
 interface Props {
   product: ShopProduct
@@ -33,10 +34,12 @@ export default function ProductCard({ product, locale }: Props) {
   const [weight, setWeight]           = useState<250 | 1000>(250)
   const [grind, setGrind]             = useState<'whole' | 'ground'>('whole')
   const [grindOption, setGrindOption] = useState('espresso')
+  const [isHovered, setIsHovered]     = useState(false)
 
-  const name   = getProductName(product, locale)
-  const notes  = getProductFlavorNotes(product, locale)
-  const image  = getProductImage(product)
+  const name      = getProductName(product, locale)
+  const notes     = getProductFlavorNotes(product, locale)
+  const noteList  = notes ? notes.split('•').map(n => n.trim()).filter(Boolean) : []
+  const image     = getProductImage(product)
   const basePrice = getProductPrice(product, weight)
   const has1kg = !!product.price_1000
 
@@ -81,7 +84,12 @@ export default function ProductCard({ product, locale }: Props) {
   }
 
   return (
-    <Link href={`/${locale}/products/${product.slug}`} className="block group">
+    <Link
+      href={`/${locale}/products/${product.slug}`}
+      className="block group"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <article className="card h-full min-w-[300px] flex flex-col">
         {/* Image */}
         <div className="relative aspect-square overflow-hidden bg-brand-border/30">
@@ -103,7 +111,23 @@ export default function ProductCard({ product, locale }: Props) {
         <div className="flex flex-1 flex-col p-3 md:p-4">
           <h3 className="text-sm font-semibold leading-snug md:text-base">{name}</h3>
           {notes && (
-            <p className="mt-1 line-clamp-2 min-h-[2.5rem] text-xs text-brand-muted md:text-sm">{notes}</p>
+            <div className="mt-1 flex min-h-[2.5rem] flex-wrap gap-1.5">
+              {noteList.map((note, i) => {
+                const color = getFlavorColor(note)
+                return (
+                  <span
+                    key={i}
+                    className="rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors duration-300"
+                    style={{
+                      backgroundColor: isHovered ? color.bg   : '#F4F3F0',
+                      color:           isHovered ? color.text : '#6E6D68',
+                    }}
+                  >
+                    {note}
+                  </span>
+                )
+              })}
+            </div>
           )}
 
           {product.body != null && product.acidity != null && (
