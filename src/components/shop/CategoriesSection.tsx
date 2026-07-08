@@ -13,7 +13,7 @@ export default async function CategoriesSection({ locale }: { locale: Locale }) 
   const t = await getTranslations({ locale, namespace: 'categories' })
 
   return (
-    <section className="container pb-16">
+    <section className="container pb-8 md:pb-12">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {CATEGORIES.map(cat => (
           <Link
