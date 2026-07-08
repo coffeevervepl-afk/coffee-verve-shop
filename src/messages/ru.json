@@ -56,6 +56,8 @@
   "product": {
     "add_to_cart": "В корзину", "added": "Добавлено", "save": "Выгодно", "save_amount": "выгоднее на 10 zł",
     "choose_weight": "Вес", "quantity": "Количество", "body": "Плотность", "acidity": "Кислотность",
+    "grind_whole": "В зёрнах", "grind_ground": "Молотый",
+    "grind_tooltip": "Молотый кофе продаём только в упаковке 250г — так он дольше сохраняет аромат",
     "flavor_notes": "Вкусовые ноты", "origin": "Происхождение",
     "process": "Обработка", "roast": "Обжарка", "brew": "Метод",
     "roast_light": "Светлая", "roast_medium": "Средняя",

@@ -20,6 +20,7 @@ export default function ProductCard({ product, locale }: Props) {
   const add  = useCartStore(s => s.addItem)
   const open = useCartStore(s => s.openDrawer)
   const [weight, setWeight] = useState<250 | 1000>(250)
+  const [grind, setGrind]   = useState<'whole' | 'ground'>('whole')
 
   const name   = getProductName(product, locale)
   const notes  = getProductFlavorNotes(product, locale)
@@ -27,7 +28,9 @@ export default function ProductCard({ product, locale }: Props) {
   const price  = getProductPrice(product, weight)
   const has1kg = !!product.price_1000
 
-  const isDiscounted = weight === 1000 && !!product.old_price_1000 && product.old_price_1000 > price
+  const isDiscounted   = weight === 1000 && !!product.old_price_1000 && product.old_price_1000 > price
+  const groundDisabled = weight === 1000
+  const effectiveGrind = groundDisabled ? 'whole' : grind
 
   function handleAddToCart(e: React.MouseEvent) {
     e.preventDefault()
@@ -37,6 +40,7 @@ export default function ProductCard({ product, locale }: Props) {
       name,
       image,
       weight,
+      grind:      effectiveGrind,
       unit_price: price,
       qty:        1,
     })
@@ -47,6 +51,11 @@ export default function ProductCard({ product, locale }: Props) {
   function selectWeight(e: React.MouseEvent, w: 250 | 1000) {
     e.preventDefault()
     setWeight(w)
+  }
+
+  function selectGrind(e: React.MouseEvent, g: 'whole' | 'ground') {
+    e.preventDefault()
+    setGrind(g)
   }
 
   return (
@@ -107,6 +116,37 @@ export default function ProductCard({ product, locale }: Props) {
               ))}
             </div>
           )}
+
+          <div className="mt-2 flex gap-2 rounded-xl bg-[#2C1810] p-1">
+            <button
+              onClick={e => selectGrind(e, 'whole')}
+              className={`flex-1 rounded-lg py-1.5 text-xs font-semibold transition ${
+                effectiveGrind === 'whole' ? 'bg-white text-[#2C1810]' : 'text-white/70 hover:text-white'
+              }`}
+            >
+              {t('grind_whole')}
+            </button>
+
+            <div className="group relative flex-1">
+              <button
+                onClick={e => selectGrind(e, 'ground')}
+                disabled={groundDisabled}
+                className={`w-full rounded-lg py-1.5 text-xs font-semibold transition ${
+                  groundDisabled
+                    ? 'cursor-not-allowed text-white/70 opacity-40'
+                    : effectiveGrind === 'ground' ? 'bg-white text-[#2C1810]' : 'text-white/70 hover:text-white'
+                }`}
+              >
+                {t('grind_ground')}
+              </button>
+
+              {groundDisabled && (
+                <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-48 -translate-x-1/2 rounded-lg bg-[#111110] px-3 py-2 text-xs text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                  {t('grind_tooltip')}
+                </div>
+              )}
+            </div>
+          </div>
 
           <div className="mt-auto flex items-center justify-between pt-3">
             <div className="flex flex-col">

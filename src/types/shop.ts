@@ -38,6 +38,7 @@ export interface CartItem {
   name: string           // resolved for current locale
   image: string
   weight: ProductWeight
+  grind?: 'whole' | 'ground'
   unit_price: number
   qty: number
 }
