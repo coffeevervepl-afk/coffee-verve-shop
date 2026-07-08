@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
@@ -6,7 +7,7 @@ import { Plus } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { useCartStore } from '@/hooks/useCartStore'
 import type { Locale, ShopProduct } from '@/types/shop'
-import { getProductName, getProductFlavorNotes, getProductImage } from '@/lib/product-utils'
+import { getProductName, getProductFlavorNotes, getProductImage, getProductPrice } from '@/lib/product-utils'
 import { fmtPrice } from '@/lib/pricing'
 
 interface Props {
@@ -18,11 +19,15 @@ export default function ProductCard({ product, locale }: Props) {
   const t    = useTranslations('product')
   const add  = useCartStore(s => s.addItem)
   const open = useCartStore(s => s.openDrawer)
+  const [weight, setWeight] = useState<250 | 1000>(250)
 
   const name   = getProductName(product, locale)
   const notes  = getProductFlavorNotes(product, locale)
   const image  = getProductImage(product)
-  const price  = product.price_250
+  const price  = getProductPrice(product, weight)
+  const has1kg = !!product.price_1000
+
+  const isDiscounted = weight === 1000 && !!product.old_price_1000 && product.old_price_1000 > price
 
   function handleAddToCart(e: React.MouseEvent) {
     e.preventDefault()
@@ -31,7 +36,7 @@ export default function ProductCard({ product, locale }: Props) {
       slug:       product.slug,
       name,
       image,
-      weight:     250,
+      weight,
       unit_price: price,
       qty:        1,
     })
@@ -39,9 +44,14 @@ export default function ProductCard({ product, locale }: Props) {
     open()
   }
 
+  function selectWeight(e: React.MouseEvent, w: 250 | 1000) {
+    e.preventDefault()
+    setWeight(w)
+  }
+
   return (
     <Link href={`/${locale}/products/${product.slug}`} className="block group">
-      <article className="card h-full flex flex-col">
+      <article className="card h-full min-w-[300px] flex flex-col">
         {/* Image */}
         <div className="relative aspect-square overflow-hidden bg-brand-border/30">
           <Image
@@ -65,8 +75,29 @@ export default function ProductCard({ product, locale }: Props) {
             <p className="mt-1 line-clamp-2 text-xs text-brand-muted md:text-sm">{notes}</p>
           )}
 
+          {has1kg && (
+            <div className="mt-2 flex gap-2 rounded-xl bg-[#2C1810] p-1">
+              {([250, 1000] as const).map(w => (
+                <button
+                  key={w}
+                  onClick={e => selectWeight(e, w)}
+                  className={`flex-1 rounded-lg py-1 text-xs font-semibold transition ${
+                    weight === w ? 'bg-white text-[#2C1810]' : 'text-white/70 hover:text-white'
+                  }`}
+                >
+                  {w === 250 ? '250г' : '1кг'}
+                </button>
+              ))}
+            </div>
+          )}
+
           <div className="mt-auto flex items-center justify-between pt-3">
-            <span className="text-base font-bold md:text-lg">{fmtPrice(price)}</span>
+            <div className="flex flex-col">
+              {isDiscounted && (
+                <span className="text-xs line-through text-[#999]">{fmtPrice(product.old_price_1000!)}</span>
+              )}
+              <span className="text-base font-bold md:text-lg">{fmtPrice(price)}</span>
+            </div>
             <button
               onClick={handleAddToCart}
               aria-label={t('add_to_cart')}
