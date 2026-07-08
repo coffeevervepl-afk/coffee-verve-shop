@@ -72,7 +72,7 @@ export default function ProductCard({ product, locale }: Props) {
         <div className="flex flex-1 flex-col p-3 md:p-4">
           <h3 className="text-sm font-semibold leading-snug md:text-base">{name}</h3>
           {notes && (
-            <p className="mt-1 line-clamp-2 text-xs text-brand-muted md:text-sm">{notes}</p>
+            <p className="mt-1 line-clamp-2 min-h-[2.5rem] text-xs text-brand-muted md:text-sm">{notes}</p>
           )}
 
           {product.body != null && product.acidity != null && (
