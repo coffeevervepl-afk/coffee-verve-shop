@@ -39,7 +39,7 @@
   },
   "product": {
     "add_to_cart": "Do koszyka", "added": "Dodano", "save": "Oszczędzasz", "save_amount": "taniej o 10 zł",
-    "choose_weight": "Waga", "quantity": "Ilość",
+    "choose_weight": "Waga", "quantity": "Ilość", "body": "Gęstość", "acidity": "Kwasowość",
     "flavor_notes": "Nuty smakowe", "origin": "Pochodzenie",
     "process": "Obróbka", "roast": "Palenie", "brew": "Metoda",
     "roast_light": "Jasne", "roast_medium": "Średnie",

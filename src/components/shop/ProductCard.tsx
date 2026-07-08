@@ -75,6 +75,23 @@ export default function ProductCard({ product, locale }: Props) {
             <p className="mt-1 line-clamp-2 text-xs text-brand-muted md:text-sm">{notes}</p>
           )}
 
+          {product.body != null && product.acidity != null && (
+            <div className="mb-3 mt-2 space-y-1.5">
+              <div className="flex items-center gap-2">
+                <span className="w-16 shrink-0 text-[10px] text-gray-400">{t('body')}</span>
+                <div className="h-[3px] flex-1 overflow-hidden rounded-full bg-gray-100">
+                  <div className="h-full rounded-full bg-gray-900" style={{ width: `${(product.body / 5) * 100}%` }} />
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-16 shrink-0 text-[10px] text-gray-400">{t('acidity')}</span>
+                <div className="h-[3px] flex-1 overflow-hidden rounded-full bg-gray-100">
+                  <div className="h-full rounded-full bg-gray-900" style={{ width: `${(product.acidity / 5) * 100}%` }} />
+                </div>
+              </div>
+            </div>
+          )}
+
           {has1kg && (
             <div className="mt-2 flex gap-2 rounded-xl bg-[#2C1810] p-1">
               {([250, 1000] as const).map(w => (

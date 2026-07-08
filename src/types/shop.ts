@@ -28,6 +28,8 @@ export interface ShopProduct {
   is_active: boolean
   is_featured: boolean
   sort_order: number
+  body?: number | null
+  acidity?: number | null
 }
 
 export interface CartItem {

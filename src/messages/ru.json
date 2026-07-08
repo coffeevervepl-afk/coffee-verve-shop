@@ -43,7 +43,7 @@
   },
   "product": {
     "add_to_cart": "В корзину", "added": "Добавлено", "save": "Выгодно", "save_amount": "выгоднее на 10 zł",
-    "choose_weight": "Вес", "quantity": "Количество",
+    "choose_weight": "Вес", "quantity": "Количество", "body": "Плотность", "acidity": "Кислотность",
     "flavor_notes": "Вкусовые ноты", "origin": "Происхождение",
     "process": "Обработка", "roast": "Обжарка", "brew": "Метод",
     "roast_light": "Светлая", "roast_medium": "Средняя",
