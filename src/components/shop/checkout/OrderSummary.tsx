@@ -13,7 +13,8 @@ interface Props {
 }
 
 export default function OrderSummary({ items, pricing }: Props) {
-  const t = useTranslations('checkout')
+  const t        = useTranslations('checkout')
+  const tProduct = useTranslations('product')
 
   return (
     <aside className="rounded-2xl border border-brand-border p-5 h-fit sticky top-20">
@@ -29,6 +30,12 @@ export default function OrderSummary({ items, pricing }: Props) {
             <div className="flex-1 min-w-0">
               <p className="truncate text-sm font-medium">{item.name}</p>
               <p className="text-xs text-brand-muted">{item.weight}g × {item.qty}</p>
+              {item.grind === 'ground' && (
+                <p className="text-xs text-brand-muted">
+                  {tProduct('grind_ground')}
+                  {item.grindOption ? ` · ${tProduct(`grind_${item.grindOption}`)}` : ''}
+                </p>
+              )}
             </div>
             <span className="text-sm font-semibold flex-shrink-0">
               {fmtPrice(item.unit_price * item.qty)}

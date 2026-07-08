@@ -12,6 +12,7 @@ const FREE_THRESHOLD = Number(process.env.NEXT_PUBLIC_FREE_DELIVERY_THRESHOLD ??
 export default function CartDrawer() {
   const t          = useTranslations('cart')
   const tCommon    = useTranslations('common')
+  const tProduct   = useTranslations('product')
   const drawerOpen = useCartStore(s => s.drawerOpen)
   const closeDrawer = useCartStore(s => s.closeDrawer)
   const items      = useCartStore(s => s.items)
@@ -71,6 +72,12 @@ export default function CartDrawer() {
                       <div className="flex flex-1 flex-col">
                         <p className="text-sm font-medium leading-tight">{item.name}</p>
                         <p className="text-xs text-brand-muted">{item.weight}g</p>
+                        {item.grind === 'ground' && (
+                          <p className="text-xs text-brand-muted">
+                            {tProduct('grind_ground')}
+                            {item.grindOption ? ` · ${tProduct(`grind_${item.grindOption}`)}` : ''}
+                          </p>
+                        )}
                         <div className="mt-1 flex items-center justify-between">
                           <div className="flex items-center gap-1 rounded-full border border-brand-border">
                             <button
