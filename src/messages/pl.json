@@ -31,7 +31,11 @@
     "title": "Gwarancja jakości",
     "body": "Nie smakuje? Wymienimy lub zwrócimy pieniądze. Bez pytań, bez biurokracji.",
     "compact": "Nie smakuje? Wymienimy kawę lub zwrócimy pieniądze.",
-    "compact_title": "Gwarancja smaku"
+    "compact_title": "Gwarancja smaku",
+    "tooltip_title": "Gwarancja smaku — bez ryzyka",
+    "tooltip_text": "Nie smakuje? Po prostu napisz do nas:",
+    "tooltip_line1": "✓ Wymienimy na inny gatunek bezpłatnie",
+    "tooltip_line2": "✓ Lub zwrócimy 100% pieniędzy — bez pytań"
   },
   "product": {
     "add_to_cart": "Do koszyka", "added": "Dodano",
