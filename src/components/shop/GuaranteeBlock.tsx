@@ -13,12 +13,12 @@ export default function GuaranteeBlock({ compact }: Props) {
         <p className="text-[18px] text-[rgba(255,255,255,0.8)]">{t('compact')}</p>
 
         {/* Tooltip — desktop only */}
-        <div className="absolute bottom-full left-0 z-50 mb-2 hidden w-full translate-y-1 rounded-xl bg-[#1C1008] px-5 py-4 text-white opacity-0 transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:block">
-          <p className="mb-2 text-[15px] font-bold text-[#E8D5BC]">{t('tooltip_title')}</p>
-          <p className="text-sm text-white">{t('tooltip_text')}</p>
-          <p className="mt-1 text-sm text-[#C89B6D]">{t('tooltip_line1')}</p>
-          <p className="text-sm text-[#C89B6D]">{t('tooltip_line2')}</p>
-          <div className="absolute left-6 top-full h-0 w-0 border-x-8 border-t-8 border-x-transparent border-t-[#1C1008]" />
+        <div className="absolute bottom-full left-0 z-50 mb-2 hidden w-full translate-y-1 rounded-[14px] border border-[rgba(255,255,255,0.9)] bg-[rgba(255,255,255,0.85)] px-5 py-4 text-[#2C1810] opacity-0 shadow-[0_8px_32px_rgba(44,24,16,0.15)] backdrop-blur-[16px] transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:block">
+          <p className="mb-2 text-[15px] font-bold text-[#2C1810]">{t('tooltip_title')}</p>
+          <p className="text-sm text-[#2C1810]">{t('tooltip_text')}</p>
+          <p className="mt-1 text-sm text-[#6B4226]">{t('tooltip_line1')}</p>
+          <p className="text-sm text-[#6B4226]">{t('tooltip_line2')}</p>
+          <div className="absolute left-6 top-full h-0 w-0 border-x-8 border-t-8 border-x-transparent border-t-[rgba(255,255,255,0.85)]" />
         </div>
       </div>
     )
