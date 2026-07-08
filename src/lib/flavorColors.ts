@@ -7,44 +7,44 @@ export interface FlavorColor {
 const FLAVOR_MAP: { keywords: string[]; color: FlavorColor }[] = [
   {
     keywords: ['шоколад', 'czekolada', 'шоколад', 'chocolate', 'cacao', 'какао', 'kakao'],
-    color: { bg: '#3D1F00', text: '#B5651D' }
+    color: { bg: '#3D1F00', text: '#C0392B' }
   },
   {
     keywords: ['карамель', 'karmel', 'caramel', 'ирис', 'toffee'],
-    color: { bg: '#2A1500', text: '#E8890C' }
+    color: { bg: '#2A1500', text: '#F5820A' }
   },
   {
     keywords: ['орех', 'orzech', 'горіх', 'фундук', 'миндаль', 'nut', 'hazelnut', 'almond', 'nuga', 'нуга'],
-    color: { bg: '#2A1F00', text: '#C89632' }
+    color: { bg: '#2A1F00', text: '#D4A017' }
   },
   {
     keywords: ['ягод', 'jagod', 'berry', 'смородин', 'porzeczk', 'черник', 'малин', 'клубник', 'вишн', 'wiśni', 'слив', 'śliwk'],
-    color: { bg: '#1F001A', text: '#D6336C' }
+    color: { bg: '#1F001A', text: '#E01E5A' }
   },
   {
     keywords: ['цитрус', 'cytrus', 'citrus', 'мандарин', 'mandarynk', 'лимон', 'cytryn', 'апельсин', 'pomarańcz', 'грейпфрут', 'бергамот', 'bergamot'],
-    color: { bg: '#1F1500', text: '#E8A00C' }
+    color: { bg: '#1F1500', text: '#F5A800' }
   },
   {
     keywords: ['фрукт', 'owoc', 'фрукт', 'fruit', 'яблок', 'jabłk', 'абрикос', 'morel', 'персик', 'brzoskwin'],
-    color: { bg: '#001F10', text: '#2FA860' }
+    color: { bg: '#001F10', text: '#1DB954' }
   },
   {
     keywords: ['цвет', 'kwiat', 'квіт', 'floral', 'жасмин', 'jaśmin', 'роза', 'róż'],
-    color: { bg: '#1A0A1F', text: '#C44DD6' }
+    color: { bg: '#1A0A1F', text: '#D633C4' }
   },
   {
     keywords: ['специ', 'przypraw', 'спеці', 'spice', 'корица', 'cynamon', 'ваниль', 'wanilia', 'vanilla'],
-    color: { bg: '#2A1000', text: '#E85D2B' }
+    color: { bg: '#2A1000', text: '#F04E23' }
   },
   {
     keywords: ['мёд', 'miód', 'мед', 'honey', 'сироп', 'syrop', 'сахар', 'cukier'],
-    color: { bg: '#2A2200', text: '#E0B00C' }
+    color: { bg: '#2A2200', text: '#F0C000' }
   },
 ]
 
 // Дефолтный цвет если вкус не распознан
-const DEFAULT_COLOR: FlavorColor = { bg: '#2C1810', text: '#8B5A2B' }
+const DEFAULT_COLOR: FlavorColor = { bg: '#2C1810', text: '#B5651D' }
 
 export function getFlavorColor(note: string): FlavorColor {
   const lower = note.toLowerCase().trim()
