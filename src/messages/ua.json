@@ -38,7 +38,7 @@
     "tooltip_line2": "✓ Або повернемо 100% грошей — без питань"
   },
   "product": {
-    "add_to_cart": "До кошика", "added": "Додано", "save": "Вигідно",
+    "add_to_cart": "До кошика", "added": "Додано", "save": "Вигідно", "save_amount": "вигідніше на 10 zł",
     "choose_weight": "Вага", "quantity": "Кількість",
     "flavor_notes": "Смакові ноти", "origin": "Походження",
     "process": "Обробка", "roast": "Обсмажування", "brew": "Метод",
