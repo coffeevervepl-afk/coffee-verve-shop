@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server'
 import { getProducts } from '@/lib/supabase/products'
 import type { Locale } from '@/types/shop'
+import HeroSection from '@/components/shop/HeroSection'
 import ProductGrid from '@/components/shop/ProductGrid'
 import LeadCaptureBlock from '@/components/shop/LeadCaptureBlock'
 import GuaranteeBlock from '@/components/shop/GuaranteeBlock'
@@ -12,16 +13,7 @@ export default async function HomePage({ params }: { params: { locale: Locale } 
 
   return (
     <div className="min-h-screen">
-      {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="container py-16 md:py-24 text-center">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-gold">
-          Coffee Verve · Warsaw
-        </p>
-        <h1 className="mb-4">{t('hero_title')}</h1>
-        <p className="mx-auto max-w-md text-lg text-brand-muted">
-          {t('hero_subtitle')}
-        </p>
-      </section>
+      <HeroSection locale={locale} />
 
       {/* ── Lead capture (−10% first order) ──────────────────────────── */}
       <section className="container pb-8">
@@ -34,7 +26,7 @@ export default async function HomePage({ params }: { params: { locale: Locale } 
       </section>
 
       {/* ── Products ─────────────────────────────────────────────────── */}
-      <section className="container pb-24">
+      <section id="products" className="container pb-24">
         <div className="mb-8 flex items-center justify-between">
           <h2 className="text-2xl font-semibold">{t('catalog_title')}</h2>
         </div>

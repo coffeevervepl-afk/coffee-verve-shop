@@ -11,6 +11,13 @@
     "profile": "Profil",
     "logout": "Wyloguj się"
   },
+  "hero": {
+    "badge": "Palimy co tydzień",
+    "title": "Kawa, która [wciąga]",
+    "subtitle": "Świeżo palona kawa specialty z dostawą w całej Polsce. Nie smakuje? Wymienimy kawę lub zwrócimy pieniądze.",
+    "cta_primary": "Wybierz kawę",
+    "cta_secondary": "O nas"
+  },
   "home": {
     "hero_title": "Świeżo palona kawa", "hero_subtitle": "Dostawa w całej Polsce",
     "catalog_title": "Nasza kawa", "featured": "Polecamy",
