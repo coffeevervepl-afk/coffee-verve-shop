@@ -3,7 +3,7 @@ import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/types/shop'
 
 function renderAccentTitle(raw: string) {
-  const match = raw.match(/^(.*)\[(.+)\](.*)$/s)
+  const match = raw.match(/^([\s\S]*)\[(.+)\]([\s\S]*)$/)
   if (!match) return raw
   const [, before, accent, after] = match
   return (
