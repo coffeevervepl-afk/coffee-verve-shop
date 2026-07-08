@@ -11,6 +11,11 @@
     "profile": "Profil",
     "logout": "Wyloguj się"
   },
+  "categories": {
+    "espresso":    { "label": "Do espresso", "title": "Espresso", "count": "43 rodzaje" },
+    "filter":      { "label": "Do filtra", "title": "Filtr", "count": "37 rodzajów" },
+    "alternative": { "label": "Metody alternatywne", "title": "Alternatywa", "count": "12 rodzajów" }
+  },
   "hero": {
     "badge": "Palimy co tydzień",
     "title": "Kawa, która [wciąga]",
