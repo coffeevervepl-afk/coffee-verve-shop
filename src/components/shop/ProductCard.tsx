@@ -15,15 +15,18 @@ interface Props {
   locale:  Locale
 }
 
-export default function ProductCard({ product, locale }: Props) {
-  const GRIND_OPTIONS = [
-    { value: 'espresso',    labelKey: 'product.grind_espresso' },
-    { value: 'aeropress',   labelKey: 'product.grind_aeropress' },
-    { value: 'pourover',    labelKey: 'product.grind_pourover' },
-    { value: 'frenchpress', labelKey: 'product.grind_frenchpress' },
-    { value: 'turka',       labelKey: 'product.grind_turka' },
-  ]
+const GRIND_SURCHARGE = 3
 
+const GRIND_OPTIONS = [
+  { value: 'espresso',    paid: true },
+  { value: 'aeropress',   paid: true },
+  { value: 'pourover',    paid: true },
+  { value: 'frenchpress', paid: true },
+  { value: 'turka',       paid: true },
+  { value: 'moka',        paid: true },
+]
+
+export default function ProductCard({ product, locale }: Props) {
   const t    = useTranslations('product')
   const add  = useCartStore(s => s.addItem)
   const open = useCartStore(s => s.openDrawer)
@@ -34,13 +37,14 @@ export default function ProductCard({ product, locale }: Props) {
   const name   = getProductName(product, locale)
   const notes  = getProductFlavorNotes(product, locale)
   const image  = getProductImage(product)
-  const price  = getProductPrice(product, weight)
+  const basePrice = getProductPrice(product, weight)
   const has1kg = !!product.price_1000
 
-  const isDiscounted      = weight === 1000 && !!product.old_price_1000 && product.old_price_1000 > price
+  const isDiscounted      = weight === 1000 && !!product.old_price_1000 && product.old_price_1000 > basePrice
   const groundDisabled    = weight === 1000
   const effectiveGrind    = groundDisabled ? 'whole' : grind
   const showGrindOptions  = weight === 250 && grind === 'ground'
+  const displayPrice      = effectiveGrind === 'ground' ? basePrice + GRIND_SURCHARGE : basePrice
 
   function handleAddToCart(e: React.MouseEvent) {
     e.preventDefault()
@@ -52,7 +56,7 @@ export default function ProductCard({ product, locale }: Props) {
       weight,
       grind:       effectiveGrind,
       grindOption: effectiveGrind === 'ground' ? grindOption : undefined,
-      unit_price:  price,
+      unit_price:  displayPrice,
       qty:         1,
     })
     toast.success(`${name} — добавлено`)
@@ -182,7 +186,7 @@ export default function ProductCard({ product, locale }: Props) {
                       : 'border-gray-200 bg-white text-gray-600 hover:border-[#2C1810]'
                   }`}
                 >
-                  {t(opt.labelKey.replace(/^product\./, ''))}
+                  {t(`grind_${opt.value}`)}
                 </button>
               ))}
             </div>
@@ -193,7 +197,10 @@ export default function ProductCard({ product, locale }: Props) {
               {isDiscounted && (
                 <span className="text-xs line-through text-[#999]">{fmtPrice(product.old_price_1000!)}</span>
               )}
-              <span className="text-base font-bold md:text-lg">{fmtPrice(price)}</span>
+              <span className="text-base font-bold md:text-lg">{fmtPrice(displayPrice)}</span>
+              {effectiveGrind === 'ground' && (
+                <span className="text-xs text-gray-400">{t('grind_surcharge')}</span>
+              )}
             </div>
             <button
               onClick={handleAddToCart}
