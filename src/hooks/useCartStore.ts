@@ -26,7 +26,12 @@ export const useCartStore = create<CartStore>((set, get) => ({
 
   addItem: (item) => {
     const items = [...get().items]
-    const idx   = items.findIndex(i => i.product_id === item.product_id && i.weight === item.weight)
+    const idx   = items.findIndex(i =>
+      i.product_id === item.product_id &&
+      i.weight === item.weight &&
+      (i.grind ?? 'whole') === (item.grind ?? 'whole') &&
+      (i.grindOption ?? '') === (item.grindOption ?? '')
+    )
     if (idx >= 0) {
       items[idx] = { ...items[idx], qty: items[idx].qty + item.qty }
     } else {

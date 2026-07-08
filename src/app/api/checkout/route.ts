@@ -131,6 +131,8 @@ export async function POST(req: NextRequest) {
     unit_price:      item.unit_price,
     quantity:        item.qty,
     line_total:      item.unit_price * item.qty,
+    grind:           item.grind ?? 'whole',
+    grind_option:    item.grindOption ?? null,
   }))
 
   await sb.from('shop_order_items').insert(orderItems)
