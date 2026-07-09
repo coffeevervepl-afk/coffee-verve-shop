@@ -160,7 +160,7 @@ export default function ProductCard({ product, locale }: Props) {
                   key={w}
                   onClick={e => selectWeight(e, w)}
                   className={`flex-1 rounded-full py-1 text-xs font-semibold transition-all duration-200 ${
-                    weight === w ? 'bg-[#2C1810] text-white' : 'text-[#6E6D68]'
+                    weight === w ? 'bg-[#4A2C1A] text-white' : 'text-[#6E6D68]'
                   }`}
                 >
                   {w === 250 ? '250г' : '1кг'}
@@ -173,7 +173,7 @@ export default function ProductCard({ product, locale }: Props) {
             <button
               onClick={e => selectGrind(e, 'whole')}
               className={`flex-1 rounded-full py-1.5 text-xs font-semibold transition-all duration-200 ${
-                effectiveGrind === 'whole' ? 'bg-[#2C1810] text-white' : 'text-[#6E6D68]'
+                effectiveGrind === 'whole' ? 'bg-[#4A2C1A] text-white' : 'text-[#6E6D68]'
               }`}
             >
               {t('grind_whole')}
@@ -186,7 +186,7 @@ export default function ProductCard({ product, locale }: Props) {
                 className={`w-full rounded-full py-1.5 text-xs font-semibold transition-all duration-200 ${
                   groundDisabled
                     ? 'cursor-not-allowed text-[#6E6D68] opacity-40'
-                    : effectiveGrind === 'ground' ? 'bg-[#2C1810] text-white' : 'text-[#6E6D68]'
+                    : effectiveGrind === 'ground' ? 'bg-[#4A2C1A] text-white' : 'text-[#6E6D68]'
                 }`}
               >
                 {t('grind_ground')}
