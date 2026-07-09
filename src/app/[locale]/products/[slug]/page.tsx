@@ -103,13 +103,11 @@ export default async function ProductPage({ params, searchParams }: Props) {
             <p className="mb-3.5 text-[22px] leading-[1.7] text-[#2D2D2D]">{desc}</p>
           )}
 
-          {/* Guarantee UTP — compact, below add to cart */}
-          <div className="mt-4">
+          {/* Guarantee UTP + login discount hint — compact, below add to cart */}
+          <div className="mt-4 space-y-3">
             <GuaranteeBlock compact />
+            <LoginDiscountHint />
           </div>
-
-          {/* Login discount hint — guests only */}
-          <LoginDiscountHint />
 
           {/* Add to cart (client) */}
           <AddToCartSection
