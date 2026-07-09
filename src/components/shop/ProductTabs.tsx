@@ -21,8 +21,8 @@ export default function ProductTabs({ product, locale }: Props) {
   ]
 
   return (
-    <section className="w-full py-8 md:py-12">
-      <div className="w-full rounded-3xl border border-white/40 bg-[rgba(255,255,255,0.6)] p-3.5 shadow-sm backdrop-blur-md md:p-4">
+    <section className="w-full mt-8 md:mt-10 pb-8 md:pb-12">
+      <div className="w-full rounded-3xl border border-[#E8E7E3] bg-[#F7F3EE] p-5 shadow-sm md:p-7">
         <div className="grid grid-cols-3 gap-2 border-b border-[#E8E7E3] pb-4">
           {tabs.map(tab => (
             <button
@@ -30,8 +30,8 @@ export default function ProductTabs({ product, locale }: Props) {
               onClick={() => setActive(tab.key)}
               className={`rounded-[14px] px-4 py-1.5 text-center text-[12px] font-medium transition-colors duration-200 ${
                 active === tab.key
-                  ? 'bg-white/70 font-semibold text-[#3A2115] shadow-sm backdrop-blur-sm'
-                  : 'text-[#6E6D68] hover:bg-[#F0E9E0]'
+                  ? 'bg-white/80 font-semibold text-[#3A2115] shadow-sm backdrop-blur-sm'
+                  : 'text-[#6E6D68] hover:bg-white/40'
               }`}
             >
               <span className="flex items-center justify-center gap-1.5">
