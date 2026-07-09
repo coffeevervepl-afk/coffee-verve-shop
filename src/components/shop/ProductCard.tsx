@@ -102,7 +102,7 @@ export default function ProductCard({ product, locale }: Props) {
     >
       <article className="card h-full min-w-[300px] flex flex-col">
         {/* Image */}
-        <div className="relative aspect-square overflow-hidden bg-brand-border/30">
+        <div className="relative aspect-[4/3] overflow-hidden bg-brand-border/30">
           <Image
             src={image}
             alt={name}
@@ -118,8 +118,8 @@ export default function ProductCard({ product, locale }: Props) {
         </div>
 
         {/* Info */}
-        <div className="flex flex-1 flex-col p-3 md:p-3.5">
-          <h3 className="text-sm font-semibold leading-snug md:text-base">{name}</h3>
+        <div className="flex flex-1 flex-col p-3">
+          <h3 className="text-sm font-semibold leading-snug md:text-[15px]">{name}</h3>
           {notes && (
             <p className="mt-1 line-clamp-2 min-h-[2rem] text-xs md:text-[13px]">
               {noteList.map((note, i) => (
@@ -137,7 +137,7 @@ export default function ProductCard({ product, locale }: Props) {
           )}
 
           {product.body != null && product.acidity != null && (
-            <div className="mb-3 mt-2 space-y-1.5">
+            <div className="mb-2 mt-1.5 space-y-1.5">
               <div className="flex items-center gap-2">
                 <span className="w-16 shrink-0 text-[10px] font-medium text-gray-600">{t('body')}</span>
                 <div className="h-[4px] flex-1 overflow-hidden rounded-full bg-gray-200">
@@ -154,7 +154,7 @@ export default function ProductCard({ product, locale }: Props) {
           )}
 
           {has1kg && (
-            <div className="mt-2 flex gap-1 rounded-full p-0.5 transition-colors duration-300" style={{ backgroundColor: switchBg }}>
+            <div className="mt-1.5 flex gap-1 rounded-full p-0.5 transition-colors duration-300" style={{ backgroundColor: switchBg }}>
               {([250, 1000] as const).map(w => (
                 <button
                   key={w}
@@ -169,7 +169,7 @@ export default function ProductCard({ product, locale }: Props) {
             </div>
           )}
 
-          <div className="mt-2 flex gap-1 rounded-full p-0.5 transition-colors duration-300" style={{ backgroundColor: switchBg }}>
+          <div className="mt-1.5 flex gap-1 rounded-full p-0.5 transition-colors duration-300" style={{ backgroundColor: switchBg }}>
             <button
               onClick={e => selectGrind(e, 'whole')}
               className={`flex-1 rounded-full py-1.5 text-xs font-semibold transition-all duration-200 ${
