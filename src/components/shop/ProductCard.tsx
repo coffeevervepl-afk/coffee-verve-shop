@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
@@ -10,6 +10,7 @@ import type { Locale, ShopProduct } from '@/types/shop'
 import { getProductName, getProductFlavorNotes, getProductImage, getProductPrice } from '@/lib/product-utils'
 import { fmtPrice } from '@/lib/pricing'
 import { getFlavorColor } from '@/lib/flavorColors'
+import { extractDominantColor, FALLBACK_COLOR } from '@/lib/extractColor'
 
 interface Props {
   product: ShopProduct
@@ -35,6 +36,7 @@ export default function ProductCard({ product, locale }: Props) {
   const [grind, setGrind]             = useState<'whole' | 'ground'>('whole')
   const [grindOption, setGrindOption] = useState('espresso')
   const [isHovered, setIsHovered]     = useState(false)
+  const [switchBg, setSwitchBg]       = useState(FALLBACK_COLOR)
 
   const name      = getProductName(product, locale)
   const notes     = getProductFlavorNotes(product, locale)
@@ -42,6 +44,14 @@ export default function ProductCard({ product, locale }: Props) {
   const image     = getProductImage(product)
   const basePrice = getProductPrice(product, weight)
   const has1kg = !!product.price_1000
+
+  useEffect(() => {
+    let cancelled = false
+    extractDominantColor(image).then(color => {
+      if (!cancelled) setSwitchBg(color)
+    })
+    return () => { cancelled = true }
+  }, [image])
 
   const isDiscounted      = weight === 1000 && !!product.old_price_1000 && product.old_price_1000 > basePrice
   const groundDisabled    = weight === 1000
@@ -144,13 +154,13 @@ export default function ProductCard({ product, locale }: Props) {
           )}
 
           {has1kg && (
-            <div className="mt-2 flex gap-2 rounded-full bg-[#F4F3F0] p-1">
+            <div className="mt-2 flex gap-2 rounded-full p-1 transition-colors duration-300" style={{ backgroundColor: switchBg }}>
               {([250, 1000] as const).map(w => (
                 <button
                   key={w}
                   onClick={e => selectWeight(e, w)}
                   className={`flex-1 rounded-full py-1 text-xs font-semibold transition-all duration-200 ${
-                    weight === w ? 'bg-white text-[#2C1810] shadow-sm' : 'text-[#6E6D68]'
+                    weight === w ? 'bg-[#2C1810] text-white' : 'text-[#6E6D68]'
                   }`}
                 >
                   {w === 250 ? '250г' : '1кг'}
@@ -159,11 +169,11 @@ export default function ProductCard({ product, locale }: Props) {
             </div>
           )}
 
-          <div className="mt-2 flex gap-2 rounded-full bg-[#F4F3F0] p-1">
+          <div className="mt-2 flex gap-2 rounded-full p-1 transition-colors duration-300" style={{ backgroundColor: switchBg }}>
             <button
               onClick={e => selectGrind(e, 'whole')}
               className={`flex-1 rounded-full py-1.5 text-xs font-semibold transition-all duration-200 ${
-                effectiveGrind === 'whole' ? 'bg-white text-[#2C1810] shadow-sm' : 'text-[#6E6D68]'
+                effectiveGrind === 'whole' ? 'bg-[#2C1810] text-white' : 'text-[#6E6D68]'
               }`}
             >
               {t('grind_whole')}
@@ -176,7 +186,7 @@ export default function ProductCard({ product, locale }: Props) {
                 className={`w-full rounded-full py-1.5 text-xs font-semibold transition-all duration-200 ${
                   groundDisabled
                     ? 'cursor-not-allowed text-[#6E6D68] opacity-40'
-                    : effectiveGrind === 'ground' ? 'bg-white text-[#2C1810] shadow-sm' : 'text-[#6E6D68]'
+                    : effectiveGrind === 'ground' ? 'bg-[#2C1810] text-white' : 'text-[#6E6D68]'
                 }`}
               >
                 {t('grind_ground')}
