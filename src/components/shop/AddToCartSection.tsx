@@ -261,8 +261,9 @@ function GrindSelector({
           </button>
 
           {groundDisabled && (
-            <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-56 -translate-x-1/2 rounded-lg bg-[#111110] px-3 py-2 text-xs text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+            <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-56 -translate-x-1/2 rounded-2xl border border-white/40 bg-white/70 px-4 py-3 text-xs text-[#3A2115] opacity-0 shadow-xl backdrop-blur-md transition-opacity duration-150 group-hover:opacity-100">
               {t('grind_tooltip')}
+              <div className="absolute left-1/2 top-full h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rotate-45 border border-white/40 bg-white/70" />
             </div>
           )}
         </div>
