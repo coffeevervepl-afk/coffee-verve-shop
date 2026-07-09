@@ -56,7 +56,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
 
   return (
     <div className="container py-4 md:py-7">
-      <div className="grid gap-5 md:grid-cols-2 md:gap-7">
+      <div className="grid gap-5 md:grid-cols-[1fr_400px] md:gap-7">
 
         {/* Images */}
         <ProductGallery
@@ -66,7 +66,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
         />
 
         {/* Details */}
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full md:max-w-[400px]">
           <h1 className="mb-4 text-xl font-bold leading-tight md:text-2xl">{name}</h1>
 
           {notes && (
