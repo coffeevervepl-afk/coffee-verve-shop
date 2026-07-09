@@ -118,10 +118,10 @@ export default function ProductCard({ product, locale }: Props) {
         </div>
 
         {/* Info */}
-        <div className="flex flex-1 flex-col p-2 md:p-2.5">
-          <h3 className="text-[9px] font-semibold leading-snug md:text-[11px]">{name}</h3>
+        <div className="flex flex-1 flex-col p-2.5 md:p-3">
+          <h3 className="text-[11px] font-semibold leading-snug md:text-[13px]">{name}</h3>
           {notes && (
-            <p className="mt-1 line-clamp-2 min-h-[1.75rem] text-[9px] md:text-[10px]">
+            <p className="mt-1 line-clamp-2 min-h-[2rem] text-[10px] md:text-[11px]">
               {noteList.map((note, i) => (
                 <span key={i}>
                   <span
@@ -137,15 +137,15 @@ export default function ProductCard({ product, locale }: Props) {
           )}
 
           {product.body != null && product.acidity != null && (
-            <div className="mb-[10px] mt-[5px] space-y-[7px]">
-              <div className="flex items-center gap-[5px]">
-                <span className="w-14 shrink-0 text-[9px] font-medium text-gray-600">{t('body')}</span>
+            <div className="mb-3 mt-1.5 space-y-2">
+              <div className="flex items-center gap-1.5">
+                <span className="w-16 shrink-0 text-[9px] font-medium text-gray-600">{t('body')}</span>
                 <div className="h-[4px] flex-1 overflow-hidden rounded-full bg-gray-200">
                   <div className="h-full rounded-full bg-gray-800 transition-all duration-300" style={{ width: `${(product.body / 5) * 100}%` }} />
                 </div>
               </div>
-              <div className="flex items-center gap-[5px]">
-                <span className="w-14 shrink-0 text-[9px] font-medium text-gray-600">{t('acidity')}</span>
+              <div className="flex items-center gap-1.5">
+                <span className="w-16 shrink-0 text-[9px] font-medium text-gray-600">{t('acidity')}</span>
                 <div className="h-[4px] flex-1 overflow-hidden rounded-full bg-gray-200">
                   <div className="h-full rounded-full bg-gray-800 transition-all duration-300" style={{ width: `${(product.acidity / 5) * 100}%` }} />
                 </div>
@@ -154,12 +154,12 @@ export default function ProductCard({ product, locale }: Props) {
           )}
 
           {has1kg && (
-            <div className="mt-[5px] flex gap-[5px] rounded-full p-[3px] transition-colors duration-300" style={{ backgroundColor: switchBg }}>
+            <div className="mt-1.5 flex gap-1.5 rounded-full p-[3px] transition-colors duration-300" style={{ backgroundColor: switchBg }}>
               {([250, 1000] as const).map(w => (
                 <button
                   key={w}
                   onClick={e => selectWeight(e, w)}
-                  className={`flex-1 rounded-full py-[3px] text-[9px] font-semibold transition-all duration-200 ${
+                  className={`flex-1 rounded-full py-[3px] text-[10px] font-semibold transition-all duration-200 ${
                     weight === w ? 'bg-[#412618] text-white' : 'text-[#6E6D68]'
                   }`}
                 >
@@ -169,10 +169,10 @@ export default function ProductCard({ product, locale }: Props) {
             </div>
           )}
 
-          <div className="mt-[5px] flex gap-[5px] rounded-full p-[3px] transition-colors duration-300" style={{ backgroundColor: switchBg }}>
+          <div className="mt-1.5 flex gap-1.5 rounded-full p-[3px] transition-colors duration-300" style={{ backgroundColor: switchBg }}>
             <button
               onClick={e => selectGrind(e, 'whole')}
-              className={`flex-1 rounded-full py-[3px] text-[9px] font-semibold transition-all duration-200 ${
+              className={`flex-1 rounded-full py-1 text-[10px] font-semibold transition-all duration-200 ${
                 effectiveGrind === 'whole' ? 'bg-[#412618] text-white' : 'text-[#6E6D68]'
               }`}
             >
@@ -183,7 +183,7 @@ export default function ProductCard({ product, locale }: Props) {
               <button
                 onClick={e => selectGrind(e, 'ground')}
                 disabled={groundDisabled}
-                className={`w-full rounded-full py-[3px] text-[9px] font-semibold transition-all duration-200 ${
+                className={`w-full rounded-full py-1 text-[10px] font-semibold transition-all duration-200 ${
                   groundDisabled
                     ? 'cursor-not-allowed text-[#6E6D68] opacity-40'
                     : effectiveGrind === 'ground' ? 'bg-[#412618] text-white' : 'text-[#6E6D68]'
@@ -202,15 +202,15 @@ export default function ProductCard({ product, locale }: Props) {
 
           <div
             className={`overflow-hidden transition-all duration-300 ${
-              showGrindOptions ? 'mt-[5px] max-h-40 opacity-100' : 'max-h-0 opacity-0'
+              showGrindOptions ? 'mt-1.5 max-h-40 opacity-100' : 'max-h-0 opacity-0'
             }`}
           >
-            <div className="flex flex-wrap gap-[3px]">
+            <div className="flex flex-wrap gap-1">
               {GRIND_OPTIONS.map(opt => (
                 <button
                   key={opt.value}
                   onClick={e => selectGrindOption(e, opt.value)}
-                  className={`rounded-full border px-2 py-[3px] text-[9px] font-medium transition ${
+                  className={`rounded-full border px-2.5 py-[3px] text-[9px] font-medium transition ${
                     grindOption === opt.value
                       ? 'border-[#412618] bg-[#412618] text-white'
                       : 'border-gray-200 bg-white text-gray-600 hover:border-[#412618]'
@@ -222,12 +222,12 @@ export default function ProductCard({ product, locale }: Props) {
             </div>
           </div>
 
-          <div className="mt-auto flex items-center justify-between pt-[8px]">
+          <div className="mt-auto flex items-center justify-between pt-2.5">
             <div className="flex flex-col">
               {isDiscounted && (
                 <span className="text-xs line-through text-[#999]">{fmtPrice(product.old_price_1000!)}</span>
               )}
-              <span className="text-[11px] font-bold md:text-[12px]">{fmtPrice(displayPrice)}</span>
+              <span className="text-[13px] font-bold md:text-[14px]">{fmtPrice(displayPrice)}</span>
               {effectiveGrind === 'ground' && (
                 <span className="text-xs text-gray-400">{t('grind_surcharge')}</span>
               )}
@@ -235,9 +235,9 @@ export default function ProductCard({ product, locale }: Props) {
             <button
               onClick={handleAddToCart}
               aria-label={t('add_to_cart')}
-              className="flex h-[22px] w-[22px] items-center justify-center rounded-full bg-[#412618] text-white transition hover:bg-[#4A2C1A] active:scale-95"
+              className="flex h-[26px] w-[26px] items-center justify-center rounded-full bg-[#412618] text-white transition hover:bg-[#4A2C1A] active:scale-95"
             >
-              <Plus size={11} />
+              <Plus size={13} />
             </button>
           </div>
         </div>
