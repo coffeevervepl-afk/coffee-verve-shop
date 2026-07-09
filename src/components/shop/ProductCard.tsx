@@ -118,10 +118,10 @@ export default function ProductCard({ product, locale }: Props) {
         </div>
 
         {/* Info */}
-        <div className="flex flex-1 flex-col p-3 md:p-4">
+        <div className="flex flex-1 flex-col p-3 md:p-3.5">
           <h3 className="text-sm font-semibold leading-snug md:text-base">{name}</h3>
           {notes && (
-            <p className="mt-1 line-clamp-2 min-h-[2.5rem] text-xs md:text-sm">
+            <p className="mt-1 line-clamp-2 min-h-[2rem] text-xs md:text-[13px]">
               {noteList.map((note, i) => (
                 <span key={i}>
                   <span
@@ -137,16 +137,16 @@ export default function ProductCard({ product, locale }: Props) {
           )}
 
           {product.body != null && product.acidity != null && (
-            <div className="mb-4 mt-2 space-y-2.5">
+            <div className="mb-3 mt-2 space-y-1.5">
               <div className="flex items-center gap-2">
-                <span className="w-20 shrink-0 text-[11px] font-medium text-gray-600">{t('body')}</span>
-                <div className="h-[5px] flex-1 overflow-hidden rounded-full bg-gray-200">
+                <span className="w-16 shrink-0 text-[10px] font-medium text-gray-600">{t('body')}</span>
+                <div className="h-[4px] flex-1 overflow-hidden rounded-full bg-gray-200">
                   <div className="h-full rounded-full bg-gray-800 transition-all duration-300" style={{ width: `${(product.body / 5) * 100}%` }} />
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-20 shrink-0 text-[11px] font-medium text-gray-600">{t('acidity')}</span>
-                <div className="h-[5px] flex-1 overflow-hidden rounded-full bg-gray-200">
+                <span className="w-16 shrink-0 text-[10px] font-medium text-gray-600">{t('acidity')}</span>
+                <div className="h-[4px] flex-1 overflow-hidden rounded-full bg-gray-200">
                   <div className="h-full rounded-full bg-gray-800 transition-all duration-300" style={{ width: `${(product.acidity / 5) * 100}%` }} />
                 </div>
               </div>
@@ -154,7 +154,7 @@ export default function ProductCard({ product, locale }: Props) {
           )}
 
           {has1kg && (
-            <div className="mt-2 flex gap-2 rounded-full p-1 transition-colors duration-300" style={{ backgroundColor: switchBg }}>
+            <div className="mt-2 flex gap-1 rounded-full p-0.5 transition-colors duration-300" style={{ backgroundColor: switchBg }}>
               {([250, 1000] as const).map(w => (
                 <button
                   key={w}
@@ -169,7 +169,7 @@ export default function ProductCard({ product, locale }: Props) {
             </div>
           )}
 
-          <div className="mt-2 flex gap-2 rounded-full p-1 transition-colors duration-300" style={{ backgroundColor: switchBg }}>
+          <div className="mt-2 flex gap-1 rounded-full p-0.5 transition-colors duration-300" style={{ backgroundColor: switchBg }}>
             <button
               onClick={e => selectGrind(e, 'whole')}
               className={`flex-1 rounded-full py-1.5 text-xs font-semibold transition-all duration-200 ${
@@ -202,15 +202,15 @@ export default function ProductCard({ product, locale }: Props) {
 
           <div
             className={`overflow-hidden transition-all duration-300 ${
-              showGrindOptions ? 'mt-2 max-h-40 opacity-100' : 'max-h-0 opacity-0'
+              showGrindOptions ? 'mt-1.5 max-h-40 opacity-100' : 'max-h-0 opacity-0'
             }`}
           >
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-1">
               {GRIND_OPTIONS.map(opt => (
                 <button
                   key={opt.value}
                   onClick={e => selectGrindOption(e, opt.value)}
-                  className={`rounded-full border px-3 py-1 text-[11px] font-medium transition ${
+                  className={`rounded-full border px-2.5 py-0.5 text-[10px] font-medium transition ${
                     grindOption === opt.value
                       ? 'border-[#412618] bg-[#412618] text-white'
                       : 'border-gray-200 bg-white text-gray-600 hover:border-[#412618]'
@@ -222,14 +222,14 @@ export default function ProductCard({ product, locale }: Props) {
             </div>
           </div>
 
-          <div className="mt-auto flex items-center justify-between pt-3">
+          <div className="mt-auto flex items-center justify-between pt-1.5">
             <div className="flex flex-col">
               {isDiscounted && (
                 <span className="text-xs line-through text-[#999]">{fmtPrice(product.old_price_1000!)}</span>
               )}
               <span className="text-base font-bold md:text-lg">{fmtPrice(displayPrice)}</span>
               {effectiveGrind === 'ground' && (
-                <span className="text-xs text-gray-400">{t('grind_surcharge')}</span>
+                <span className="text-[10px] text-gray-400">{t('grind_surcharge')}</span>
               )}
             </div>
             <button
