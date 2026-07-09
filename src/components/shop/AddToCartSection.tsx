@@ -1,11 +1,12 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { ShoppingBag, Minus, Plus } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { useCartStore } from '@/hooks/useCartStore'
 import { getProductPrice } from '@/lib/product-utils'
 import { fmtPrice } from '@/lib/pricing'
+import { extractDominantColor, FALLBACK_COLOR } from '@/lib/extractColor'
 import type { Locale, ProductWeight, ShopProduct } from '@/types/shop'
 
 interface Props {
@@ -103,6 +104,19 @@ function WeightSelector({
   setWeight: (w: ProductWeight) => void
 }) {
   const t = useTranslations('product')
+  const [bg, setBg] = useState(FALLBACK_COLOR)
+
+  const mainImage = product.images?.[0]
+
+  useEffect(() => {
+    if (!mainImage) return
+    let cancelled = false
+    extractDominantColor(mainImage).then(color => {
+      if (!cancelled) setBg(color)
+    })
+    return () => { cancelled = true }
+  }, [mainImage])
+
   if (weights.length <= 1) return null
   return (
     <div>
@@ -112,10 +126,11 @@ function WeightSelector({
           <button
             key={w}
             onClick={() => setWeight(w)}
-            className={`relative flex h-[60px] flex-1 flex-col items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] transition-all ${
+            style={{ backgroundColor: w === weight ? '#3A2115' : bg }}
+            className={`relative flex h-[60px] flex-1 flex-col items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] transition-colors ${
               w === weight
-                ? 'border-[#3A2115] bg-[#3A2115] text-white font-bold'
-                : 'border-[#E8E7E3] bg-[#F4F3F0] text-[#6E6D68]'
+                ? 'border-[#3A2115] text-white font-bold'
+                : 'border-[#E8E7E3] text-[#6E6D68]'
             }`}
           >
             <span className="flex items-center">
