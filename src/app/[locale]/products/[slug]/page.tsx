@@ -7,6 +7,7 @@ import AddToCartSection from '@/components/shop/AddToCartSection'
 import ProductGallery from '@/components/shop/ProductGallery'
 import ReviewsSection from '@/components/shop/reviews/ReviewsSection'
 import GuaranteeBlock from '@/components/shop/GuaranteeBlock'
+import LoginDiscountHint from '@/components/shop/LoginDiscountHint'
 import { fmtPrice } from '@/lib/pricing'
 import { getFlavorColor } from '@/lib/flavorColors'
 
@@ -105,6 +106,9 @@ export default async function ProductPage({ params, searchParams }: Props) {
           <div className="mt-4">
             <GuaranteeBlock compact />
           </div>
+
+          {/* Login discount hint — guests only */}
+          <LoginDiscountHint />
 
           {/* Add to cart (client) */}
           <AddToCartSection

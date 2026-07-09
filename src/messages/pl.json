@@ -11,6 +11,11 @@
     "profile": "Profil",
     "logout": "Wyloguj się"
   },
+  "login_hint": {
+    "title": "Zaloguj się — będzie taniej",
+    "subtitle": "Zniżka {pct}% na pierwsze zamówienie i kolejne",
+    "cta": "Załóż konto"
+  },
   "categories": {
     "espresso":    { "label": "Do espresso", "title": "Espresso", "count": "43 rodzaje" },
     "filter":      { "label": "Do filtra", "title": "Filtr", "count": "37 rodzajów" },
