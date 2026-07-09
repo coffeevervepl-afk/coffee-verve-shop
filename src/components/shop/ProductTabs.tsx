@@ -45,7 +45,7 @@ export default function ProductTabs({ product, locale }: Props) {
             <button
               key={tab.key}
               onClick={() => setActive(tab.key)}
-              className={`rounded-xl px-4 py-4 text-center text-base md:text-lg font-medium transition-colors duration-200 ${
+              className={`rounded-xl px-4 py-3 text-center text-base md:text-lg font-medium transition-colors duration-200 ${
                 active === tab.key
                   ? 'bg-white font-semibold text-[#3A2115] shadow-sm'
                   : 'text-[#6E6D68] hover:bg-white/40'
