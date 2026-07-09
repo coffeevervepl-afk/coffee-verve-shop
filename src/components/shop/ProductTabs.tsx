@@ -37,7 +37,7 @@ export default function ProductTabs({ product, locale }: Props) {
              : product.description_ua
 
   return (
-    <section className="w-full mt-8 md:mt-10 pb-8 md:pb-12">
+    <section className="w-full max-w-[600px] mt-8 md:mt-10 pb-8 md:pb-12">
       {/* Zone 1: tab track */}
       <div className="w-full rounded-2xl bg-[#F4EEE6] p-2">
         <div className="grid grid-cols-3 gap-1">
