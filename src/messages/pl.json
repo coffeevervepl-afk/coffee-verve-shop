@@ -14,7 +14,10 @@
   "product_tabs": {
     "description": "Opis",
     "comments": "Komentarze",
-    "recipes": "Przepisy"
+    "recipes": "Przepisy",
+    "description_placeholder": "Wkrótce pojawi się tutaj szczegółowy opis",
+    "comments_placeholder": "Wkrótce pojawią się tutaj komentarze",
+    "recipes_placeholder": "Wkrótce pojawią się tutaj przepisy"
   },
   "login_hint": {
     "title": "Zaloguj się — będzie taniej",

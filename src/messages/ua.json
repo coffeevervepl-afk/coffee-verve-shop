@@ -14,7 +14,10 @@
   "product_tabs": {
     "description": "Опис",
     "comments": "Коментарі",
-    "recipes": "Рецепти"
+    "recipes": "Рецепти",
+    "description_placeholder": "Скоро тут з'явиться детальний опис",
+    "comments_placeholder": "Скоро тут з'являться коментарі",
+    "recipes_placeholder": "Скоро тут з'являться рецепти"
   },
   "login_hint": {
     "title": "Увійдіть — і стане дешевше",
