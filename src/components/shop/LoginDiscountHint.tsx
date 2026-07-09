@@ -26,14 +26,21 @@ export default function LoginDiscountHint() {
       </div>
       <Link
         href={`/${locale}/account/register`}
-        className="login-hint-cta flex-shrink-0 whitespace-nowrap rounded-full border-2 border-[#3A2115] px-4 py-2 text-sm font-semibold text-[#3A2115] transition-colors duration-200 hover:bg-[#3A2115] hover:text-white"
+        className="login-hint-cta flex-shrink-0 whitespace-nowrap rounded-full border-2 border-[#3A2115] px-4 py-2 text-sm font-semibold text-[#3A2115]"
       >
         {t('cta')}
       </Link>
 
       <style jsx>{`
         .login-hint-cta {
+          background-color: transparent;
+          transition: background-color 200ms ease, backdrop-filter 200ms ease;
           animation: loginHintPulse 2s ease-in-out infinite;
+        }
+        .login-hint-cta:hover {
+          background-color: rgba(255, 255, 255, 0.6);
+          -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
         }
         @keyframes loginHintPulse {
           0%   { box-shadow: 0 0 0 0 rgba(58, 33, 21, 0.4); }
