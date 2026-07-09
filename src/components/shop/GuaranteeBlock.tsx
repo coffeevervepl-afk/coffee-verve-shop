@@ -8,7 +8,7 @@ export default function GuaranteeBlock({ compact }: Props) {
 
   if (compact) {
     return (
-      <div className="group relative w-full rounded-[12px] bg-[#3A2115] px-3.5 py-2 transition-all duration-200 cursor-default hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(44,24,16,0.35)] hover:bg-[#3A2115]">
+      <div className="group relative w-full rounded-[12px] bg-[#3A2115] px-3.5 py-2.5 transition-all duration-200 cursor-default hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(44,24,16,0.35)] hover:bg-[#3A2115]">
         <p className="text-[12px] font-bold text-white">{t('compact_title')}</p>
         <p className="text-[11px] text-[rgba(255,255,255,0.8)]">{t('compact')}</p>
 
