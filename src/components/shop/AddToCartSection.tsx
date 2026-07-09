@@ -89,7 +89,7 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
   return (
     <>
       {/* ── Desktop inline controls (hidden on mobile) ─────────────── */}
-      <div className="mt-auto hidden md:block space-y-5">
+      <div className="mt-auto hidden md:block space-y-4">
         <WeightSelector product={product} weights={weights} weight={weight} setWeight={selectWeight} bg={switchBg} />
         <GrindSelector
           grind={grind}
@@ -114,7 +114,7 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
               <span className="text-xs text-gray-400">{t('grind_surcharge')}</span>
             )}
           </div>
-          <button onClick={handleAdd} className="btn flex-1 gap-2 bg-[#3A2115] text-white transition hover:-translate-y-px hover:bg-[#412618] active:translate-y-0">
+          <button onClick={handleAdd} className="btn h-[48px] flex-1 gap-2 bg-[#3A2115] text-white transition hover:-translate-y-px hover:bg-[#412618] active:translate-y-0">
             <ShoppingBag size={18} />
             {t('add_to_cart')}
           </button>
@@ -151,7 +151,7 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
               <span className="text-xs text-gray-400">{t('grind_surcharge')}</span>
             )}
           </div>
-          <button onClick={handleAdd} className="btn flex-1 gap-2 py-3 bg-[#3A2115] text-white transition hover:-translate-y-px hover:bg-[#412618] active:translate-y-0">
+          <button onClick={handleAdd} className="btn h-[48px] flex-1 gap-2 bg-[#3A2115] text-white transition hover:-translate-y-px hover:bg-[#412618] active:translate-y-0">
             <ShoppingBag size={18} />
             {t('add_to_cart')}
           </button>
@@ -194,7 +194,7 @@ function WeightSelector({
             key={w}
             onClick={() => setWeight(w)}
             style={{ backgroundColor: w === weight ? '#3A2115' : bg }}
-            className={`relative flex h-[60px] flex-1 flex-col items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] transition-colors ${
+            className={`relative flex h-[48px] flex-1 flex-col items-center justify-center rounded-[14px] border px-3 py-2 text-[15px] transition-colors ${
               w === weight
                 ? 'border-[#3A2115] text-white font-bold'
                 : 'border-[#E8E7E3] text-[#3A2115] font-medium'
@@ -202,7 +202,7 @@ function WeightSelector({
           >
             <span className="flex items-center">
               {label}
-              <span className="ml-1.5 text-[15px] font-semibold opacity-70">
+              <span className="ml-1.5 text-[13px] font-semibold opacity-70">
                 {fmtPrice(getProductPrice(product, w))}
               </span>
             </span>
@@ -235,7 +235,7 @@ function GrindSelector({
         <button
           onClick={() => setGrind('whole')}
           style={{ backgroundColor: effectiveGrind === 'whole' ? '#3A2115' : bg }}
-          className={`relative flex h-[60px] flex-1 items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] transition-colors ${
+          className={`relative flex h-[48px] flex-1 items-center justify-center rounded-[14px] border px-3 py-2 text-[15px] transition-colors ${
             effectiveGrind === 'whole'
               ? 'border-[#3A2115] text-white font-bold'
               : 'border-[#E8E7E3] text-[#3A2115] font-medium'
@@ -249,7 +249,7 @@ function GrindSelector({
             onClick={() => setGrind('ground')}
             disabled={groundDisabled}
             style={{ backgroundColor: groundDisabled ? undefined : (effectiveGrind === 'ground' ? '#3A2115' : bg) }}
-            className={`relative flex h-[60px] w-full items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] transition-colors ${
+            className={`relative flex h-[48px] w-full items-center justify-center rounded-[14px] border px-3 py-2 text-[15px] transition-colors ${
               groundDisabled
                 ? 'cursor-not-allowed border-[#E8E7E3] text-[#3A2115] opacity-40'
                 : effectiveGrind === 'ground'
@@ -278,7 +278,7 @@ function GrindSelector({
             <button
               key={opt.value}
               onClick={() => setGrindOption(opt.value)}
-              className={`rounded-full border px-4 py-1.5 text-sm font-medium transition ${
+              className={`rounded-full border px-3 py-1 text-[13px] font-medium transition ${
                 grindOption === opt.value
                   ? 'border-[#3A2115] bg-[#3A2115] text-white'
                   : 'border-gray-200 bg-white text-gray-600 hover:border-[#3A2115]'
@@ -304,11 +304,11 @@ function QtySelector({
     <div className="flex items-center gap-4">
       <p className="text-sm font-medium text-brand-muted">{t('quantity')}</p>
       <div className="flex items-center gap-3 rounded-full border border-brand-border px-1">
-        <button onClick={() => setQty(q => Math.max(1, q - 1))} className="btn-ghost rounded-full p-2">
+        <button onClick={() => setQty(q => Math.max(1, q - 1))} className="btn-ghost rounded-full p-1.5">
           <Minus size={14} />
         </button>
         <span className="w-6 text-center text-sm font-semibold">{qty}</span>
-        <button onClick={() => setQty(q => q + 1)} className="btn-ghost rounded-full p-2">
+        <button onClick={() => setQty(q => q + 1)} className="btn-ghost rounded-full p-1.5">
           <Plus size={14} />
         </button>
       </div>
