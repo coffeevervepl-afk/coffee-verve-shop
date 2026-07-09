@@ -119,15 +119,15 @@ export default function ProductCard({ product, locale }: Props) {
 
         {/* Info */}
         <div className="flex flex-1 flex-col p-3">
-          <div className="flex justify-end">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="min-w-0 flex-1 line-clamp-2 text-lg font-semibold leading-snug">{name}</h3>
             <button
               type="button"
-              className="card-details-btn rounded-full border border-[#E8E7E3] bg-white/70 px-4 py-1.5 text-[13px] font-medium text-[#3A2115] shadow-sm backdrop-blur-sm"
+              className="card-details-btn shrink-0 rounded-full border border-[#E8E7E3] bg-white/70 px-4 py-1.5 text-[13px] font-medium text-[#3A2115] shadow-sm backdrop-blur-sm"
             >
               {t('details_btn')}
             </button>
           </div>
-          <h3 className="mt-1 text-lg font-semibold leading-snug md:text-xl">{name}</h3>
           {notes && (
             <p className="mt-1 line-clamp-2 min-h-[2rem] text-xs md:text-[13px]">
               {noteList.map((note, i) => (
