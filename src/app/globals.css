@@ -157,3 +157,11 @@ p  { line-height: 1.7; }
 @media (prefers-reduced-motion: reduce) {
   .login-hint-cta { animation: none; }
 }
+
+/* ── Product card "details" CTA — same breathing pulse ────────────────────── */
+.card-details-btn {
+  animation: breathe 2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-details-btn { animation: none; }
+}

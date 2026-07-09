@@ -74,7 +74,7 @@
     "tooltip_line2": "✓ Lub zwrócimy 100% pieniędzy — bez pytań"
   },
   "product": {
-    "add_to_cart": "Do koszyka", "added": "Dodano", "save": "Oszczędzasz", "save_amount": "taniej o 10 zł",
+    "add_to_cart": "Do koszyka", "added": "Dodano", "save": "Oszczędzasz", "save_amount": "taniej o 10 zł", "details_btn": "Szczegóły",
     "choose_weight": "Waga", "quantity": "Ilość", "body": "Gęstość", "acidity": "Kwasowość",
     "grind_whole": "W ziarnach", "grind_ground": "Mielona",
     "grind_tooltip": "Kawę mieloną sprzedajemy tylko w opakowaniu 250g — dłużej zachowuje aromat",
