@@ -37,15 +37,15 @@ export default function ProductTabs({ product, locale }: Props) {
              : product.description_ua
 
   return (
-    <section className="w-full max-w-[600px] mt-8 md:mt-10 pb-8 md:pb-12">
+    <section className="w-full mt-8 md:mt-10 pb-8 md:pb-12">
       {/* Zone 1: tab track */}
-      <div className="w-full rounded-2xl bg-[#F4EEE6] p-2">
+      <div className="w-full rounded-2xl bg-[#F4EEE6] p-1">
         <div className="grid grid-cols-3 gap-1">
           {tabs.map(tab => (
             <button
               key={tab.key}
               onClick={() => setActive(tab.key)}
-              className={`rounded-xl px-4 py-3 text-center text-base md:text-lg font-medium transition-colors duration-200 ${
+              className={`rounded-xl px-4 py-2.5 text-center text-sm font-medium transition-colors duration-200 ${
                 active === tab.key
                   ? 'bg-white font-semibold text-[#3A2115] shadow-sm'
                   : 'text-[#6E6D68] hover:bg-white/40'
