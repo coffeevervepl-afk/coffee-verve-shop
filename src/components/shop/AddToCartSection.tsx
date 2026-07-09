@@ -114,7 +114,7 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
               <span className="text-xs text-gray-400">{t('grind_surcharge')}</span>
             )}
           </div>
-          <button onClick={handleAdd} className="btn h-[44px] flex-1 gap-2 bg-[#3A2115] text-[13px] text-white transition hover:-translate-y-px hover:bg-[#412618] active:translate-y-0">
+          <button onClick={handleAdd} className="btn h-[50px] flex-1 gap-2 bg-[#3A2115] text-[14px] text-white transition hover:-translate-y-px hover:bg-[#412618] active:translate-y-0">
             <ShoppingBag size={18} />
             {t('add_to_cart')}
           </button>
@@ -151,7 +151,7 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
               <span className="text-xs text-gray-400">{t('grind_surcharge')}</span>
             )}
           </div>
-          <button onClick={handleAdd} className="btn h-[44px] flex-1 gap-2 bg-[#3A2115] text-[13px] text-white transition hover:-translate-y-px hover:bg-[#412618] active:translate-y-0">
+          <button onClick={handleAdd} className="btn h-[50px] flex-1 gap-2 bg-[#3A2115] text-[14px] text-white transition hover:-translate-y-px hover:bg-[#412618] active:translate-y-0">
             <ShoppingBag size={18} />
             {t('add_to_cart')}
           </button>
@@ -194,7 +194,7 @@ function WeightSelector({
             key={w}
             onClick={() => setWeight(w)}
             style={{ backgroundColor: w === weight ? '#3A2115' : bg }}
-            className={`relative flex h-[40px] flex-1 flex-col items-center justify-center rounded-[14px] border px-3 py-2 text-[13px] transition-colors ${
+            className={`relative flex h-[46px] flex-1 flex-col items-center justify-center rounded-[14px] border px-3 py-2 text-[14px] transition-colors ${
               w === weight
                 ? 'border-[#3A2115] text-white font-bold'
                 : 'border-[#E8E7E3] text-[#3A2115] font-medium'
@@ -235,7 +235,7 @@ function GrindSelector({
         <button
           onClick={() => setGrind('whole')}
           style={{ backgroundColor: effectiveGrind === 'whole' ? '#3A2115' : bg }}
-          className={`relative flex h-[40px] flex-1 items-center justify-center rounded-[14px] border px-3 py-2 text-[13px] transition-colors ${
+          className={`relative flex h-[46px] flex-1 items-center justify-center rounded-[14px] border px-3 py-2 text-[14px] transition-colors ${
             effectiveGrind === 'whole'
               ? 'border-[#3A2115] text-white font-bold'
               : 'border-[#E8E7E3] text-[#3A2115] font-medium'
@@ -249,7 +249,7 @@ function GrindSelector({
             onClick={() => setGrind('ground')}
             disabled={groundDisabled}
             style={{ backgroundColor: groundDisabled ? undefined : (effectiveGrind === 'ground' ? '#3A2115' : bg) }}
-            className={`relative flex h-[40px] w-full items-center justify-center rounded-[14px] border px-3 py-2 text-[13px] transition-colors ${
+            className={`relative flex h-[46px] w-full items-center justify-center rounded-[14px] border px-3 py-2 text-[14px] transition-colors ${
               groundDisabled
                 ? 'cursor-not-allowed border-[#E8E7E3] text-[#3A2115] opacity-40'
                 : effectiveGrind === 'ground'
