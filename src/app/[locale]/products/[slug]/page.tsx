@@ -8,6 +8,7 @@ import ProductGallery from '@/components/shop/ProductGallery'
 import ReviewsSection from '@/components/shop/reviews/ReviewsSection'
 import GuaranteeBlock from '@/components/shop/GuaranteeBlock'
 import LoginDiscountHint from '@/components/shop/LoginDiscountHint'
+import ProductTabs from '@/components/shop/ProductTabs'
 import { fmtPrice } from '@/lib/pricing'
 import { getFlavorColor } from '@/lib/flavorColors'
 
@@ -120,6 +121,9 @@ export default async function ProductPage({ params, searchParams }: Props) {
           />
         </div>
       </div>
+
+      {/* ── Tabs (description / comments / recipes) ───────────────────────── */}
+      <ProductTabs product={product} locale={locale} />
 
       {/* ── Reviews ─────────────────────────────────────────────────────── */}
       <ReviewsSection

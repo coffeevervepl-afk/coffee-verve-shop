@@ -11,6 +11,11 @@
     "profile": "Profil",
     "logout": "Wyloguj się"
   },
+  "product_tabs": {
+    "description": "Opis",
+    "comments": "Komentarze",
+    "recipes": "Przepisy"
+  },
   "login_hint": {
     "title": "Zaloguj się — będzie taniej",
     "subtitle": "Zniżka {pct}% na pierwsze zamówienie i kolejne",

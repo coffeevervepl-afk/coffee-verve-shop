@@ -11,6 +11,11 @@
     "profile": "Профиль",
     "logout": "Выйти"
   },
+  "product_tabs": {
+    "description": "Описание",
+    "comments": "Комментарии",
+    "recipes": "Рецепты"
+  },
   "login_hint": {
     "title": "Войдите — и станет дешевле",
     "subtitle": "Скидка {pct}% на первый заказ и на все следующие",
