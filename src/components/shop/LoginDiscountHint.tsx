@@ -16,7 +16,7 @@ export default function LoginDiscountHint() {
   if (loading || user) return null
 
   return (
-    <div className="mb-6 flex items-center justify-between gap-4 rounded-2xl bg-[#F4F3F0] p-4">
+    <div className="mb-6 flex items-center justify-between gap-4 rounded-2xl bg-[#F4F3F0] p-3">
       <div className="flex items-center gap-3">
         <span className="text-2xl">🎁</span>
         <div>
@@ -26,7 +26,7 @@ export default function LoginDiscountHint() {
       </div>
       <Link
         href={`/${locale}/account/register`}
-        className="login-hint-cta flex-shrink-0 whitespace-nowrap rounded-full border-2 border-[#3A2115] px-4 py-2 text-sm font-semibold text-[#3A2115]"
+        className="login-hint-cta inline-flex h-[40px] flex-shrink-0 items-center justify-center whitespace-nowrap rounded-full border-2 border-[#3A2115] px-4 text-[13px] font-semibold text-[#3A2115]"
       >
         {t('cta')}
       </Link>
