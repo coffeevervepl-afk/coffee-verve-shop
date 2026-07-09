@@ -30,29 +30,6 @@ export default function LoginDiscountHint() {
       >
         {t('cta')}
       </Link>
-
-      <style jsx>{`
-        .login-hint-cta {
-          background-color: transparent;
-          transition: background-color 200ms ease, backdrop-filter 200ms ease;
-          animation: loginHintPulse 2s ease-in-out infinite;
-        }
-        .login-hint-cta:hover {
-          background-color: rgba(255, 255, 255, 0.6);
-          -webkit-backdrop-filter: blur(8px);
-          backdrop-filter: blur(8px);
-        }
-        @keyframes loginHintPulse {
-          0%   { box-shadow: 0 0 0 0 rgba(58, 33, 21, 0.4); }
-          70%  { box-shadow: 0 0 0 8px rgba(58, 33, 21, 0); }
-          100% { box-shadow: 0 0 0 0 rgba(58, 33, 21, 0); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .login-hint-cta {
-            animation: none;
-          }
-        }
-      `}</style>
     </div>
   )
 }

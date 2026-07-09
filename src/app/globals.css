@@ -138,3 +138,22 @@ p  { line-height: 1.7; }
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+
+/* ── Login discount hint CTA — breathing pulse + glass hover ─────────────── */
+.login-hint-cta {
+  background-color: transparent;
+  transition: background-color 200ms ease, backdrop-filter 200ms ease;
+  animation: breathe 2s ease-in-out infinite;
+}
+.login-hint-cta:hover {
+  background-color: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .login-hint-cta { animation: none; }
+}
