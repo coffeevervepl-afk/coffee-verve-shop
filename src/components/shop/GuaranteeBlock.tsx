@@ -8,9 +8,9 @@ export default function GuaranteeBlock({ compact }: Props) {
 
   if (compact) {
     return (
-      <div className="group relative w-full rounded-[12px] bg-[#3A2115] px-4 py-2.5 transition-all duration-200 cursor-default hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(44,24,16,0.35)] hover:bg-[#3A2115]">
-        <p className="text-[14px] font-bold text-white">{t('compact_title')}</p>
-        <p className="text-[13px] text-[rgba(255,255,255,0.8)]">{t('compact')}</p>
+      <div className="group relative w-full rounded-[12px] bg-[#3A2115] px-3.5 py-2 transition-all duration-200 cursor-default hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(44,24,16,0.35)] hover:bg-[#3A2115]">
+        <p className="text-[12px] font-bold text-white">{t('compact_title')}</p>
+        <p className="text-[11px] text-[rgba(255,255,255,0.8)]">{t('compact')}</p>
 
         {/* Tooltip — desktop only */}
         <div className="absolute bottom-full left-0 z-50 mb-2 hidden w-full translate-y-1 rounded-[20px] border border-[rgba(255,255,255,0.55)] bg-[rgba(255,255,255,0.18)] px-5 py-4 text-[#1C1008] opacity-0 shadow-[0_8px_32px_rgba(44,24,16,0.10),0_2px_8px_rgba(44,24,16,0.06),inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(255,255,255,0.2)] [-webkit-backdrop-filter:blur(24px)_saturate(2)_brightness(1.1)] [backdrop-filter:blur(24px)_saturate(2)_brightness(1.1)] transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:block">

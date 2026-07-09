@@ -55,8 +55,8 @@ export default async function ProductPage({ params, searchParams }: Props) {
     processLabel[raw]?.[locale] ?? raw
 
   return (
-    <div className="container py-5 md:py-8">
-      <div className="grid gap-6 md:grid-cols-2 md:gap-8">
+    <div className="container py-4 md:py-7">
+      <div className="grid gap-5 md:grid-cols-2 md:gap-7">
 
         {/* Images */}
         <ProductGallery
@@ -67,10 +67,10 @@ export default async function ProductPage({ params, searchParams }: Props) {
 
         {/* Details */}
         <div className="flex flex-col">
-          <h1 className="mb-4 text-2xl font-bold leading-tight md:text-3xl">{name}</h1>
+          <h1 className="mb-4 text-xl font-bold leading-tight md:text-2xl">{name}</h1>
 
           {notes && (
-            <p className="mb-3 text-[22px] font-medium">
+            <p className="mb-2.5 text-[19px] font-medium">
               {noteList.map((note, i) => (
                 <span key={i}>
                   <span style={{ color: getFlavorColor(note).text }}>{note}</span>
@@ -81,7 +81,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
           )}
 
           {/* Attributes */}
-          <div className="mb-3 flex flex-wrap gap-2">
+          <div className="mb-2.5 flex flex-wrap gap-2">
             {product.roast_level && (
               <span className="rounded-full border border-brand-border px-4 py-2 text-[19px] text-[#3D3C39]">
                 {t('roast')}: {roastLabel[product.roast_level]}
@@ -100,7 +100,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
           </div>
 
           {desc && (
-            <p className="mb-4 text-[22px] leading-[1.7] text-[#2D2D2D]">{desc}</p>
+            <p className="mb-3.5 text-[22px] leading-[1.7] text-[#2D2D2D]">{desc}</p>
           )}
 
           {/* Guarantee UTP — compact, below add to cart */}
