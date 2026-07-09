@@ -47,7 +47,7 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
             )}
             <span className="text-2xl font-bold">{fmtPrice(price * qty)}</span>
           </div>
-          <button onClick={handleAdd} className="btn flex-1 gap-2 bg-[#412618] text-white transition hover:-translate-y-px hover:opacity-90 active:translate-y-0 active:opacity-100">
+          <button onClick={handleAdd} className="btn flex-1 gap-2 bg-[#3A2115] text-white transition hover:-translate-y-px hover:bg-[#412618] active:translate-y-0">
             <ShoppingBag size={18} />
             {t('add_to_cart')}
           </button>
@@ -71,7 +71,7 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
             )}
             <span className="text-xl font-bold">{fmtPrice(price * qty)}</span>
           </div>
-          <button onClick={handleAdd} className="btn flex-1 gap-2 py-3 bg-[#412618] text-white transition hover:-translate-y-px hover:opacity-90 active:translate-y-0 active:opacity-100">
+          <button onClick={handleAdd} className="btn flex-1 gap-2 py-3 bg-[#3A2115] text-white transition hover:-translate-y-px hover:bg-[#412618] active:translate-y-0">
             <ShoppingBag size={18} />
             {t('add_to_cart')}
           </button>
@@ -114,7 +114,7 @@ function WeightSelector({
             onClick={() => setWeight(w)}
             className={`relative flex h-[60px] flex-1 flex-col items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] transition-all ${
               w === weight
-                ? 'border-[#412618] bg-[#412618] text-white font-bold'
+                ? 'border-[#3A2115] bg-[#3A2115] text-white font-bold'
                 : 'border-[#E8E7E3] bg-[#F4F3F0] text-[#6E6D68]'
             }`}
           >
