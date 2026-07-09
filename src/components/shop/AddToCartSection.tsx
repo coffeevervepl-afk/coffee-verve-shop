@@ -47,7 +47,7 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
             )}
             <span className="text-2xl font-bold">{fmtPrice(price * qty)}</span>
           </div>
-          <button onClick={handleAdd} className="btn btn-primary flex-1 gap-2">
+          <button onClick={handleAdd} className="btn flex-1 gap-2 bg-[#4A2C1A] text-white transition hover:-translate-y-px hover:opacity-90 active:translate-y-0 active:opacity-100">
             <ShoppingBag size={18} />
             {t('add_to_cart')}
           </button>
@@ -71,7 +71,7 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
             )}
             <span className="text-xl font-bold">{fmtPrice(price * qty)}</span>
           </div>
-          <button onClick={handleAdd} className="btn btn-primary flex-1 gap-2 py-3">
+          <button onClick={handleAdd} className="btn flex-1 gap-2 py-3 bg-[#4A2C1A] text-white transition hover:-translate-y-px hover:opacity-90 active:translate-y-0 active:opacity-100">
             <ShoppingBag size={18} />
             {t('add_to_cart')}
           </button>
@@ -112,10 +112,10 @@ function WeightSelector({
           <button
             key={w}
             onClick={() => setWeight(w)}
-            className={`relative flex h-[60px] flex-1 flex-col items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] backdrop-blur-[12px] transition-all ${
+            className={`relative flex h-[60px] flex-1 flex-col items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] transition-all ${
               w === weight
-                ? 'border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.95)] text-[#111110] font-bold shadow-[0_2px_12px_rgba(0,0,0,0.1)]'
-                : 'border-[rgba(255,255,255,0.7)] bg-[rgba(255,255,255,0.5)] text-[#3D3C39] hover:bg-[rgba(255,255,255,0.75)]'
+                ? 'border-[#4A2C1A] bg-[#4A2C1A] text-white font-bold'
+                : 'border-[#E8E7E3] bg-[#F4F3F0] text-[#6E6D68]'
             }`}
           >
             <span className="flex items-center">
