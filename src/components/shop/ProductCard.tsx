@@ -160,7 +160,7 @@ export default function ProductCard({ product, locale }: Props) {
                   key={w}
                   onClick={e => selectWeight(e, w)}
                   className={`flex-1 rounded-full py-1 text-xs font-semibold transition-all duration-200 ${
-                    weight === w ? 'bg-[#4A2C1A] text-white' : 'text-[#6E6D68]'
+                    weight === w ? 'bg-[#412618] text-white' : 'text-[#6E6D68]'
                   }`}
                 >
                   {w === 250 ? '250г' : '1кг'}
@@ -173,7 +173,7 @@ export default function ProductCard({ product, locale }: Props) {
             <button
               onClick={e => selectGrind(e, 'whole')}
               className={`flex-1 rounded-full py-1.5 text-xs font-semibold transition-all duration-200 ${
-                effectiveGrind === 'whole' ? 'bg-[#4A2C1A] text-white' : 'text-[#6E6D68]'
+                effectiveGrind === 'whole' ? 'bg-[#412618] text-white' : 'text-[#6E6D68]'
               }`}
             >
               {t('grind_whole')}
@@ -186,7 +186,7 @@ export default function ProductCard({ product, locale }: Props) {
                 className={`w-full rounded-full py-1.5 text-xs font-semibold transition-all duration-200 ${
                   groundDisabled
                     ? 'cursor-not-allowed text-[#6E6D68] opacity-40'
-                    : effectiveGrind === 'ground' ? 'bg-[#4A2C1A] text-white' : 'text-[#6E6D68]'
+                    : effectiveGrind === 'ground' ? 'bg-[#412618] text-white' : 'text-[#6E6D68]'
                 }`}
               >
                 {t('grind_ground')}
@@ -212,8 +212,8 @@ export default function ProductCard({ product, locale }: Props) {
                   onClick={e => selectGrindOption(e, opt.value)}
                   className={`rounded-full border px-3 py-1 text-[11px] font-medium transition ${
                     grindOption === opt.value
-                      ? 'border-[#2C1810] bg-[#2C1810] text-white'
-                      : 'border-gray-200 bg-white text-gray-600 hover:border-[#2C1810]'
+                      ? 'border-[#412618] bg-[#412618] text-white'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-[#412618]'
                   }`}
                 >
                   {t(`grind_${opt.value}`)}
@@ -235,7 +235,7 @@ export default function ProductCard({ product, locale }: Props) {
             <button
               onClick={handleAddToCart}
               aria-label={t('add_to_cart')}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-accent text-white transition hover:opacity-80 active:scale-95"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-[#412618] text-white transition hover:bg-[#4A2C1A] active:scale-95"
             >
               <Plus size={16} />
             </button>
