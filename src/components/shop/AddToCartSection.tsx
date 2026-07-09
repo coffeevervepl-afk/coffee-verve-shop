@@ -17,18 +17,71 @@ interface Props {
   locale:   Locale
 }
 
+const GRIND_SURCHARGE = 3
+
+const GRIND_OPTIONS = [
+  { value: 'espresso' },
+  { value: 'aeropress' },
+  { value: 'pourover' },
+  { value: 'frenchpress' },
+  { value: 'turka' },
+  { value: 'moka' },
+]
+
 export default function AddToCartSection({ product, weights, name, image }: Props) {
   const t          = useTranslations('product')
-  const [weight, setWeight] = useState<ProductWeight>(weights[0].w)
-  const [qty, setQty]       = useState(1)
+  const [weight, setWeight]           = useState<ProductWeight>(weights[0].w)
+  const [qty, setQty]                 = useState(1)
+  const [grind, setGrind]             = useState<'whole' | 'ground'>('whole')
+  const [grindOption, setGrindOption] = useState('espresso')
+  const [switchBg, setSwitchBg]       = useState(FALLBACK_COLOR)
   const addItem    = useCartStore(s => s.addItem)
   const openDrawer = useCartStore(s => s.openDrawer)
   const price      = getProductPrice(product, weight)
 
-  const isDiscounted = weight === 1000 && !!product.old_price_1000 && product.old_price_1000 > price
+  const mainImage = product.images?.[0]
+
+  useEffect(() => {
+    if (!mainImage) return
+    let cancelled = false
+    extractDominantColor(mainImage).then(color => {
+      if (!cancelled) setSwitchBg(color)
+    })
+    return () => { cancelled = true }
+  }, [mainImage])
+
+  const isDiscounted     = weight === 1000 && !!product.old_price_1000 && product.old_price_1000 > price
+  const groundDisabled   = weight !== 250 // молотый доступен только для 250г
+  const effectiveGrind   = groundDisabled ? 'whole' : grind
+  const showGrindOptions = weight === 250 && grind === 'ground'
+  const displayPrice      = effectiveGrind === 'ground' ? price + GRIND_SURCHARGE : price
+
+  function selectWeight(w: ProductWeight) {
+    setWeight(w)
+    if (w !== 250) setGrindOption('espresso')
+  }
+
+  function selectGrind(g: 'whole' | 'ground') {
+    setGrind(g)
+    if (g === 'whole') setGrindOption('espresso')
+  }
+
+  function selectGrindOption(value: string) {
+    setGrindOption(value)
+  }
 
   function handleAdd() {
-    addItem({ product_id: product.id, slug: product.slug, name, image, weight, unit_price: price, qty })
+    addItem({
+      product_id:  product.id,
+      slug:        product.slug,
+      name,
+      image,
+      weight,
+      grind:       effectiveGrind,
+      grindOption: effectiveGrind === 'ground' ? grindOption : undefined,
+      unit_price:  displayPrice,
+      qty,
+    })
     toast.success(`${name} (${weight}g) — ${t('added')}`)
     openDrawer()
   }
@@ -37,7 +90,17 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
     <>
       {/* ── Desktop inline controls (hidden on mobile) ─────────────── */}
       <div className="mt-auto hidden md:block space-y-5">
-        <WeightSelector product={product} weights={weights} weight={weight} setWeight={setWeight} />
+        <WeightSelector product={product} weights={weights} weight={weight} setWeight={selectWeight} bg={switchBg} />
+        <GrindSelector
+          grind={grind}
+          effectiveGrind={effectiveGrind}
+          groundDisabled={groundDisabled}
+          showGrindOptions={showGrindOptions}
+          grindOption={grindOption}
+          setGrind={selectGrind}
+          setGrindOption={selectGrindOption}
+          bg={switchBg}
+        />
         <QtySelector qty={qty} setQty={setQty} t={t} />
         <div className="flex items-center gap-4">
           <div className="flex flex-col">
@@ -46,7 +109,10 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
                 {fmtPrice(product.old_price_1000! * qty)}
               </span>
             )}
-            <span className="text-2xl font-bold">{fmtPrice(price * qty)}</span>
+            <span className="text-2xl font-bold">{fmtPrice(displayPrice * qty)}</span>
+            {effectiveGrind === 'ground' && (
+              <span className="text-xs text-gray-400">{t('grind_surcharge')}</span>
+            )}
           </div>
           <button onClick={handleAdd} className="btn flex-1 gap-2 bg-[#3A2115] text-white transition hover:-translate-y-px hover:bg-[#412618] active:translate-y-0">
             <ShoppingBag size={18} />
@@ -55,9 +121,19 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
         </div>
       </div>
 
-      {/* ── Mobile: weight + qty inline, sticky CTA bar at bottom ───── */}
+      {/* ── Mobile: weight + grind + qty inline, sticky CTA bar at bottom ───── */}
       <div className="md:hidden space-y-4 mt-4">
-        <WeightSelector product={product} weights={weights} weight={weight} setWeight={setWeight} />
+        <WeightSelector product={product} weights={weights} weight={weight} setWeight={selectWeight} bg={switchBg} />
+        <GrindSelector
+          grind={grind}
+          effectiveGrind={effectiveGrind}
+          groundDisabled={groundDisabled}
+          showGrindOptions={showGrindOptions}
+          grindOption={grindOption}
+          setGrind={selectGrind}
+          setGrindOption={selectGrindOption}
+          bg={switchBg}
+        />
         <QtySelector qty={qty} setQty={setQty} t={t} />
       </div>
 
@@ -70,7 +146,10 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
                 {fmtPrice(product.old_price_1000! * qty)}
               </span>
             )}
-            <span className="text-xl font-bold">{fmtPrice(price * qty)}</span>
+            <span className="text-xl font-bold">{fmtPrice(displayPrice * qty)}</span>
+            {effectiveGrind === 'ground' && (
+              <span className="text-xs text-gray-400">{t('grind_surcharge')}</span>
+            )}
           </div>
           <button onClick={handleAdd} className="btn flex-1 gap-2 py-3 bg-[#3A2115] text-white transition hover:-translate-y-px hover:bg-[#412618] active:translate-y-0">
             <ShoppingBag size={18} />
@@ -96,27 +175,15 @@ export default function AddToCartSection({ product, weights, name, image }: Prop
 }
 
 function WeightSelector({
-  product, weights, weight, setWeight,
+  product, weights, weight, setWeight, bg,
 }: {
   product: ShopProduct
   weights: { w: ProductWeight; label: string }[]
   weight:  ProductWeight
   setWeight: (w: ProductWeight) => void
+  bg: string
 }) {
   const t = useTranslations('product')
-  const [bg, setBg] = useState(FALLBACK_COLOR)
-
-  const mainImage = product.images?.[0]
-
-  useEffect(() => {
-    if (!mainImage) return
-    let cancelled = false
-    extractDominantColor(mainImage).then(color => {
-      if (!cancelled) setBg(color)
-    })
-    return () => { cancelled = true }
-  }, [mainImage])
-
   if (weights.length <= 1) return null
   return (
     <div>
@@ -144,6 +211,83 @@ function WeightSelector({
             )}
           </button>
         ))}
+      </div>
+    </div>
+  )
+}
+
+function GrindSelector({
+  grind, effectiveGrind, groundDisabled, showGrindOptions, grindOption, setGrind, setGrindOption, bg,
+}: {
+  grind:            'whole' | 'ground'
+  effectiveGrind:   'whole' | 'ground'
+  groundDisabled:   boolean
+  showGrindOptions: boolean
+  grindOption:      string
+  setGrind:         (g: 'whole' | 'ground') => void
+  setGrindOption:   (value: string) => void
+  bg:               string
+}) {
+  const t = useTranslations('product')
+  return (
+    <div>
+      <div className="flex w-full gap-2 rounded-2xl bg-transparent p-0">
+        <button
+          onClick={() => setGrind('whole')}
+          style={{ backgroundColor: effectiveGrind === 'whole' ? '#3A2115' : bg }}
+          className={`relative flex h-[60px] flex-1 items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] transition-colors ${
+            effectiveGrind === 'whole'
+              ? 'border-[#3A2115] text-white font-bold'
+              : 'border-[#E8E7E3] text-[#3A2115] font-medium'
+          }`}
+        >
+          {t('grind_whole')}
+        </button>
+
+        <div className="group relative flex-1">
+          <button
+            onClick={() => setGrind('ground')}
+            disabled={groundDisabled}
+            style={{ backgroundColor: groundDisabled ? undefined : (effectiveGrind === 'ground' ? '#3A2115' : bg) }}
+            className={`relative flex h-[60px] w-full items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] transition-colors ${
+              groundDisabled
+                ? 'cursor-not-allowed border-[#E8E7E3] text-[#3A2115] opacity-40'
+                : effectiveGrind === 'ground'
+                ? 'border-[#3A2115] text-white font-bold'
+                : 'border-[#E8E7E3] text-[#3A2115] font-medium'
+            }`}
+          >
+            {t('grind_ground')}
+          </button>
+
+          {groundDisabled && (
+            <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-56 -translate-x-1/2 rounded-lg bg-[#111110] px-3 py-2 text-xs text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+              {t('grind_tooltip')}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div
+        className={`overflow-hidden transition-all duration-300 ${
+          showGrindOptions ? 'mt-2 max-h-40 opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="flex flex-wrap gap-2">
+          {GRIND_OPTIONS.map(opt => (
+            <button
+              key={opt.value}
+              onClick={() => setGrindOption(opt.value)}
+              className={`rounded-full border px-4 py-1.5 text-sm font-medium transition ${
+                grindOption === opt.value
+                  ? 'border-[#3A2115] bg-[#3A2115] text-white'
+                  : 'border-gray-200 bg-white text-gray-600 hover:border-[#3A2115]'
+              }`}
+            >
+              {t(`grind_${opt.value}`)}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   )
