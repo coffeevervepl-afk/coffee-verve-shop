@@ -30,6 +30,11 @@ export interface ShopProduct {
   sort_order: number
   body?: number | null
   acidity?: number | null
+  altitude?: string | null
+  variety?: string | null
+  sca_score?: number | null
+  caffeine?: string | null
+  roaster?: string | null
 }
 
 export interface CartItem {

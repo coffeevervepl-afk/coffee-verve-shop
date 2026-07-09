@@ -17,7 +17,18 @@
     "recipes": "Рецепты",
     "description_placeholder": "Скоро здесь появится подробное описание",
     "comments_placeholder": "Скоро здесь появятся комментарии",
-    "recipes_placeholder": "Скоро здесь появятся рецепты"
+    "recipes_placeholder": "Скоро здесь появятся рецепты",
+    "details_title": "Подробнее",
+    "description_title": "Описание",
+    "origin": "Регион",
+    "process": "Обработка",
+    "roast": "Обжарка",
+    "brew": "Способ",
+    "altitude": "Высота",
+    "variety": "Сорт",
+    "sca": "Оценка SCA",
+    "caffeine": "Кофеин",
+    "roaster": "Ростер"
   },
   "login_hint": {
     "title": "Войдите — и станет дешевле",

@@ -17,7 +17,18 @@
     "recipes": "Przepisy",
     "description_placeholder": "Wkrótce pojawi się tutaj szczegółowy opis",
     "comments_placeholder": "Wkrótce pojawią się tutaj komentarze",
-    "recipes_placeholder": "Wkrótce pojawią się tutaj przepisy"
+    "recipes_placeholder": "Wkrótce pojawią się tutaj przepisy",
+    "details_title": "Szczegóły",
+    "description_title": "Opis produktu",
+    "origin": "Region",
+    "process": "Obróbka",
+    "roast": "Wypał",
+    "brew": "Metoda",
+    "altitude": "Wysokość",
+    "variety": "Odmiana",
+    "sca": "Ocena SCA",
+    "caffeine": "Kofeina",
+    "roaster": "Roaster"
   },
   "login_hint": {
     "title": "Zaloguj się — będzie taniej",
