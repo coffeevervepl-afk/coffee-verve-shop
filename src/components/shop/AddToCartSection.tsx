@@ -130,7 +130,7 @@ function WeightSelector({
             className={`relative flex h-[60px] flex-1 flex-col items-center justify-center rounded-[14px] border px-4 py-2 text-[18px] transition-colors ${
               w === weight
                 ? 'border-[#3A2115] text-white font-bold'
-                : 'border-[#E8E7E3] text-[#6E6D68]'
+                : 'border-[#E8E7E3] text-[#3A2115] font-medium'
             }`}
           >
             <span className="flex items-center">

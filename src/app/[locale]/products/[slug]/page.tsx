@@ -8,6 +8,7 @@ import ProductGallery from '@/components/shop/ProductGallery'
 import ReviewsSection from '@/components/shop/reviews/ReviewsSection'
 import GuaranteeBlock from '@/components/shop/GuaranteeBlock'
 import { fmtPrice } from '@/lib/pricing'
+import { getFlavorColor } from '@/lib/flavorColors'
 
 interface Props {
   params:       { locale: Locale; slug: string }
@@ -21,10 +22,11 @@ export default async function ProductPage({ params, searchParams }: Props) {
   const product = await getProductBySlug(slug)
   if (!product) notFound()
 
-  const name  = getProductName(product, locale)
-  const desc  = getProductDescription(product, locale)
-  const notes = getProductFlavorNotes(product, locale)
-  const image = getProductImage(product)
+  const name     = getProductName(product, locale)
+  const desc     = getProductDescription(product, locale)
+  const notes    = getProductFlavorNotes(product, locale)
+  const noteList = notes ? notes.split('•').map(n => n.trim()).filter(Boolean) : []
+  const image    = getProductImage(product)
 
   const weights: { w: ProductWeight; label: string }[] = [
     { w: 250,  label: '250g' },
@@ -66,7 +68,14 @@ export default async function ProductPage({ params, searchParams }: Props) {
           <h1 className="mb-4 text-5xl font-bold">{name}</h1>
 
           {notes && (
-            <p className="mb-6 text-[22px] font-medium text-[#3D3C39]">{notes}</p>
+            <p className="mb-6 text-[22px] font-medium">
+              {noteList.map((note, i) => (
+                <span key={i}>
+                  <span style={{ color: getFlavorColor(note).text }}>{note}</span>
+                  {i < noteList.length - 1 && <span className="text-[#6E6D68]"> • </span>}
+                </span>
+              ))}
+            </p>
           )}
 
           {/* Attributes */}
