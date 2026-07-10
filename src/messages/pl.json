@@ -12,7 +12,8 @@
     "logout": "Wyloguj się",
     "reviews": "Opinie",
     "delivery_payment": "Dostawa i płatność",
-    "wishlist": "Ulubione"
+    "wishlist": "Ulubione",
+    "subscription": "Subskrypcja kawy"
   },
   "topbar": {
     "delivery": "Dostawa na terenie całej Polski",

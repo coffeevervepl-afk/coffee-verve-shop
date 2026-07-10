@@ -13,6 +13,7 @@ import type { Locale } from '@/types/shop'
 const ROW1_TEXT = 'text-[13px] font-medium tracking-[0.02em] text-[#3A2115]'
 const ROW2_LINK = 'text-[14px] font-semibold uppercase tracking-[0.04em] text-[#3A2115] transition-opacity hover:opacity-70'
 const DROPDOWN   = 'absolute right-0 top-[calc(100%+10px)] z-20 rounded-[12px] bg-[rgba(255,255,255,0.85)] text-[#3A2115] shadow-lg backdrop-blur-md transition-all duration-200'
+const NAV_CTA    = 'nav-cta-btn flex items-center gap-1 rounded-full border border-white/40 bg-white/60 px-4 py-1.5 text-[14px] font-semibold uppercase tracking-[0.04em] text-[#3A2115] backdrop-blur-sm transition-colors hover:bg-white/80'
 
 export default function Header({ locale }: { locale: Locale }) {
   const t      = useTranslations('nav')
@@ -111,10 +112,10 @@ export default function Header({ locale }: { locale: Locale }) {
               </Link>
               <Link href="#reviews" className={ROW2_LINK}>{t('reviews')}</Link>
               <Link href="#delivery" className={ROW2_LINK}>{t('delivery_payment')}</Link>
-              <a
-                href="#b2b"
-                className="flex items-center gap-1 text-[14px] font-semibold uppercase tracking-[0.04em] text-[#C47B2A] transition-opacity hover:opacity-70"
-              >
+              <Link href="#subscription" className={NAV_CTA}>
+                {t('subscription')}
+              </Link>
+              <a href="#b2b" className={NAV_CTA}>
                 {tTop('b2b')}
                 <span aria-hidden>↗</span>
               </a>

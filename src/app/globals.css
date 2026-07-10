@@ -166,6 +166,21 @@ p  { line-height: 1.7; }
   .card-details-btn { animation: none; }
 }
 
+/* ── Header nav CTA buttons (subscription / B2B) — pulsing glass ──────────── */
+.nav-cta-btn {
+  animation: nav-cta-breathe 2s ease-in-out infinite;
+}
+.nav-cta-btn:hover {
+  animation-play-state: paused;
+}
+@keyframes nav-cta-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-cta-btn { animation: none; }
+}
+
 /* ── Hide scrollbar on horizontally-scrollable carousels ──────────────────── */
 .no-scrollbar {
   scrollbar-width: none;

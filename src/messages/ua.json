@@ -12,7 +12,8 @@
     "logout": "Вийти",
     "reviews": "Відгуки",
     "delivery_payment": "Доставка і оплата",
-    "wishlist": "Обране"
+    "wishlist": "Обране",
+    "subscription": "Підписка на каву"
   },
   "topbar": {
     "delivery": "Доставка по всій Польщі",

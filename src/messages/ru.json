@@ -12,7 +12,8 @@
     "logout": "Выйти",
     "reviews": "Отзывы",
     "delivery_payment": "Доставка и оплата",
-    "wishlist": "Избранное"
+    "wishlist": "Избранное",
+    "subscription": "Подписка на кофе"
   },
   "topbar": {
     "delivery": "Доставка по всей Польше",
