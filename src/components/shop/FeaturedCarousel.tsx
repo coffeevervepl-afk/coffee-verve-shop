@@ -10,8 +10,7 @@ interface Props {
   locale:   Locale
 }
 
-const CARD_WIDTH = 320
-const CARD_GAP   = 16
+const CARD_GAP = 16
 
 export default function FeaturedCarousel({ products, locale }: Props) {
   const t = useTranslations('home')
@@ -20,7 +19,11 @@ export default function FeaturedCarousel({ products, locale }: Props) {
   if (products.length === 0) return null
 
   function scroll(direction: 1 | -1) {
-    scrollerRef.current?.scrollBy({ left: direction * (CARD_WIDTH + CARD_GAP), behavior: 'smooth' })
+    const el = scrollerRef.current
+    if (!el) return
+    const card = el.firstElementChild as HTMLElement | null
+    const cardWidth = card?.offsetWidth ?? el.clientWidth / 3
+    el.scrollBy({ left: direction * (cardWidth + CARD_GAP), behavior: 'smooth' })
   }
 
   return (
@@ -42,7 +45,7 @@ export default function FeaturedCarousel({ products, locale }: Props) {
           className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth"
         >
           {products.map(p => (
-            <div key={p.id} className="w-[320px] shrink-0 snap-start">
+            <div key={p.id} className="w-[calc((100%-32px)/3)] shrink-0 snap-start">
               <ProductCard product={p} locale={locale} />
             </div>
           ))}
