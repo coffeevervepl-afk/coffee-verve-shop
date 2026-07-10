@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
@@ -101,8 +102,8 @@ export default function Header({ locale }: { locale: Locale }) {
         {/* Row 2 — main navigation */}
         <div className="flex items-center justify-between px-6 py-3">
           <div className="flex items-center gap-8">
-            <Link href={`/${locale}`} className="text-lg font-bold tracking-tight text-brand-accent">
-              Coffee Verve
+            <Link href={`/${locale}`}>
+              <Image src="/logo.png" alt="Coffee Verve" width={40} height={40} className="h-10 w-auto" />
             </Link>
             <nav className="hidden items-center gap-8 md:flex">
               <Link href={`/${locale}`} className={ROW2_LINK}>
