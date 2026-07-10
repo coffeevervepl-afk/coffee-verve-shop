@@ -103,7 +103,7 @@ export default function Header({ locale }: { locale: Locale }) {
         <div className="flex items-center justify-between px-6 py-2">
           <div className="flex items-center gap-8">
             <Link href={`/${locale}`}>
-              <Image src="/logo.png" alt="Coffee Verve" width={72} height={72} className="h-[72px] w-auto" />
+              <Image src="/logo.png" alt="Coffee Verve" width={108} height={108} className="h-[108px] w-auto" />
             </Link>
             <nav className="hidden items-center gap-8 md:flex">
               <Link href={`/${locale}`} className={ROW2_LINK}>
