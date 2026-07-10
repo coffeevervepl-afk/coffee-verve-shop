@@ -12,6 +12,18 @@ export async function getProducts(): Promise<ShopProduct[]> {
   return data ?? []
 }
 
+export async function getFeaturedProducts(): Promise<ShopProduct[]> {
+  const sb = await createServerSupabase()
+  const { data, error } = await sb
+    .from('shop_products')
+    .select('*')
+    .eq('is_active', true)
+    .eq('is_featured', true)
+    .order('sort_order', { ascending: true })
+  if (error) throw error
+  return data ?? []
+}
+
 export async function getProductBySlug(slug: string): Promise<ShopProduct | null> {
   const sb = await createServerSupabase()
   const { data } = await sb

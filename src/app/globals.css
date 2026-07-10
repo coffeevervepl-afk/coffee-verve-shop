@@ -165,3 +165,12 @@ p  { line-height: 1.7; }
 @media (prefers-reduced-motion: reduce) {
   .card-details-btn { animation: none; }
 }
+
+/* ── Hide scrollbar on horizontally-scrollable carousels ──────────────────── */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
