@@ -11,6 +11,11 @@
     "profile": "Profil",
     "logout": "Wyloguj się"
   },
+  "topbar": {
+    "delivery": "Dostawa na terenie całej Polski",
+    "b2b": "Klienci hurtowi",
+    "contacts": "Kontakt"
+  },
   "product_tabs": {
     "description": "Opis",
     "comments": "Komentarze",

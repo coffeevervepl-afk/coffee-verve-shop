@@ -4,6 +4,7 @@ import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import '../globals.css'
 import Navbar from '@/components/layout/Navbar'
+import TopBar from '@/components/layout/TopBar'
 import CartDrawer from '@/components/shop/CartDrawer'
 import RefCapture from '@/components/shop/RefCapture'
 import { Suspense } from 'react'
@@ -33,6 +34,7 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body>
         <NextIntlClientProvider messages={messages}>
+          <TopBar locale={locale as any} />
           <Navbar locale={locale as any} />
           <Suspense fallback={null}><RefCapture /></Suspense>
           <main>{children}</main>

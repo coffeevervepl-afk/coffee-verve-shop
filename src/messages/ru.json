@@ -11,6 +11,11 @@
     "profile": "Профиль",
     "logout": "Выйти"
   },
+  "topbar": {
+    "delivery": "Доставка по всей Польше",
+    "b2b": "Оптовым покупателям",
+    "contacts": "Контакты"
+  },
   "product_tabs": {
     "description": "Описание",
     "comments": "Комментарии",

@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { ShoppingBag, Search, User } from 'lucide-react'
-import LanguageSwitcher from './LanguageSwitcher'
 import { useCartStore } from '@/hooks/useCartStore'
 import { useAuth } from '@/hooks/useAuth'
 import type { Locale } from '@/types/shop'
@@ -153,11 +152,6 @@ export default function Navbar({ locale }: { locale: Locale }) {
               </span>
             )}
           </button>
-
-          <div className="flex-1" />
-          <div className="w-px h-5 bg-gray-200 mx-3" />
-
-          <LanguageSwitcher locale={locale} />
         </div>
       </nav>
     </header>
