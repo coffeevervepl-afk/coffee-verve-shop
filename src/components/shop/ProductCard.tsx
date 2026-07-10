@@ -144,20 +144,38 @@ export default function ProductCard({ product, locale }: Props) {
             </p>
           )}
 
-          {product.body != null && product.acidity != null && (
+          {(product.body != null || product.acidity != null) && (
             <div className="mb-2 mt-1.5 space-y-1.5">
-              <div className="flex items-center gap-2">
-                <span className="w-16 shrink-0 text-[10px] font-medium text-gray-600">{t('body')}</span>
-                <div className="h-[4px] flex-1 overflow-hidden rounded-full bg-gray-200">
-                  <div className="h-full rounded-full bg-gray-800 transition-all duration-300" style={{ width: `${(product.body / 5) * 100}%` }} />
+              {product.body != null && (
+                <div className="flex items-center gap-2">
+                  <span className="w-16 shrink-0 text-[10px] font-medium text-gray-600">{t('body')}</span>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map(i => (
+                      <span
+                        key={i}
+                        className={`h-2.5 w-2.5 rounded-full ${
+                          i <= product.body! ? 'bg-[#412618]' : 'bg-transparent border border-[#D8D3CC]'
+                        }`}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-16 shrink-0 text-[10px] font-medium text-gray-600">{t('acidity')}</span>
-                <div className="h-[4px] flex-1 overflow-hidden rounded-full bg-gray-200">
-                  <div className="h-full rounded-full bg-gray-800 transition-all duration-300" style={{ width: `${(product.acidity / 5) * 100}%` }} />
+              )}
+              {product.acidity != null && (
+                <div className="flex items-center gap-2">
+                  <span className="w-16 shrink-0 text-[10px] font-medium text-gray-600">{t('acidity')}</span>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map(i => (
+                      <span
+                        key={i}
+                        className={`h-2.5 w-2.5 rounded-full ${
+                          i <= product.acidity! ? 'bg-[#412618]' : 'bg-transparent border border-[#D8D3CC]'
+                        }`}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
 
