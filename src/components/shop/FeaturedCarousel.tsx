@@ -10,7 +10,7 @@ interface Props {
   locale:   Locale
 }
 
-const CARD_WIDTH = 280
+const CARD_WIDTH = 340
 const CARD_GAP   = 16
 
 export default function FeaturedCarousel({ products, locale }: Props) {
@@ -42,7 +42,7 @@ export default function FeaturedCarousel({ products, locale }: Props) {
           className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth"
         >
           {products.map(p => (
-            <div key={p.id} className="w-[260px] shrink-0 snap-start sm:w-[280px]">
+            <div key={p.id} className="min-w-[340px] shrink-0 snap-start">
               <ProductCard product={p} locale={locale} />
             </div>
           ))}
