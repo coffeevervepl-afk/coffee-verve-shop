@@ -50,7 +50,7 @@ export default function Header({ locale }: { locale: Locale }) {
       <div className="mx-auto max-w-[1360px]">
 
         {/* Row 1 — service bar */}
-        <div className="hidden items-center justify-between border-b border-black/[0.06] px-6 py-[6px] md:flex">
+        <div className="relative z-10 hidden items-center justify-between border-b border-black/[0.06] px-6 py-[6px] md:flex">
           <LanguageSwitcher locale={locale} />
 
           <div className="flex items-center gap-4">
