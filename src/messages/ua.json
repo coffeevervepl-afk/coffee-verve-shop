@@ -9,7 +9,10 @@
     "my_account": "Мій акаунт",
     "my_orders": "Мої замовлення",
     "profile": "Профіль",
-    "logout": "Вийти"
+    "logout": "Вийти",
+    "reviews": "Відгуки",
+    "delivery_payment": "Доставка і оплата",
+    "wishlist": "Обране"
   },
   "topbar": {
     "delivery": "Доставка по всій Польщі",

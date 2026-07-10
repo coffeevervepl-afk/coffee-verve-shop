@@ -9,7 +9,10 @@
     "my_account": "Moje konto",
     "my_orders": "Moje zamówienia",
     "profile": "Profil",
-    "logout": "Wyloguj się"
+    "logout": "Wyloguj się",
+    "reviews": "Opinie",
+    "delivery_payment": "Dostawa i płatność",
+    "wishlist": "Ulubione"
   },
   "topbar": {
     "delivery": "Dostawa na terenie całej Polski",
