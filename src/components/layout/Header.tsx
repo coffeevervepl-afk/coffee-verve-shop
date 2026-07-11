@@ -8,6 +8,7 @@ import { Search, Heart, ShoppingBag, User, Phone, MessageCircle, Send, Mail } fr
 import LanguageSwitcher from './LanguageSwitcher'
 import { useCartStore } from '@/hooks/useCartStore'
 import { useAuth } from '@/hooks/useAuth'
+import { createClient } from '@/lib/supabase/client'
 import type { Locale } from '@/types/shop'
 
 const ROW1_TEXT = 'text-[13px] font-medium tracking-[0.02em] text-[#3A2115]'
@@ -27,6 +28,7 @@ export default function Header({ locale }: { locale: Locale }) {
   const contactsRef = useRef<HTMLDivElement | null>(null)
   const [accountOpen, setAccountOpen] = useState(false)
   const accountRef = useRef<HTMLDivElement | null>(null)
+  const [hasSession, setHasSession] = useState(false)
 
   useEffect(() => {
     function onClickOutside(event: MouseEvent) {
@@ -37,10 +39,22 @@ export default function Header({ locale }: { locale: Locale }) {
     return () => document.removeEventListener('mousedown', onClickOutside)
   }, [])
 
+  useEffect(() => {
+    const sb = createClient()
+    sb.auth.getSession().then(({ data }) => setHasSession(!!data.session))
+  }, [])
+
   async function handleSignOut() {
     await signOut()
     setAccountOpen(false)
     router.push(`/${locale}`)
+  }
+
+  async function handleSessionSignOut() {
+    const sb = createClient()
+    await sb.auth.signOut()
+    setAccountOpen(false)
+    window.location.href = `/${locale}`
   }
 
   const firstName = user?.name?.trim() ? user.name.trim().split(/\s+/)[0] : user?.email?.split('@')[0] ?? ''
@@ -78,12 +92,24 @@ export default function Header({ locale }: { locale: Locale }) {
 
             <span className="h-3.5 w-px bg-black/15" />
 
-            {!user ? (
+            {!user && !hasSession ? (
               <>
                 <Link href={`/${locale}/account/login`} className={ROW1_TEXT}>{t('login')}</Link>
                 <span className="h-3.5 w-px bg-black/15" />
                 <Link href={`/${locale}/account/register`} className={ROW1_TEXT}>{t('register')}</Link>
               </>
+            ) : !user && hasSession ? (
+              <div ref={accountRef} className="relative">
+                <button type="button" onClick={() => setAccountOpen(v => !v)} className={ROW1_TEXT}>
+                  <User size={16} />
+                </button>
+                <div className={`${DROPDOWN} min-w-[190px] p-1 ${
+                  accountOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'
+                }`}>
+                  <Link href={`/${locale}/account`} onClick={() => setAccountOpen(false)} className="block rounded-lg px-3 py-2 text-[13px] hover:bg-black/5">{t('my_cabinet')}</Link>
+                  <button type="button" onClick={handleSessionSignOut} className="block w-full rounded-lg px-3 py-2 text-left text-[13px] text-red-600 hover:bg-red-50">{t('logout')}</button>
+                </div>
+              </div>
             ) : (
               <div ref={accountRef} className="relative">
                 <button type="button" onClick={() => setAccountOpen(v => !v)} className={`flex items-center gap-1 ${ROW1_TEXT}`}>
