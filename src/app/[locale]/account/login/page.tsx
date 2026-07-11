@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { X } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
@@ -32,7 +33,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md rounded-3xl border border-brand-border bg-brand-surface p-8 shadow-sm">
+    <div className="relative mx-auto max-w-md rounded-3xl border border-brand-border bg-brand-surface p-8 shadow-sm">
+      <Link
+        href={`/${locale}`}
+        aria-label="Close"
+        className="absolute right-4 top-4 text-[#4A4540] transition-colors duration-150 hover:text-[#2A2620]"
+      >
+        <X size={24} />
+      </Link>
       <h1 className="text-2xl font-semibold mb-4">{t('login_title')}</h1>
       <p className="text-sm text-brand-muted mb-6">{t('login_subtitle')}</p>
       <form className="space-y-4" onSubmit={handleSubmit}>
