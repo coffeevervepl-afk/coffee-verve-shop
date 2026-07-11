@@ -44,7 +44,6 @@ export default function LoginPage() {
       const { data: userData } = await sb.auth.getUser()
       logStep(`2. getUser OK, user: ${userData.user?.email ?? 'none'}`)
 
-      router.refresh()
       logStep('3. redirecting...')
       router.push(`/${locale}/account`)
     } catch (err: any) {
