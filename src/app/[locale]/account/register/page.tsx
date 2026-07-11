@@ -23,6 +23,9 @@ export default function RegisterPage() {
   const [language, setLanguage] = useState(locale)
   const [loading, setLoading] = useState(false)
   const [registered, setRegistered] = useState(false)
+  const [consentTerms, setConsentTerms] = useState(false)
+  const [consentEmailMarketing, setConsentEmailMarketing] = useState(false)
+  const [consentSmsMarketing, setConsentSmsMarketing] = useState(false)
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -31,7 +34,12 @@ export default function RegisterPage() {
       const res = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, name, phone, language }),
+        body: JSON.stringify({
+          email, password, name, phone, language,
+          consent_terms: consentTerms,
+          consent_email_marketing: consentEmailMarketing,
+          consent_sms_marketing: consentSmsMarketing,
+        }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Registration failed')
@@ -122,7 +130,49 @@ export default function RegisterPage() {
                 ))}
               </select>
             </label>
-            <button type="submit" disabled={loading} className="btn btn-primary w-full">
+            <div className="space-y-3">
+              <label className="flex items-start gap-2 text-[13px] text-[#4A4540]">
+                <input
+                  type="checkbox"
+                  required
+                  checked={consentTerms}
+                  onChange={e => setConsentTerms(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-[#412618]"
+                />
+                <span>
+                  {t.rich('consent_terms_text', {
+                    terms: chunks => (
+                      <Link href={`/${locale}/terms`} className="underline">{chunks}</Link>
+                    ),
+                    privacy: chunks => (
+                      <Link href={`/${locale}/privacy`} className="underline">{chunks}</Link>
+                    ),
+                  })}
+                </span>
+              </label>
+
+              <label className="flex items-start gap-2 text-[13px] text-[#4A4540]">
+                <input
+                  type="checkbox"
+                  checked={consentEmailMarketing}
+                  onChange={e => setConsentEmailMarketing(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-[#412618]"
+                />
+                <span>{t('consent_email_marketing')}</span>
+              </label>
+
+              <label className="flex items-start gap-2 text-[13px] text-[#4A4540]">
+                <input
+                  type="checkbox"
+                  checked={consentSmsMarketing}
+                  onChange={e => setConsentSmsMarketing(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-[#412618]"
+                />
+                <span>{t('consent_sms_marketing')}</span>
+              </label>
+            </div>
+
+            <button type="submit" disabled={loading || !consentTerms} className="btn btn-primary w-full">
               {loading ? '…' : t('register_button')}
             </button>
           </form>

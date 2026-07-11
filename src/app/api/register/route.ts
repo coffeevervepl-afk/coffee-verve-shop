@@ -2,10 +2,29 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabase } from '@/lib/supabase/server'
 
 export async function POST(req: NextRequest) {
-  const { email, password, name, phone, language, orderId } = await req.json()
+  const {
+    email, password, name, phone, language, orderId,
+    consent_terms, consent_email_marketing, consent_sms_marketing,
+  } = await req.json()
 
   if (!email || !password || password.length < 6 || !name) {
     return NextResponse.json({ error: 'invalid_params' }, { status: 400 })
+  }
+
+  // Only set consent columns when the caller actually sent them, so callers
+  // that don't collect consent (checkout upsell, payment webhook) neither
+  // fail nor overwrite an existing user's previously recorded consent.
+  const now = new Date().toISOString()
+  const consentFields = {
+    ...(consent_terms !== undefined
+      ? { consent_terms: !!consent_terms, consent_terms_at: consent_terms ? now : null }
+      : {}),
+    ...(consent_email_marketing !== undefined
+      ? { consent_email_marketing: !!consent_email_marketing, consent_email_marketing_at: consent_email_marketing ? now : null }
+      : {}),
+    ...(consent_sms_marketing !== undefined
+      ? { consent_sms_marketing: !!consent_sms_marketing, consent_sms_marketing_at: consent_sms_marketing ? now : null }
+      : {}),
   }
 
   const sb = await createServerSupabase()
@@ -31,6 +50,7 @@ export async function POST(req: NextRequest) {
         is_guest: false,
         discount_pct: 5,
         loyalty_level: 'classic',
+        ...consentFields,
       })
       .select('id')
       .single()
@@ -48,6 +68,7 @@ export async function POST(req: NextRequest) {
         language:           language ?? undefined,
         is_guest:           false,
         ...(needsMin ? { min_discount_until: sixMonthsFromNow } : {}),
+        ...consentFields,
       })
       .eq('id', shopUserId)
   }
