@@ -123,11 +123,11 @@ export default function Header({ locale }: { locale: Locale }) {
           </div>
 
           <div className="flex items-center gap-2">
-            <button aria-label={t('search')} className="btn-ghost rounded-full p-2 text-brand-muted hover:text-brand-text">
-              <Search size={20} />
+            <button aria-label={t('search')} className="flex h-10 w-10 items-center justify-center rounded-full text-[#3A2115] transition-opacity duration-150 hover:opacity-60">
+              <Search size={24} strokeWidth={1.5} />
             </button>
-            <button aria-label={t('wishlist')} className="btn-ghost rounded-full p-2 text-brand-muted hover:text-brand-text">
-              <Heart size={20} />
+            <button aria-label={t('wishlist')} className="flex h-10 w-10 items-center justify-center rounded-full text-[#3A2115] transition-opacity duration-150 hover:opacity-60">
+              <Heart size={24} strokeWidth={1.5} />
             </button>
 
             {/* Mobile-only account entry point (row 1 is hidden below md) */}
@@ -143,10 +143,10 @@ export default function Header({ locale }: { locale: Locale }) {
             <button
               onClick={openCart}
               aria-label={t('cart')}
-              className="relative btn-ghost rounded-full p-2 text-brand-muted hover:text-brand-text"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full text-[#3A2115] transition-opacity duration-150 hover:opacity-60"
             >
-              <ShoppingBag size={20} />
-              <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-accent text-[10px] font-bold text-white">
+              <ShoppingBag size={24} strokeWidth={1.5} />
+              <span className="absolute right-0 top-0 flex h-[20px] min-w-[20px] items-center justify-center rounded-full bg-brand-accent px-1 text-[11px] font-bold text-white">
                 {count > 9 ? '9+' : count}
               </span>
             </button>
