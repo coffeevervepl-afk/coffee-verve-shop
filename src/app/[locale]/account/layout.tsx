@@ -18,9 +18,10 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   const isResetPasswordPage = pathname?.endsWith('/reset-password')
 
   useEffect(() => {
-    if (!loading && !user && !authPage) {
-      router.replace(`/${locale}/account/login`)
-    }
+    // TEMP DEBUG: guard redirect disabled to diagnose why useAuth() returns user=null
+    // if (!loading && !user && !authPage) {
+    //   router.replace(`/${locale}/account/login`)
+    // }
   }, [loading, user, authPage, locale, router])
 
   useEffect(() => {
