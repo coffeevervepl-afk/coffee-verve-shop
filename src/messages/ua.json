@@ -168,6 +168,7 @@
     "register_button": "Створити акаунт",
     "register_success": "Акаунт створено",
     "register_check_email": "Перевірте пошту для підтвердження",
+    "go_home": "На головну",
     "register_error": "Не вдалося зареєструватися",
     "have_account": "Вже є акаунт?",
     "login_link": "Увійти",

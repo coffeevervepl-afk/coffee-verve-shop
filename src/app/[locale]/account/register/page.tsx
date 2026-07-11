@@ -53,6 +53,14 @@ export default function RegisterPage() {
         <div className="rounded-2xl border border-brand-border bg-brand-surface p-6 text-center">
           <p className="mb-2 text-lg font-semibold">{t('register_check_email')}</p>
           <p className="text-sm text-brand-muted">{email}</p>
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <Link href={`/${locale}`} className="btn btn-primary">
+              {t('go_home')}
+            </Link>
+            <Link href={`/${locale}/account/login`} className="btn btn-outline">
+              {t('login_link')}
+            </Link>
+          </div>
         </div>
       ) : (
         <>

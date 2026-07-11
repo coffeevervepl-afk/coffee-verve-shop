@@ -172,6 +172,7 @@
     "register_button": "Создать аккаунт",
     "register_success": "Аккаунт создан",
     "register_check_email": "Проверьте почту для подтверждения",
+    "go_home": "На главную",
     "register_error": "Не удалось зарегистрироваться",
     "have_account": "Уже есть аккаунт?",
     "login_link": "Войти",
