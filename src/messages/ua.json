@@ -158,6 +158,7 @@
     "reset_password_min": "Пароль має бути щонайменше 6 символів",
     "reset_mismatch": "Паролі не збігаються",
     "reset_error": "Не вдалося змінити пароль",
+    "reset_success": "Пароль змінено!",
     "login_title": "Вхід до акаунту",
     "login_subtitle": "Введіть email та пароль, щоб продовжити",
     "login_button": "Увійти",

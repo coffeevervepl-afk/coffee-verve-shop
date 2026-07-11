@@ -162,6 +162,7 @@
     "reset_password_min": "Пароль должен быть минимум 6 символов",
     "reset_mismatch": "Пароли не совпадают",
     "reset_error": "Не удалось изменить пароль",
+    "reset_success": "Пароль изменён!",
     "login_title": "Вход в аккаунт",
     "login_subtitle": "Введите email и пароль, чтобы продолжить",
     "login_button": "Войти",

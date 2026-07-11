@@ -22,7 +22,7 @@ export default function ForgotPasswordPage() {
     try {
       const sb = createClient()
       const { error } = await sb.auth.resetPasswordForEmail(email, {
-        redirectTo: 'https://coffeeverve.pl/ru/account/reset-password',
+        redirectTo: `${window.location.origin}/${locale}/account/reset-password`,
       })
       if (error) throw error
       setSent(true)
@@ -41,6 +41,14 @@ export default function ForgotPasswordPage() {
       {sent ? (
         <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
           {t('forgot_sent')}
+          <div className="mt-4 flex items-center justify-center gap-3">
+            <Link href={`/${locale}`} className="btn btn-primary">
+              {t('go_home')}
+            </Link>
+            <Link href={`/${locale}/account/login`} className="btn btn-outline">
+              {t('login_link')}
+            </Link>
+          </div>
         </div>
       ) : (
         <form className="space-y-4" onSubmit={handleSubmit}>
@@ -61,11 +69,13 @@ export default function ForgotPasswordPage() {
         </form>
       )}
 
-      <div className="mt-6 text-sm text-brand-muted">
-        <Link href={`/${locale}/account/login`} className="text-brand-accent underline">
-          {t('back_to_login')}
-        </Link>
-      </div>
+      {!sent && (
+        <div className="mt-6 text-sm text-brand-muted">
+          <Link href={`/${locale}/account/login`} className="text-brand-accent underline">
+            {t('back_to_login')}
+          </Link>
+        </div>
+      )}
     </div>
   )
 }

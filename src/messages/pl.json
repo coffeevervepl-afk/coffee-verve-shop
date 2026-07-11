@@ -158,6 +158,7 @@
     "reset_password_min": "Hasło musi mieć co najmniej 6 znaków",
     "reset_mismatch": "Hasła nie są identyczne",
     "reset_error": "Nie udało się zmienić hasła",
+    "reset_success": "Hasło zmienione!",
     "login_title": "Logowanie",
     "login_subtitle": "Wprowadź email i hasło, aby kontynuować",
     "login_button": "Zaloguj się",
