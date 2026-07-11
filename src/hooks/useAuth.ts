@@ -14,7 +14,7 @@ export function useAuth(): AuthState & {
   signOut:  () => Promise<void>
 } {
   const [state, setState] = useState<AuthState>({ user: null, loading: true, config: {} })
-  const sb = createClient()
+  const [sb] = useState(() => createClient())
 
   const refresh = useCallback(async () => {
     setState(s => ({ ...s, loading: true }))
@@ -34,13 +34,13 @@ export function useAuth(): AuthState & {
     for (const r of configRes.data ?? []) config[r.key] = Number(r.value)
 
     setState({ user: userRes.data as SessionUser | null, loading: false, config })
-  }, [sb])
+  }, [])
 
   useEffect(() => {
     refresh()
     const { data: { subscription } } = sb.auth.onAuthStateChange(() => refresh())
     return () => subscription.unsubscribe()
-  }, [refresh, sb])
+  }, [refresh])
 
   const signOut = async () => {
     await sb.auth.signOut()
