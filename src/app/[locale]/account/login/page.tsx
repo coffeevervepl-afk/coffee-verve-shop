@@ -17,22 +17,38 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [debugLog, setDebugLog] = useState<string[]>([])
+
+  function logStep(line: string) {
+    setDebugLog(prev => [...prev, line])
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setLoading(true)
     setError('')
+    setDebugLog([])
     try {
       const sb = createClient()
       const { data, error } = await sb.auth.signInWithPassword({ email, password })
       console.log('login result:', data, error)
       if (error) throw error
 
-      await sb.auth.getUser()
+      logStep(`1. signIn OK, session: ${data.session ? 'yes' : 'no'}`)
+
+      if (data.session === null) {
+        setError('Сессия не создана. Проверьте email и пароль.')
+        return
+      }
+
+      const { data: userData } = await sb.auth.getUser()
+      logStep(`2. getUser OK, user: ${userData.user?.email ?? 'none'}`)
+
       router.refresh()
+      logStep('3. redirecting...')
       router.push(`/${locale}/account`)
     } catch (err: any) {
-      const message = err?.message || t('login_error')
+      const message = err?.message || JSON.stringify(err)
       setError(message)
       toast.error(message)
     } finally {
@@ -83,6 +99,11 @@ export default function LoginPage() {
           {loading ? '…' : t('login_button')}
         </button>
         {error && <p className="text-sm text-red-600">{error}</p>}
+        {debugLog.length > 0 && (
+          <div id="debug-log" className="whitespace-pre-wrap rounded-lg bg-gray-100 p-3 text-xs text-gray-700">
+            {debugLog.join('\n')}
+          </div>
+        )}
       </form>
       <div className="mt-6 text-sm text-brand-muted">
         {t('no_account')}{' '}
