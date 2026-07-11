@@ -35,7 +35,8 @@ export default function AccountPage() {
   const [savingTelegram, setSavingTelegram] = useState(false)
 
   useEffect(() => {
-    if (!loading && !user) router.push(`/${locale}`)
+    // TEMP DEBUG: guard redirect disabled to diagnose why useAuth() returns user=null
+    // if (!loading && !user) router.push(`/${locale}`)
   }, [loading, user, locale, router])
 
   useEffect(() => {
@@ -89,15 +90,32 @@ export default function AccountPage() {
     router.push(`/${locale}`)
   }
 
-  if (loading) return (
-    <div className="container py-20 text-center text-brand-muted">Загрузка…</div>
+  const debugPanel = (
+    <div id="debug-log" className="mb-4 rounded-lg border border-yellow-300 bg-yellow-50 p-3 text-xs text-gray-800">
+      <p>loading: {String(loading)}</p>
+      <p>user: {user ? user.email : 'null'}</p>
+      <p>session check...</p>
+    </div>
   )
-  if (!user) return null
+
+  if (loading) return (
+    <div className="container py-20 text-center text-brand-muted">
+      {debugPanel}
+      Загрузка…
+    </div>
+  )
+  if (!user) return (
+    <div className="container py-20 text-center text-brand-muted">
+      {debugPanel}
+      <p>Guard временно отключён — user отсутствует, но редиректа нет.</p>
+    </div>
+  )
 
   const discount = getLoyaltyDiscount(user.loyalty_level, config)
 
   return (
     <div className="container py-10 max-w-2xl">
+      {debugPanel}
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold">Личный кабинет</h1>
         <button onClick={handleSignOut} className="text-sm text-brand-muted underline">
