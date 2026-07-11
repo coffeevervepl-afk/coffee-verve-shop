@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { X } from 'lucide-react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'react-hot-toast'
@@ -11,13 +11,13 @@ import { toast } from 'react-hot-toast'
 export default function LoginPage() {
   const params = useParams()
   const locale = params.locale as string
-  const router = useRouter()
   const t = useTranslations('account')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [debugLog, setDebugLog] = useState<string[]>([])
+  const [loggedIn, setLoggedIn] = useState(false)
 
   function logStep(line: string) {
     setDebugLog(prev => [...prev, line])
@@ -44,8 +44,8 @@ export default function LoginPage() {
       const { data: userData } = await sb.auth.getUser()
       logStep(`2. getUser OK, user: ${userData.user?.email ?? 'none'}`)
 
-      logStep('3. redirecting...')
-      router.push(`/${locale}/account`)
+      logStep('3. login complete, awaiting manual navigation')
+      setLoggedIn(true)
     } catch (err: any) {
       const message = err?.message || JSON.stringify(err)
       setError(message)
@@ -65,45 +65,62 @@ export default function LoginPage() {
         <X size={24} />
       </Link>
       <h1 className="text-2xl font-semibold mb-4">{t('login_title')}</h1>
-      <p className="text-sm text-brand-muted mb-6">{t('login_subtitle')}</p>
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        <label className="block text-sm">
-          <span className="text-brand-muted">{t('email')}</span>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            className="input mt-2 w-full"
-            placeholder="you@example.com"
-          />
-        </label>
-        <label className="block text-sm">
-          <span className="text-brand-muted">{t('password')}</span>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            className="input mt-2 w-full"
-            placeholder="••••••••"
-          />
-          <div className="mt-2 text-right">
-            <Link href={`/${locale}/account/forgot-password`} className="text-xs text-brand-accent underline">
-              {t('forgot_password_link')}
-            </Link>
-          </div>
-        </label>
-        <button type="submit" disabled={loading} className="btn btn-primary w-full">
-          {loading ? '…' : t('login_button')}
-        </button>
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        {debugLog.length > 0 && (
-          <div id="debug-log" className="whitespace-pre-wrap rounded-lg bg-gray-100 p-3 text-xs text-gray-700">
-            {debugLog.join('\n')}
-          </div>
-        )}
-      </form>
+
+      {loggedIn ? (
+        <div className="space-y-4">
+          <p className="text-sm font-semibold text-green-600">Вход выполнен!</p>
+          <a href={`/${locale}/account`} className="btn btn-primary w-full">
+            Перейти в кабинет
+          </a>
+          {debugLog.length > 0 && (
+            <div id="debug-log" className="whitespace-pre-wrap rounded-lg bg-gray-100 p-3 text-xs text-gray-700">
+              {debugLog.join('\n')}
+            </div>
+          )}
+        </div>
+      ) : (
+        <>
+          <p className="text-sm text-brand-muted mb-6">{t('login_subtitle')}</p>
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <label className="block text-sm">
+              <span className="text-brand-muted">{t('email')}</span>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                className="input mt-2 w-full"
+                placeholder="you@example.com"
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="text-brand-muted">{t('password')}</span>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                className="input mt-2 w-full"
+                placeholder="••••••••"
+              />
+              <div className="mt-2 text-right">
+                <Link href={`/${locale}/account/forgot-password`} className="text-xs text-brand-accent underline">
+                  {t('forgot_password_link')}
+                </Link>
+              </div>
+            </label>
+            <button type="submit" disabled={loading} className="btn btn-primary w-full">
+              {loading ? '…' : t('login_button')}
+            </button>
+            {error && <p className="text-sm text-red-600">{error}</p>}
+            {debugLog.length > 0 && (
+              <div id="debug-log" className="whitespace-pre-wrap rounded-lg bg-gray-100 p-3 text-xs text-gray-700">
+                {debugLog.join('\n')}
+              </div>
+            )}
+          </form>
+        </>
+      )}
       <div className="mt-6 text-sm text-brand-muted">
         {t('no_account')}{' '}
         <Link href={`/${locale}/account/register`} className="text-brand-accent underline">
