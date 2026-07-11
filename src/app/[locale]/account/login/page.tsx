@@ -27,8 +27,10 @@ export default function LoginPage() {
       const { data, error } = await sb.auth.signInWithPassword({ email, password })
       console.log('login result:', data, error)
       if (error) throw error
-      router.push(`/${locale}/account`)
+
+      await sb.auth.getUser()
       router.refresh()
+      router.push(`/${locale}/account`)
     } catch (err: any) {
       const message = err?.message || t('login_error')
       setError(message)
