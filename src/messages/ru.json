@@ -171,6 +171,7 @@
     "register_subtitle": "Создайте аккаунт для управления заказами и скидками",
     "register_button": "Создать аккаунт",
     "register_success": "Аккаунт создан",
+    "register_check_email": "Проверьте почту для подтверждения",
     "register_error": "Не удалось зарегистрироваться",
     "have_account": "Уже есть аккаунт?",
     "login_link": "Войти",

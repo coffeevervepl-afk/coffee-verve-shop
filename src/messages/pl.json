@@ -167,6 +167,7 @@
     "register_subtitle": "Utwórz konto, aby zarządzać zamówieniami i rabatami",
     "register_button": "Utwórz konto",
     "register_success": "Konto utworzone",
+    "register_check_email": "Sprawdź skrzynkę e-mail, aby potwierdzić rejestrację",
     "register_error": "Nie udało się zarejestrować",
     "have_account": "Masz już konto?",
     "login_link": "Zaloguj się",

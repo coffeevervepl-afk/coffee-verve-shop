@@ -167,6 +167,7 @@
     "register_subtitle": "Створіть акаунт для керування замовленнями та знижками",
     "register_button": "Створити акаунт",
     "register_success": "Акаунт створено",
+    "register_check_email": "Перевірте пошту для підтвердження",
     "register_error": "Не вдалося зареєструватися",
     "have_account": "Вже є акаунт?",
     "login_link": "Увійти",
