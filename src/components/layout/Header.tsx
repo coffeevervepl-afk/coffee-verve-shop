@@ -16,6 +16,12 @@ const ROW2_LINK = 'whitespace-nowrap text-[13px] font-medium uppercase tracking-
 const DROPDOWN   = 'absolute right-0 top-[calc(100%+10px)] z-20 rounded-[12px] bg-[rgba(255,255,255,0.85)] text-[#3A2115] shadow-lg backdrop-blur-md transition-all duration-200'
 const NAV_CTA    = 'nav-cta-btn flex items-center gap-1 whitespace-nowrap rounded-full border border-white/40 bg-white/60 px-4 py-1.5 text-[13px] font-medium uppercase tracking-[0.04em] text-[#4A4540] backdrop-blur-sm transition-colors hover:bg-white/80'
 
+function getDisplayName(email: string): string {
+  const namePart = email.split('@')[0].split('.')[0].replace(/[0-9]/g, '')
+  if (!namePart) return email.split('@')[0]
+  return namePart.charAt(0).toUpperCase() + namePart.slice(1).toLowerCase()
+}
+
 export default function Header({ locale }: { locale: Locale }) {
   const t      = useTranslations('nav')
   const tTop   = useTranslations('topbar')
@@ -28,7 +34,7 @@ export default function Header({ locale }: { locale: Locale }) {
   const contactsRef = useRef<HTMLDivElement | null>(null)
   const [accountOpen, setAccountOpen] = useState(false)
   const accountRef = useRef<HTMLDivElement | null>(null)
-  const [hasSession, setHasSession] = useState(false)
+  const [sessionEmail, setSessionEmail] = useState<string | null>(null)
 
   useEffect(() => {
     function onClickOutside(event: MouseEvent) {
@@ -41,7 +47,7 @@ export default function Header({ locale }: { locale: Locale }) {
 
   useEffect(() => {
     const sb = createClient()
-    sb.auth.getSession().then(({ data }) => setHasSession(!!data.session))
+    sb.auth.getSession().then(({ data }) => setSessionEmail(data.session?.user?.email ?? null))
   }, [])
 
   async function handleSignOut() {
@@ -92,16 +98,20 @@ export default function Header({ locale }: { locale: Locale }) {
 
             <span className="h-3.5 w-px bg-black/15" />
 
-            {!user && !hasSession ? (
+            {!user && !sessionEmail ? (
               <>
                 <Link href={`/${locale}/account/login`} className={ROW1_TEXT}>{t('login')}</Link>
                 <span className="h-3.5 w-px bg-black/15" />
                 <Link href={`/${locale}/account/register`} className={ROW1_TEXT}>{t('register')}</Link>
               </>
-            ) : !user && hasSession ? (
+            ) : !user && sessionEmail ? (
               <div ref={accountRef} className="relative">
-                <button type="button" onClick={() => setAccountOpen(v => !v)} className={ROW1_TEXT}>
-                  <User size={16} />
+                <button
+                  type="button"
+                  onClick={() => setAccountOpen(v => !v)}
+                  className="flex cursor-pointer items-center gap-1 text-[14px] font-medium text-[#3A2115] transition-colors hover:text-[#2A2620]"
+                >
+                  {getDisplayName(sessionEmail)} <span aria-hidden>▾</span>
                 </button>
                 <div className={`${DROPDOWN} min-w-[190px] p-1 ${
                   accountOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'
