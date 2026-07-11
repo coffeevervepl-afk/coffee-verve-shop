@@ -35,11 +35,7 @@ export default function AccountPage() {
   const [savingTelegram, setSavingTelegram] = useState(false)
 
   useEffect(() => {
-    if (loading || user) return
-    const timer = setTimeout(() => {
-      router.push(`/${locale}`)
-    }, 2000)
-    return () => clearTimeout(timer)
+    if (!loading && !user) router.push(`/${locale}`)
   }, [loading, user, locale, router])
 
   useEffect(() => {
