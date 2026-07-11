@@ -93,9 +93,8 @@ export default async function AccountPage({ params }: Props) {
   const progressPct = nextThreshold ? Math.min(100, Math.round((orderCount / nextThreshold) * 100)) : 100
   const nextTierKey = tier === 'classic' ? 'silver' : 'gold'
 
-  const registeredDate = shopUser?.created_at
-    ? new Date(shopUser.created_at).toLocaleDateString(DATE_LOCALE[locale])
-    : '—'
+  const regDate = new Date(user.created_at)
+  const registeredDate = `${String(regDate.getDate()).padStart(2, '0')}.${String(regDate.getMonth() + 1).padStart(2, '0')}.${regDate.getFullYear()}`
 
   const quickActions = [
     { href: `/${locale}/account/orders`,    icon: Package,     label: t('quick_orders') },
