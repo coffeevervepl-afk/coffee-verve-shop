@@ -91,9 +91,9 @@ export default function Header({ locale }: { locale: Locale }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="flex h-[28px] w-[28px] items-center justify-center transition-opacity hover:opacity-80"
+                className="flex h-[32px] w-[32px] items-center justify-center transition-opacity hover:opacity-80"
               >
-                <Icon size={16} color={color} />
+                <Icon size={20} color={color} />
               </a>
             ))}
           </div>
