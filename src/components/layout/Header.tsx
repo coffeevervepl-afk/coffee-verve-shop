@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { Search, Heart, ShoppingBag, User, Phone, MessageCircle, Send, Mail } from 'lucide-react'
+import { Search, Heart, ShoppingBag, User, Phone, MessageCircle, Send, Mail, Instagram, Facebook, Music } from 'lucide-react'
 import LanguageSwitcher from './LanguageSwitcher'
 import { useCartStore } from '@/hooks/useCartStore'
 import { useAuth } from '@/hooks/useAuth'
@@ -15,6 +15,14 @@ const ROW1_TEXT = 'text-[13px] font-medium tracking-[0.02em] text-[#3A2115]'
 const ROW2_LINK = 'whitespace-nowrap text-[13px] font-medium uppercase tracking-[0.04em] text-[#4A4540] transition-opacity hover:opacity-70'
 const DROPDOWN   = 'absolute right-0 top-[calc(100%+10px)] z-20 rounded-[12px] bg-[rgba(255,255,255,0.85)] text-[#3A2115] shadow-lg backdrop-blur-md transition-all duration-200'
 const NAV_CTA    = 'nav-cta-btn flex items-center gap-1 whitespace-nowrap rounded-full border border-white/40 bg-white/60 px-4 py-1.5 text-[13px] font-medium uppercase tracking-[0.04em] text-[#4A4540] backdrop-blur-sm transition-colors hover:bg-white/80'
+
+const SOCIAL_LINKS = [
+  { href: 'https://www.instagram.com/coffee.verve',        icon: Instagram,      color: '#E1306C', label: 'Instagram' },
+  { href: 'https://www.tiktok.com/@coffeeverve',            icon: Music,          color: '#000000', label: 'TikTok' },
+  { href: 'https://www.facebook.com/share/1BZXE3GTod/',     icon: Facebook,       color: '#1877F2', label: 'Facebook' },
+  { href: 'https://wa.me/48573994584',                      icon: MessageCircle,  color: '#25D366', label: 'WhatsApp' },
+  { href: 'https://t.me/coffeeverve_shop',                  icon: Send,           color: '#229ED9', label: 'Telegram' },
+]
 
 function getDisplayName(email: string): string {
   const namePart = email.split('@')[0].split('.')[0].replace(/[0-9]/g, '')
@@ -70,10 +78,27 @@ export default function Header({ locale }: { locale: Locale }) {
       <div className="mx-auto max-w-[1360px]">
 
         {/* Row 1 — service bar */}
-        <div className="relative z-10 hidden items-center justify-between border-b border-black/[0.06] px-6 py-[6px] md:flex">
-          <LanguageSwitcher locale={locale} />
+        <div className="relative z-10 hidden grid-cols-3 items-center border-b border-black/[0.06] px-6 py-[6px] md:grid">
+          <div className="justify-self-start">
+            <LanguageSwitcher locale={locale} />
+          </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-center gap-3 justify-self-center">
+            {SOCIAL_LINKS.map(({ href, icon: Icon, color, label }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="flex h-[28px] w-[28px] items-center justify-center transition-opacity hover:opacity-80"
+              >
+                <Icon size={16} color={color} />
+              </a>
+            ))}
+          </div>
+
+          <div className="flex items-center justify-end gap-4 justify-self-end">
             <div ref={contactsRef} className="relative">
               <button type="button" onClick={() => setContactsOpen(v => !v)} className={ROW1_TEXT}>
                 {tTop('contacts')}
