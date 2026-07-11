@@ -67,7 +67,7 @@ export default function Header({ locale }: { locale: Locale }) {
                 <a href="https://wa.me/48573994584" target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-lg px-2 py-2 text-[13px] transition-colors hover:bg-black/5">
                   <MessageCircle size={16} /> WhatsApp
                 </a>
-                <a href="https://t.me/coffeeverve" target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-lg px-2 py-2 text-[13px] transition-colors hover:bg-black/5">
+                <a href="https://t.me/Coffeeverve_pl" target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-lg px-2 py-2 text-[13px] transition-colors hover:bg-black/5">
                   <Send size={16} /> Telegram
                 </a>
                 <a href="mailto:info@coffeeverve.pl" className="flex items-center gap-2 rounded-lg px-2 py-2 text-[13px] transition-colors hover:bg-black/5">
