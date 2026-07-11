@@ -16,17 +16,22 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setLoading(true)
+    setError('')
     try {
       const sb = createClient()
       const { error } = await sb.auth.signInWithPassword({ email, password })
       if (error) throw error
       router.push(`/${locale}/account`)
+      router.refresh()
     } catch (err: any) {
-      toast.error(err?.message || t('login_error'))
+      const message = err?.message || t('login_error')
+      setError(message)
+      toast.error(message)
     } finally {
       setLoading(false)
     }
@@ -74,6 +79,7 @@ export default function LoginPage() {
         <button type="submit" disabled={loading} className="btn btn-primary w-full">
           {loading ? '…' : t('login_button')}
         </button>
+        {error && <p className="text-sm text-red-600">{error}</p>}
       </form>
       <div className="mt-6 text-sm text-brand-muted">
         {t('no_account')}{' '}
