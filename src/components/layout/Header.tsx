@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { Search, Heart, ShoppingBag, User, MessageCircle, Send, Mail } from 'lucide-react'
+import { Search, Heart, ShoppingBag, User, Phone, MessageCircle, Send, Mail } from 'lucide-react'
 import LanguageSwitcher from './LanguageSwitcher'
 import { useCartStore } from '@/hooks/useCartStore'
 import { useAuth } from '@/hooks/useAuth'
@@ -61,7 +61,10 @@ export default function Header({ locale }: { locale: Locale }) {
               <div className={`${DROPDOWN} w-56 p-3 ${
                 contactsOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'
               }`}>
-                <a href="https://wa.me/48XXXXXXXXXX" target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-lg px-2 py-2 text-[13px] transition-colors hover:bg-black/5">
+                <a href="tel:+48573994584" className="flex items-center gap-2 rounded-lg px-2 py-2 text-[13px] transition-colors hover:bg-black/5">
+                  <Phone size={16} /> +48 573 994 584
+                </a>
+                <a href="https://wa.me/48573994584" target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-lg px-2 py-2 text-[13px] transition-colors hover:bg-black/5">
                   <MessageCircle size={16} /> WhatsApp
                 </a>
                 <a href="https://t.me/coffeeverve" target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-lg px-2 py-2 text-[13px] transition-colors hover:bg-black/5">
