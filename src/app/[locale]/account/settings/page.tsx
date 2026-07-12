@@ -35,6 +35,7 @@ export default async function SettingsPage({ params }: Props) {
 
   return (
     <SettingsForm
+      locale={locale}
       initialProfile={{
         name:                     shopUser?.name ?? '',
         phone:                    shopUser?.phone ?? '',

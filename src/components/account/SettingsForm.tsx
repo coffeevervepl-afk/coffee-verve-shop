@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { toast } from 'react-hot-toast'
+import type { Locale } from '@/types/shop'
 
 interface Profile {
   name: string
@@ -22,6 +24,7 @@ interface Address {
 }
 
 interface Props {
+  locale: Locale
   initialProfile: Profile
   initialAddresses: Address[]
 }
@@ -53,7 +56,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
   )
 }
 
-export default function SettingsForm({ initialProfile, initialAddresses }: Props) {
+export default function SettingsForm({ locale, initialProfile, initialAddresses }: Props) {
   const t = useTranslations('settings')
 
   const [profile, setProfile] = useState(initialProfile)
@@ -148,7 +151,15 @@ export default function SettingsForm({ initialProfile, initialAddresses }: Props
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-4 md:p-8">
-      <h1 className="text-2xl font-bold uppercase text-[#3A2115]">{t('page_title')}</h1>
+      <div>
+        <h1 className="text-2xl font-bold uppercase text-[#3A2115]">{t('page_title')}</h1>
+        <Link
+          href={`/${locale}/account`}
+          className="mt-1 inline-flex items-center gap-1 text-xs text-brand-muted transition-colors hover:text-[#3A2115]"
+        >
+          ← {t('back_to_account')}
+        </Link>
+      </div>
 
       {/* Block 1 — Personal data */}
       <section className={cardClass}>

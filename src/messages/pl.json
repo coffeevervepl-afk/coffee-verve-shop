@@ -245,6 +245,7 @@
   },
   "settings": {
     "page_title": "Ustawienia",
+    "back_to_account": "Powrót do konta",
     "personal_data_title": "Dane osobowe",
     "name_label": "Imię",
     "phone_label": "Telefon",

@@ -245,6 +245,7 @@
   },
   "settings": {
     "page_title": "Налаштування",
+    "back_to_account": "Повернутися в акаунт",
     "personal_data_title": "Особисті дані",
     "name_label": "Ім'я",
     "phone_label": "Телефон",

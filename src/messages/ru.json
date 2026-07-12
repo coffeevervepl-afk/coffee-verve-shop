@@ -249,6 +249,7 @@
   },
   "settings": {
     "page_title": "Настройки",
+    "back_to_account": "Вернуться в аккаунт",
     "personal_data_title": "Личные данные",
     "name_label": "Имя",
     "phone_label": "Телефон",
