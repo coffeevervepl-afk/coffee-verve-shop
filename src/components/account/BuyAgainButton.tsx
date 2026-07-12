@@ -33,12 +33,14 @@ export default function BuyAgainButton({ locale, shopProductId, slug, weight, gr
       const sb = createClient()
       // Re-fetch the current product so the item carries a live image/price and
       // we can tell if it was removed or deactivated since the original order.
-      let query = sb.from('shop_products').select('*').eq('is_active', true).limit(1)
+      // Keep all filter (.eq) calls before the transform (.limit/.maybeSingle) —
+      // .limit() returns a transform builder that no longer exposes .eq().
+      let query = sb.from('shop_products').select('*').eq('is_active', true)
       if (shopProductId)  query = query.eq('id', shopProductId)
       else if (slug)      query = query.eq('slug', slug)
       else { toast.error(t('reorder_unavailable')); return }
 
-      const { data, error } = await query.maybeSingle()
+      const { data, error } = await query.limit(1).maybeSingle()
       if (error || !data) { toast.error(t('reorder_unavailable')); return }
 
       const product = data as ShopProduct
