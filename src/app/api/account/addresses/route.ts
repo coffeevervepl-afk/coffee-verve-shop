@@ -44,6 +44,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'not_found' }, { status: 404 })
   }
 
+  const { count } = await sb
+    .from('shop_addresses')
+    .select('id', { count: 'exact', head: true })
+    .eq('shop_user_id', shopUser.id)
+
+  if ((count ?? 0) >= 3) {
+    return NextResponse.json({ error: 'max_addresses_reached' }, { status: 400 })
+  }
+
   const payload = await req.json()
   const {
     type,
@@ -55,6 +64,9 @@ export async function POST(req: NextRequest) {
     paczkomat_name,
     paczkomat_address,
     is_default,
+    label,
+    recipient_name,
+    recipient_phone,
   } = payload
 
   const insertData = {
@@ -68,6 +80,9 @@ export async function POST(req: NextRequest) {
     paczkomat_name: paczkomat_name ?? null,
     paczkomat_address: paczkomat_address ?? null,
     is_default: Boolean(is_default),
+    label: label ?? null,
+    recipient_name: recipient_name ?? null,
+    recipient_phone: recipient_phone ?? null,
   }
 
   if (insertData.is_default) {
@@ -109,6 +124,9 @@ export async function PATCH(req: NextRequest) {
     paczkomat_name,
     paczkomat_address,
     is_default,
+    label,
+    recipient_name,
+    recipient_phone,
   } = payload
 
   if (!id) return NextResponse.json({ error: 'no_id' }, { status: 400 })
@@ -129,6 +147,9 @@ export async function PATCH(req: NextRequest) {
       paczkomat_name: paczkomat_name ?? null,
       paczkomat_address: paczkomat_address ?? null,
       is_default: Boolean(is_default),
+      label: label ?? null,
+      recipient_name: recipient_name ?? null,
+      recipient_phone: recipient_phone ?? null,
     })
     .eq('id', id)
     .eq('shop_user_id', shopUser.id)
