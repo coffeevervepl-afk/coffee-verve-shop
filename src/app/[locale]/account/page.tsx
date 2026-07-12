@@ -28,12 +28,20 @@ interface AddressRow {
   city:        string | null
 }
 
+interface OrderItemRow {
+  product_name: string
+  weight:       number
+  quantity:     number
+  line_total:   number
+}
+
 interface OrderRow {
-  id:           string
-  order_number: number
-  total:        number
-  status:       string
-  created_at:   string
+  id:                string
+  order_number:      number
+  total:             number
+  status:            string
+  created_at:        string
+  shop_order_items:  OrderItemRow[] | null
 }
 
 const STATUS_STYLES: Record<string, string> = {
@@ -79,7 +87,7 @@ export default async function AccountPage({ params }: Props) {
         .eq('email', email)
         .single(),
       supabase.from('shop_orders')
-        .select('id, order_number, total, status, created_at')
+        .select('id, order_number, total, status, created_at, shop_order_items(product_name, weight, quantity, line_total)')
         .eq('customer_email', email)
         .order('created_at', { ascending: false })
         .limit(3),
@@ -179,7 +187,16 @@ export default async function AccountPage({ params }: Props) {
                       {t(`status_${order.status}`)}
                     </span>
                   </p>
-                  <p className="text-sm text-brand-muted">
+                  {order.shop_order_items && order.shop_order_items.length > 0 && (
+                    <ul className="mt-1.5 space-y-0.5">
+                      {order.shop_order_items.map((item, i) => (
+                        <li key={i} className="text-sm text-brand-muted">
+                          {item.product_name} · {item.weight}г × {item.quantity} — {fmtPrice(item.line_total)}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <p className="mt-1.5 text-sm text-brand-muted">
                     {new Date(order.created_at).toLocaleDateString(DATE_LOCALE[locale])}
                   </p>
                 </div>
