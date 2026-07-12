@@ -91,10 +91,10 @@ export default async function AccountPage({ params }: Props) {
   let shopUser: ShopUserRow | null = null
   let recentOrders: OrderRow[] = []
   let address: AddressRow | null = null
-  // Maps `${shop_order_id}|${crm_product_id}|${weight}` → first qr_token of the
-  // matching CRM order(s). One CRM order (and qr_token) exists per unit, so for
-  // qty>1 we keep the first token per position.
-  const qrByKey = new Map<string, string>()
+  // Maps `${shop_order_id}|${crm_product_id}|${weight}` → all qr_tokens of the
+  // matching CRM orders. One CRM order (and qr_token) exists per physical unit,
+  // so a qty>N position collects N tokens → one QR button per unit.
+  const qrByKey = new Map<string, string[]>()
 
   try {
     const [shopUserRes, ordersRes] = await Promise.all([
@@ -120,8 +120,11 @@ export default async function AccountPage({ params }: Props) {
         .in('shop_order_id', orderIds)
       if (!crmRes.error) {
         for (const r of crmRes.data ?? []) {
+          if (!r.qr_token) continue
           const key = `${r.shop_order_id}|${r.product_id}|${r.weight}`
-          if (r.qr_token && !qrByKey.has(key)) qrByKey.set(key, r.qr_token)
+          const tokens = qrByKey.get(key)
+          if (tokens) tokens.push(r.qr_token)
+          else qrByKey.set(key, [r.qr_token])
         }
       }
     }
@@ -224,8 +227,8 @@ export default async function AccountPage({ params }: Props) {
                   {order.shop_order_items && order.shop_order_items.length > 0 && (
                     <ul className="mt-2 space-y-1">
                       {order.shop_order_items.map((item, i) => {
-                        const qrToken = qrByKey.get(`${order.id}|${item.shop_products?.[0]?.crm_product_id}|${item.weight}`)
-                        const qrEnabled = delivered && !!qrToken
+                        // All qr_tokens for this position — one per physical unit.
+                        const qrTokens = qrByKey.get(`${order.id}|${item.shop_products?.[0]?.crm_product_id}|${item.weight}`) ?? []
                         return (
                           <li key={i} className="flex items-center justify-between gap-2 text-xs text-brand-muted">
                             <span className="min-w-0 truncate">
@@ -240,10 +243,12 @@ export default async function AccountPage({ params }: Props) {
                                 grind={item.grind}
                                 grindOption={item.grind_option}
                               />
-                              {item.weight === 250 && (
-                                qrEnabled ? (
+                              {item.weight === 250 && Array.from({ length: item.quantity }).map((_, u) => {
+                                const token = qrTokens[u]
+                                return delivered && token ? (
                                   <a
-                                    href={`${CRM_URL}/passport/${qrToken}?lang=${locale}`}
+                                    key={u}
+                                    href={`${CRM_URL}/passport/${token}?lang=${locale}`}
                                     target="_blank"
                                     rel="noreferrer"
                                     className="rounded-full border border-[#412618] px-2 py-0.5 text-[11px] font-medium text-[#412618] transition-colors hover:bg-[#412618]/5"
@@ -252,6 +257,7 @@ export default async function AccountPage({ params }: Props) {
                                   </a>
                                 ) : (
                                   <span
+                                    key={u}
                                     aria-disabled="true"
                                     title={t('qr_after_delivery')}
                                     className="cursor-not-allowed rounded-full border border-gray-200 px-2 py-0.5 text-[11px] font-medium text-gray-300"
@@ -259,7 +265,7 @@ export default async function AccountPage({ params }: Props) {
                                     QR
                                   </span>
                                 )
-                              )}
+                              })}
                             </span>
                           </li>
                         )
