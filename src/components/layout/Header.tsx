@@ -76,7 +76,7 @@ export default function Header({ locale }: { locale: Locale }) {
   const router = useRouter()
   const count    = useCartStore(s => s.count)
   const openCart = useCartStore(s => s.openDrawer)
-  const { user, signOut } = useAuth()
+  const { user, signOut, refresh } = useAuth()
 
   const [contactsOpen, setContactsOpen] = useState(false)
   const contactsRef = useRef<HTMLDivElement | null>(null)
@@ -96,7 +96,8 @@ export default function Header({ locale }: { locale: Locale }) {
 
   useEffect(() => {
     const sb = createClient()
-    sb.auth.getSession().then(async ({ data }) => {
+    async function loadSessionName() {
+      const { data } = await sb.auth.getSession()
       const sessEmail = data.session?.user?.email ?? null
       setSessionEmail(sessEmail)
       if (sessEmail) {
@@ -106,8 +107,18 @@ export default function Header({ locale }: { locale: Locale }) {
         const { data: row } = await sb.from('shop_users').select('name').eq('email', sessEmail).single()
         setSessionName(row?.name?.trim() || null)
       }
-    })
-  }, [])
+    }
+    loadSessionName()
+
+    // Re-read the name after the profile is edited elsewhere (e.g. the account
+    // page's ProfileCard) so the header doesn't keep showing the stale name.
+    function onProfileUpdated() {
+      loadSessionName()
+      refresh()
+    }
+    window.addEventListener('shop-user-updated', onProfileUpdated)
+    return () => window.removeEventListener('shop-user-updated', onProfileUpdated)
+  }, [refresh])
 
   async function handleSignOut() {
     await signOut()

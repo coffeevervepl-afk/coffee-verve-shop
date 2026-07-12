@@ -60,6 +60,9 @@ export default function ProfileCard({
       if (!res.ok) throw new Error()
       setName(nameDraft)
       setEditingName(false)
+      // Tell the header (and any other listener) to re-read shop_users.name so
+      // it doesn't keep showing the pre-edit value.
+      window.dispatchEvent(new Event('shop-user-updated'))
       toast.success(t('saved'))
     } catch {
       toast.error(t('save_error'))
