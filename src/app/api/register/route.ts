@@ -38,9 +38,13 @@ export async function POST(req: NextRequest) {
 
   let shopUserId = existing?.id ?? null
 
-  // If no shop_user, create one (rare — normally created at checkout)
+  // If no shop_user, create one (rare — normally created at checkout).
+  // This MUST succeed before we create the Supabase Auth user below —
+  // otherwise a failed insert (e.g. a CRM-sync trigger rejecting the row)
+  // would leave an orphaned auth.users record with no matching shop_users
+  // row. Check the error explicitly instead of letting it pass silently.
   if (!shopUserId) {
-    const { data: newUser } = await sb
+    const { data: newUser, error: insertError } = await sb
       .from('shop_users')
       .insert({
         email,
@@ -54,13 +58,17 @@ export async function POST(req: NextRequest) {
       })
       .select('id')
       .single()
-    shopUserId = newUser?.id
+    if (insertError || !newUser) {
+      console.error('Registration: shop_users insert failed:', insertError)
+      return NextResponse.json({ error: 'shop_user_create_failed' }, { status: 500 })
+    }
+    shopUserId = newUser.id
   } else {
     // Convert guest → registered; set min_discount_until = +6 months if not already active
     const sixMonthsFromNow = new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000).toISOString()
     const currentMin = existing?.min_discount_until
     const needsMin   = !currentMin || new Date(currentMin) < new Date()
-    await sb
+    const { error: updateError } = await sb
       .from('shop_users')
       .update({
         name:               name || undefined,
@@ -71,15 +79,21 @@ export async function POST(req: NextRequest) {
         ...consentFields,
       })
       .eq('id', shopUserId)
+    if (updateError) {
+      console.error('Registration: shop_users update failed:', updateError)
+      return NextResponse.json({ error: 'shop_user_update_failed' }, { status: 500 })
+    }
   }
 
-  // Generate referral code if missing
+  // Generate referral code if missing (non-critical enrichment — log but
+  // don't fail registration if it doesn't stick).
   if (existing && !existing.referral_code && shopUserId) {
     const { data: codeData } = await sb.rpc('generate_referral_code')
     if (codeData) {
-      await sb.from('shop_users')
+      const { error: refError } = await sb.from('shop_users')
         .update({ referral_code: codeData })
         .eq('id', shopUserId)
+      if (refError) console.error('Registration: referral_code update failed:', refError)
     }
   }
 
