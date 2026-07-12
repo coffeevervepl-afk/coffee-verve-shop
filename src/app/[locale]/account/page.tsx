@@ -239,9 +239,9 @@ export default async function AccountPage({ params }: Props) {
                                   ? `${t('grind_ground')} (${t(`grind_opt_${item.grind_option}`)})`
                                   : t('grind_ground'))
                               : ''
-                        // QR availability depends ONLY on weight (250g = tasting guarantee).
-                        const showQr = item.weight === 250
                         return Array.from({ length: item.quantity }).map((_, u) => {
+                          // Problem-report link depends only on having a qr_token
+                          // (any weight), gated clickable by delivery status.
                           const token = qrTokens[u]
                           return (
                             <li key={`${i}-${u}`} className="flex items-center justify-between gap-2 leading-tight">
@@ -249,7 +249,8 @@ export default async function AccountPage({ params }: Props) {
                                 <span className="text-[13px] font-medium text-[#3A2115]">{item.product_name}</span>
                                 <span className="text-xs text-gray-500"> · {item.weight}г — {perPack}{grindText ? ` · ${grindText}` : ''}</span>
                               </span>
-                              {/* Two fixed slots so buttons line up across rows regardless of QR presence. */}
+                              {/* Kup ponownie + problem-report slot; invisible clone keeps
+                                  rows aligned when a line has no qr_token. */}
                               <span className="flex shrink-0 items-center gap-1.5">
                                 <BuyAgainButton
                                   locale={locale}
@@ -259,28 +260,30 @@ export default async function AccountPage({ params }: Props) {
                                   grind={item.grind}
                                   grindOption={item.grind_option}
                                 />
-                                <span className="flex w-9 justify-end">
-                                  {showQr && (
-                                    delivered && token ? (
-                                      <a
-                                        href={`${CRM_URL}/passport/${token}?lang=${locale}`}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="rounded-full border border-[#412618] px-2 py-0.5 text-[11px] font-medium text-[#412618]"
-                                      >
-                                        QR
-                                      </a>
-                                    ) : (
-                                      <span
-                                        aria-disabled="true"
-                                        title={t('qr_after_delivery')}
-                                        className="cursor-not-allowed rounded-full border border-gray-200 px-2 py-0.5 text-[11px] font-medium text-gray-300"
-                                      >
-                                        QR
-                                      </span>
-                                    )
-                                  )}
-                                </span>
+                                {token ? (
+                                  delivered ? (
+                                    <a
+                                      href={`${CRM_URL}/passport/${token}?lang=${locale}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="whitespace-nowrap rounded-full border border-[#412618] px-2 py-0.5 text-[11px] font-medium text-[#412618]"
+                                    >
+                                      {t('report_problem')}
+                                    </a>
+                                  ) : (
+                                    <span
+                                      aria-disabled="true"
+                                      title={t('report_after_delivery')}
+                                      className="cursor-not-allowed whitespace-nowrap rounded-full border border-gray-200 px-2 py-0.5 text-[11px] font-medium text-gray-300"
+                                    >
+                                      {t('report_problem')}
+                                    </span>
+                                  )
+                                ) : (
+                                  <span aria-hidden="true" className="invisible whitespace-nowrap rounded-full border px-2 py-0.5 text-[11px] font-medium">
+                                    {t('report_problem')}
+                                  </span>
+                                )}
                               </span>
                             </li>
                           )
