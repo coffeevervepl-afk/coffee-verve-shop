@@ -26,6 +26,8 @@ export default function SuccessPage() {
   const [showPwd,     setShowPwd]     = useState(false)
   const [regLoading,  setRegLoading]  = useState(false)
   const [tasteProfile, setTasteProfile] = useState<any>(null)
+  // null = still checking; same server-validated check as /account.
+  const [isLoggedIn,  setIsLoggedIn]  = useState<boolean | null>(null)
 
   useEffect(() => {
     setItems([])
@@ -37,6 +39,11 @@ export default function SuccessPage() {
       .single()
       .then(({ data }) => setOrder(data))
   }, [orderId, setItems])
+
+  useEffect(() => {
+    const sb = createClient()
+    sb.auth.getUser().then(({ data }) => setIsLoggedIn(!!data.user))
+  }, [])
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
@@ -94,8 +101,21 @@ export default function SuccessPage() {
           </>
         )}
 
-        {/* ── Step: offer registration ──────────────────────────────── */}
-        {step === 'confirm' && order && (
+        {/* ── Logged-in: thank-you note instead of the register offer ── */}
+        {order && isLoggedIn && (
+          <div className="mb-6">
+            <h2
+              style={{ fontFamily: 'var(--font-serif)' }}
+              className="text-[34px] font-bold leading-tight text-[#3A2115]"
+            >
+              {t('thanks_title')}
+            </h2>
+            <p className="mt-2 text-gray-500">{t('thanks_subtitle')}</p>
+          </div>
+        )}
+
+        {/* ── Step: offer registration (guests only) ────────────────── */}
+        {step === 'confirm' && order && isLoggedIn === false && (
           <div className="rounded-2xl border border-brand-gold/40 bg-brand-gold/5 p-6 text-left mb-6">
             <p className="text-lg font-bold mb-1">Сохрани скидку {DISCOUNT_PCT}% навсегда</p>
             <p className="text-sm text-brand-muted mb-4">
@@ -166,7 +186,7 @@ export default function SuccessPage() {
         )}
 
         {/* ── Final links ───────────────────────────────────────────── */}
-        {(step === 'done' || !order) && (
+        {(step === 'done' || !order || isLoggedIn) && (
           <div className="space-y-3">
             <Link href={`/${locale}/account`} className="btn btn-primary w-full">
               Мой кабинет

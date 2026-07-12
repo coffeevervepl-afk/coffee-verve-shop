@@ -300,6 +300,8 @@
     "tracking": "Numer śledzenia pojawi się po wysyłce",
     "register_cta": "Utwórz konto",
     "register_desc": "Zachowaj rabat {pct}% i śledź zamówienia",
+    "thanks_title": "Dziękujemy za zamówienie!",
+    "thanks_subtitle": "Twoja kawa już się szykuje do wysyłki",
     "continue": "Kontynuuj zakupy"
   },
   "common": { "loading": "Ładowanie...", "error": "Błąd", "retry": "Spróbuj ponownie", "pln": "zł" }
