@@ -15,6 +15,8 @@ interface ShopUserRow {
   created_at:               string
   consent_email_marketing:  boolean | null
   consent_sms_marketing:    boolean | null
+  loyalty_level:             'classic' | 'gold' | 'platinum'
+  spent_12m:                 number
 }
 
 interface OrderRow {
@@ -36,13 +38,13 @@ const STATUS_STYLES: Record<string, string> = {
 
 const DATE_LOCALE: Record<Locale, string> = { ru: 'ru-RU', pl: 'pl-PL', ua: 'uk-UA' }
 
-function getTier(orderCount: number) {
-  if (orderCount >= 10) return 'gold' as const
-  if (orderCount >= 3)  return 'silver' as const
-  return 'classic' as const
-}
-
-const TIER_PCT = { classic: 0, silver: 5, gold: 10 }
+// Mirrors loyalty_config (classic_discount/gold_discount/platinum_discount
+// and gold_threshold/platinum_threshold), computed server-side by recalc_loyalty
+// off spent_12m — kept here in sync rather than queried, since these
+// thresholds rarely change and this avoids an extra round trip.
+const DISCOUNT_PCT = { classic: 5, gold: 10, platinum: 15 }
+const NEXT_THRESHOLD = { classic: 600, gold: 1800, platinum: null }
+const NEXT_TIER = { classic: 'gold', gold: 'platinum', platinum: null } as const
 
 export default async function AccountPage({ params }: Props) {
   const { locale } = params
@@ -58,18 +60,14 @@ export default async function AccountPage({ params }: Props) {
   const email = user.email
 
   let shopUser: ShopUserRow | null = null
-  let orderCount = 0
   let recentOrders: OrderRow[] = []
 
   try {
-    const [shopUserRes, countRes, ordersRes] = await Promise.all([
+    const [shopUserRes, ordersRes] = await Promise.all([
       supabase.from('shop_users')
-        .select('name, phone, created_at, consent_email_marketing, consent_sms_marketing')
+        .select('name, phone, created_at, consent_email_marketing, consent_sms_marketing, loyalty_level, spent_12m')
         .eq('email', email)
         .single(),
-      supabase.from('shop_orders')
-        .select('id', { count: 'exact', head: true })
-        .eq('customer_email', email),
       supabase.from('shop_orders')
         .select('id, order_number, total, status, created_at')
         .eq('customer_email', email)
@@ -78,19 +76,19 @@ export default async function AccountPage({ params }: Props) {
     ])
 
     if (!shopUserRes.error) shopUser = shopUserRes.data
-    if (!countRes.error) orderCount = countRes.count ?? 0
     if (!ordersRes.error) recentOrders = ordersRes.data ?? []
   } catch {
     // Keep defaults — render placeholders instead of crashing.
   }
 
   const firstName = shopUser?.name?.trim().split(/\s+/)[0] || ''
-  const tier = getTier(orderCount)
-  const tierPct = TIER_PCT[tier]
-  const nextThreshold = tier === 'classic' ? 3 : tier === 'silver' ? 10 : null
-  const progressPct = nextThreshold ? Math.min(100, Math.round((orderCount / nextThreshold) * 100)) : 100
-  const nextTierKey = tier === 'classic' ? 'silver' : 'gold'
-  const remainingToNext = nextThreshold ? Math.max(nextThreshold - orderCount, 0) : 0
+  const tier = shopUser?.loyalty_level ?? 'classic'
+  const tierPct = DISCOUNT_PCT[tier]
+  const spent = shopUser?.spent_12m ?? 0
+  const nextThreshold = NEXT_THRESHOLD[tier]
+  const nextTierKey = NEXT_TIER[tier]
+  const progressPct = nextThreshold ? Math.min(100, Math.round((spent / nextThreshold) * 100)) : 100
+  const remainingToNext = nextThreshold ? Math.max(nextThreshold - spent, 0) : 0
 
   const regDate = new Date(user.created_at)
   const registeredDate = `${String(regDate.getDate()).padStart(2, '0')}.${String(regDate.getMonth() + 1).padStart(2, '0')}.${regDate.getFullYear()}`
@@ -116,8 +114,8 @@ export default async function AccountPage({ params }: Props) {
             />
           </div>
           <p className="mt-1 truncate text-[11px] text-brand-muted">
-            {nextThreshold
-              ? t('progress_remaining', { count: remainingToNext, next: t(`tier_${nextTierKey}`), pct: TIER_PCT[nextTierKey] })
+            {nextThreshold && nextTierKey
+              ? t('progress_remaining', { amount: fmtPrice(remainingToNext), next: t(`tier_${nextTierKey}`), pct: DISCOUNT_PCT[nextTierKey] })
               : t('max_level')}
           </p>
         </div>
