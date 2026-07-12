@@ -10,6 +10,7 @@ interface Props {
 }
 
 interface ShopUserRow {
+  name:                      string | null
   phone:                    string | null
   created_at:               string
   consent_email_marketing:  boolean | null
@@ -41,7 +42,7 @@ function getTier(orderCount: number) {
   return 'classic' as const
 }
 
-const TIER_COLOR = { classic: '#9C9C9C', silver: '#B8BCC2', gold: '#C47B2A' }
+const TIER_PCT = { classic: 0, silver: 5, gold: 10 }
 
 export default async function AccountPage({ params }: Props) {
   const { locale } = params
@@ -63,7 +64,7 @@ export default async function AccountPage({ params }: Props) {
   try {
     const [shopUserRes, countRes, ordersRes] = await Promise.all([
       supabase.from('shop_users')
-        .select('phone, created_at, consent_email_marketing, consent_sms_marketing')
+        .select('name, phone, created_at, consent_email_marketing, consent_sms_marketing')
         .eq('email', email)
         .single(),
       supabase.from('shop_orders')
@@ -83,12 +84,13 @@ export default async function AccountPage({ params }: Props) {
     // Keep defaults — render placeholders instead of crashing.
   }
 
-  const emailName = email.split('@')[0]
+  const firstName = shopUser?.name?.trim().split(/\s+/)[0] || ''
   const tier = getTier(orderCount)
-  const tierColor = TIER_COLOR[tier]
+  const tierPct = TIER_PCT[tier]
   const nextThreshold = tier === 'classic' ? 3 : tier === 'silver' ? 10 : null
   const progressPct = nextThreshold ? Math.min(100, Math.round((orderCount / nextThreshold) * 100)) : 100
   const nextTierKey = tier === 'classic' ? 'silver' : 'gold'
+  const remainingToNext = nextThreshold ? Math.max(nextThreshold - orderCount, 0) : 0
 
   const regDate = new Date(user.created_at)
   const registeredDate = `${String(regDate.getDate()).padStart(2, '0')}.${String(regDate.getMonth() + 1).padStart(2, '0')}.${regDate.getFullYear()}`
@@ -99,26 +101,23 @@ export default async function AccountPage({ params }: Props) {
       {/* 1. Welcome / loyalty block */}
       <div className="flex min-h-[80px] items-center justify-between gap-4 rounded-2xl border border-[rgba(255,255,255,0.4)] bg-[rgba(255,255,255,0.6)] px-5 py-4 shadow-sm backdrop-blur-xl">
         <p className="min-w-0 truncate text-[15px] font-semibold text-[#3A2115]">
-          {t('welcome')}, {emailName}
+          {firstName ? `${t('welcome')}, ${firstName}` : `${t('welcome')}!`}
         </p>
 
-        <span
-          className="shrink-0 rounded-full px-3 py-1 text-xs font-semibold text-white"
-          style={{ backgroundColor: '#412618' }}
-        >
-          {t(`tier_${tier}`)}
+        <span className="shrink-0 rounded-full border border-[rgba(65,38,24,0.2)] bg-[rgba(255,255,255,0.5)] px-3 py-1 text-xs font-semibold text-[#412618] backdrop-blur">
+          {t(`tier_${tier}`)} · {tierPct}%
         </span>
 
         <div className="w-[120px] shrink-0">
-          <div className="h-1.5 overflow-hidden rounded-full bg-black/10">
+          <div className="h-1.5 overflow-hidden rounded-full bg-gray-200">
             <div
               className="h-full rounded-full transition-all"
-              style={{ width: `${progressPct}%`, backgroundColor: tierColor }}
+              style={{ width: `${progressPct}%`, backgroundColor: '#412618' }}
             />
           </div>
           <p className="mt-1 truncate text-[11px] text-brand-muted">
             {nextThreshold
-              ? t('progress_to_next', { count: orderCount, target: nextThreshold, next: t(`tier_${nextTierKey}`) })
+              ? t('progress_remaining', { count: remainingToNext, next: t(`tier_${nextTierKey}`), pct: TIER_PCT[nextTierKey] })
               : t('max_level')}
           </p>
         </div>
