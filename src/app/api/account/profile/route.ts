@@ -19,8 +19,18 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'no_fields' }, { status: 400 })
   }
 
-  const { error } = await supabase.from('shop_users').update(update).eq('email', user.email)
+  // Select the updated rows back so a 0-row update (e.g. an RLS policy filtering
+  // everything out, or an email that matches no shop_users row) is treated as a
+  // failure instead of a silent success — PostgREST returns no error in that case.
+  const { data: updated, error } = await supabase
+    .from('shop_users')
+    .update(update)
+    .eq('email', user.email)
+    .select('id')
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (!updated || updated.length === 0) {
+    return NextResponse.json({ error: 'not_updated' }, { status: 404 })
+  }
 
   return NextResponse.json({ ok: true })
 }
