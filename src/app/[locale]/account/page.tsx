@@ -38,9 +38,16 @@ interface OrderItemRow {
   line_total:      number
   grind:           string | null
   grind_option:    string | null
-  // supabase-js (no generated DB types) infers this embed as an array, so match
-  // that shape here and read the first element when mapping to a qr_token.
-  shop_products:   { crm_product_id: string | null }[] | null
+  // supabase-js infers this embed as an array (no generated DB types), but at
+  // runtime PostgREST returns a to-one embed as a single object. Accept both;
+  // read the value via crmProductId() which handles either shape.
+  shop_products:   { crm_product_id: string | null } | { crm_product_id: string | null }[] | null
+}
+
+// Normalise the shop_products embed (object at runtime, array per TS inference).
+function crmProductId(sp: OrderItemRow['shop_products']): string | null {
+  if (!sp) return null
+  return Array.isArray(sp) ? sp[0]?.crm_product_id ?? null : sp.crm_product_id
 }
 
 interface OrderRow {
@@ -228,7 +235,7 @@ export default async function AccountPage({ params }: Props) {
                     <ul className="mt-2 space-y-1.5">
                       {order.shop_order_items.flatMap((item, i) => {
                         // One CRM order (qr_token) per physical unit.
-                        const qrTokens = qrByKey.get(`${order.id}|${item.shop_products?.[0]?.crm_product_id}|${item.weight}`) ?? []
+                        const qrTokens = qrByKey.get(`${order.id}|${crmProductId(item.shop_products)}|${item.weight}`) ?? []
                         const perPack = fmtPrice(item.line_total / item.quantity)
                         // Grind label: "Зёрна" / "Молотый" / "Молотый (эспрессо)".
                         const grindText =
