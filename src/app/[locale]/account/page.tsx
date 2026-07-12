@@ -56,6 +56,9 @@ interface OrderRow {
 // production URL so the QR link works even if the env var isn't set.
 const CRM_URL = process.env.NEXT_PUBLIC_CRM_URL ?? 'https://coffe-verve-crm.vercel.app'
 
+// Known grind_option values that have a translation key (grind_opt_*).
+const GRIND_OPTS = ['espresso', 'aeropress', 'pourover', 'frenchpress', 'turka', 'moka']
+
 const STATUS_STYLES: Record<string, string> = {
   new:        'bg-gray-100 text-gray-600',
   confirmed:  'bg-gray-100 text-gray-600',
@@ -227,14 +230,26 @@ export default async function AccountPage({ params }: Props) {
                         // One CRM order (qr_token) per physical unit.
                         const qrTokens = qrByKey.get(`${order.id}|${item.shop_products?.[0]?.crm_product_id}|${item.weight}`) ?? []
                         const perPack = fmtPrice(item.line_total / item.quantity)
+                        // Grind label: "Зёрна" / "Молотый" / "Молотый (эспрессо)".
+                        const grindText =
+                          item.grind === 'whole'
+                            ? t('grind_whole')
+                            : item.grind === 'ground'
+                              ? (item.grind_option && GRIND_OPTS.includes(item.grind_option)
+                                  ? `${t('grind_ground')} (${t(`grind_opt_${item.grind_option}`)})`
+                                  : t('grind_ground'))
+                              : ''
+                        // QR availability depends ONLY on weight (250g = tasting guarantee).
+                        const showQr = item.weight === 250
                         return Array.from({ length: item.quantity }).map((_, u) => {
                           const token = qrTokens[u]
                           return (
                             <li key={`${i}-${u}`} className="flex items-center justify-between gap-2 leading-tight">
                               <span className="min-w-0 truncate">
                                 <span className="text-[13px] font-medium text-[#3A2115]">{item.product_name}</span>
-                                <span className="text-xs text-gray-500"> · {item.weight}г — {perPack}</span>
+                                <span className="text-xs text-gray-500"> · {item.weight}г — {perPack}{grindText ? ` · ${grindText}` : ''}</span>
                               </span>
+                              {/* Two fixed slots so buttons line up across rows regardless of QR presence. */}
                               <span className="flex shrink-0 items-center gap-1.5">
                                 <BuyAgainButton
                                   locale={locale}
@@ -244,26 +259,28 @@ export default async function AccountPage({ params }: Props) {
                                   grind={item.grind}
                                   grindOption={item.grind_option}
                                 />
-                                {item.weight === 250 && (
-                                  delivered && token ? (
-                                    <a
-                                      href={`${CRM_URL}/passport/${token}?lang=${locale}`}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                      className="rounded-full border border-[#412618] px-2 py-0.5 text-[11px] font-medium text-[#412618]"
-                                    >
-                                      QR
-                                    </a>
-                                  ) : (
-                                    <span
-                                      aria-disabled="true"
-                                      title={t('qr_after_delivery')}
-                                      className="cursor-not-allowed rounded-full border border-gray-200 px-2 py-0.5 text-[11px] font-medium text-gray-300"
-                                    >
-                                      QR
-                                    </span>
-                                  )
-                                )}
+                                <span className="flex w-9 justify-end">
+                                  {showQr && (
+                                    delivered && token ? (
+                                      <a
+                                        href={`${CRM_URL}/passport/${token}?lang=${locale}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="rounded-full border border-[#412618] px-2 py-0.5 text-[11px] font-medium text-[#412618]"
+                                      >
+                                        QR
+                                      </a>
+                                    ) : (
+                                      <span
+                                        aria-disabled="true"
+                                        title={t('qr_after_delivery')}
+                                        className="cursor-not-allowed rounded-full border border-gray-200 px-2 py-0.5 text-[11px] font-medium text-gray-300"
+                                      >
+                                        QR
+                                      </span>
+                                    )
+                                  )}
+                                </span>
                               </span>
                             </li>
                           )
