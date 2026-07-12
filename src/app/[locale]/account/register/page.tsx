@@ -81,7 +81,7 @@ export default function RegisterPage() {
       ) : (
         <>
           <p className="text-sm text-brand-muted mb-6">{t('register_subtitle')}</p>
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-4" onSubmit={handleSubmit} autoComplete="off">
             <label className="block text-sm">
               <span className="text-brand-muted">{t('email')}</span>
               <input
@@ -91,6 +91,9 @@ export default function RegisterPage() {
                 onChange={e => setEmail(e.target.value)}
                 className="input mt-2 w-full"
                 placeholder="you@example.com"
+                autoComplete="new-email"
+                readOnly
+                onFocus={e => e.target.removeAttribute('readonly')}
               />
             </label>
             <label className="block text-sm">
@@ -102,6 +105,9 @@ export default function RegisterPage() {
                 onChange={e => setName(e.target.value)}
                 className="input mt-2 w-full"
                 placeholder={t('name_placeholder')}
+                autoComplete="off"
+                readOnly
+                onFocus={e => e.target.removeAttribute('readonly')}
               />
             </label>
             <label className="block text-sm">
@@ -112,6 +118,9 @@ export default function RegisterPage() {
                 onChange={e => setPhone(e.target.value)}
                 className="input mt-2 w-full"
                 placeholder="+48 123 456 789"
+                autoComplete="off"
+                readOnly
+                onFocus={e => e.target.removeAttribute('readonly')}
               />
             </label>
             <label className="block text-sm">
@@ -124,6 +133,9 @@ export default function RegisterPage() {
                 onChange={e => setPassword(e.target.value)}
                 className="input mt-2 w-full"
                 placeholder="••••••••"
+                autoComplete="new-password"
+                readOnly
+                onFocus={e => e.target.removeAttribute('readonly')}
               />
             </label>
             <label className="block text-sm">
