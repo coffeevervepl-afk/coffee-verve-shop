@@ -100,7 +100,7 @@ export default function ProductCard({ product, locale }: Props) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <article className="card h-full min-w-[300px] flex flex-col">
+      <article className="card h-full min-w-0 md:min-w-[300px] flex flex-col">
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden bg-brand-border/30">
           <Image
