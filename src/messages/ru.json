@@ -239,6 +239,7 @@
     "no_orders": "У вас ещё нет заказов. Попробуйте наш кофе!",
     "go_to_catalog": "Перейти в каталог",
     "buy_again": "Купить снова",
+    "qr_after_delivery": "QR доступен после доставки",
     "status_new": "Новый",
     "status_confirmed": "Подтверждён",
     "status_processing": "В обработке",

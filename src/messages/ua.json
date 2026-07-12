@@ -235,6 +235,7 @@
     "no_orders": "У вас ще немає замовлень. Спробуйте нашу каву!",
     "go_to_catalog": "Перейти до каталогу",
     "buy_again": "Купити знову",
+    "qr_after_delivery": "QR доступний після доставки",
     "status_new": "Нове",
     "status_confirmed": "Підтверджене",
     "status_processing": "В обробці",

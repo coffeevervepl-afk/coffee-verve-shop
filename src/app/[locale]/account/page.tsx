@@ -29,10 +29,11 @@ interface AddressRow {
 }
 
 interface OrderItemRow {
-  product_name: string
-  weight:       number
-  quantity:     number
-  line_total:   number
+  product_name:  string
+  weight:        number
+  quantity:      number
+  line_total:    number
+  shop_products: { crm_product_id: string | null } | null
 }
 
 interface OrderRow {
@@ -43,6 +44,10 @@ interface OrderRow {
   created_at:        string
   shop_order_items:  OrderItemRow[] | null
 }
+
+// Passport ("паспорт товара") lives on the CRM domain. Falls back to the
+// production URL so the QR link works even if the env var isn't set.
+const CRM_URL = process.env.NEXT_PUBLIC_CRM_URL ?? 'https://coffe-verve-crm.vercel.app'
 
 const STATUS_STYLES: Record<string, string> = {
   new:        'bg-gray-100 text-gray-600',
@@ -79,6 +84,10 @@ export default async function AccountPage({ params }: Props) {
   let shopUser: ShopUserRow | null = null
   let recentOrders: OrderRow[] = []
   let address: AddressRow | null = null
+  // Maps `${shop_order_id}|${crm_product_id}|${weight}` → first qr_token of the
+  // matching CRM order(s). One CRM order (and qr_token) exists per unit, so for
+  // qty>1 we keep the first token per position.
+  const qrByKey = new Map<string, string>()
 
   try {
     const [shopUserRes, ordersRes] = await Promise.all([
@@ -87,7 +96,7 @@ export default async function AccountPage({ params }: Props) {
         .eq('email', email)
         .single(),
       supabase.from('shop_orders')
-        .select('id, order_number, total, status, created_at, shop_order_items(product_name, weight, quantity, line_total)')
+        .select('id, order_number, total, status, created_at, shop_order_items(product_name, weight, quantity, line_total, shop_products(crm_product_id))')
         .eq('customer_email', email)
         .order('created_at', { ascending: false })
         .limit(3),
@@ -95,6 +104,20 @@ export default async function AccountPage({ params }: Props) {
 
     if (!shopUserRes.error) shopUser = shopUserRes.data
     if (!ordersRes.error) recentOrders = ordersRes.data ?? []
+
+    // Pull qr_token + match key from the CRM `orders` mirror for these orders.
+    if (recentOrders.length > 0) {
+      const orderIds = recentOrders.map(o => o.id)
+      const crmRes = await supabase.from('orders')
+        .select('shop_order_id, product_id, weight, qr_token')
+        .in('shop_order_id', orderIds)
+      if (!crmRes.error) {
+        for (const r of crmRes.data ?? []) {
+          const key = `${r.shop_order_id}|${r.product_id}|${r.weight}`
+          if (r.qr_token && !qrByKey.has(key)) qrByKey.set(key, r.qr_token)
+        }
+      }
+    }
 
     if (shopUser) {
       const addrRes = await supabase.from('shop_addresses')
@@ -175,37 +198,72 @@ export default async function AccountPage({ params }: Props) {
           </div>
         ) : (
           <div className="space-y-3">
-            {recentOrders.map(order => (
-              <div
-                key={order.id}
-                className="flex flex-col gap-3 rounded-xl border border-brand-border p-4 sm:flex-row sm:items-center sm:justify-between"
-              >
-                <div className="min-w-0">
-                  <p className="flex flex-wrap items-center gap-2 font-medium">
-                    #{order.order_number}
-                    <span className={`rounded-full px-2 py-0.5 text-xs ${STATUS_STYLES[order.status] ?? 'bg-gray-100 text-gray-600'}`}>
-                      {t(`status_${order.status}`)}
-                    </span>
-                  </p>
+            {recentOrders.map(order => {
+              const delivered = order.status === 'delivered'
+              return (
+                <div key={order.id} className="rounded-xl border border-brand-border p-4">
+                  {/* header: number + status · total */}
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="flex flex-wrap items-center gap-2 font-medium">
+                      #{order.order_number}
+                      <span className={`rounded-full px-2 py-0.5 text-xs ${STATUS_STYLES[order.status] ?? 'bg-gray-100 text-gray-600'}`}>
+                        {t(`status_${order.status}`)}
+                      </span>
+                    </p>
+                    <p className="shrink-0 font-bold">{fmtPrice(order.total)}</p>
+                  </div>
+
+                  {/* items — one compact row per position */}
                   {order.shop_order_items && order.shop_order_items.length > 0 && (
-                    <ul className="mt-1.5 space-y-0.5">
-                      {order.shop_order_items.map((item, i) => (
-                        <li key={i} className="text-sm text-brand-muted">
-                          {item.product_name} · {item.weight}г × {item.quantity} — {fmtPrice(item.line_total)}
-                        </li>
-                      ))}
+                    <ul className="mt-2 space-y-1">
+                      {order.shop_order_items.map((item, i) => {
+                        const qrToken = qrByKey.get(`${order.id}|${item.shop_products?.crm_product_id}|${item.weight}`)
+                        const qrEnabled = delivered && !!qrToken
+                        return (
+                          <li key={i} className="flex items-center justify-between gap-2 text-xs text-brand-muted">
+                            <span className="min-w-0 truncate">
+                              {item.product_name} · {item.weight}г × {item.quantity} — {fmtPrice(item.line_total)}
+                            </span>
+                            <span className="flex shrink-0 items-center gap-1.5">
+                              <button
+                                type="button"
+                                className="rounded-full border border-brand-border px-2 py-0.5 text-[11px] font-medium text-[#3A2115] transition-colors hover:bg-gray-50"
+                              >
+                                {t('buy_again')}
+                              </button>
+                              {item.weight === 250 && (
+                                qrEnabled ? (
+                                  <a
+                                    href={`${CRM_URL}/passport/${qrToken}?lang=${locale}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="rounded-full border border-[#412618] px-2 py-0.5 text-[11px] font-medium text-[#412618] transition-colors hover:bg-[#412618]/5"
+                                  >
+                                    QR
+                                  </a>
+                                ) : (
+                                  <span
+                                    aria-disabled="true"
+                                    title={t('qr_after_delivery')}
+                                    className="cursor-not-allowed rounded-full border border-gray-200 px-2 py-0.5 text-[11px] font-medium text-gray-300"
+                                  >
+                                    QR
+                                  </span>
+                                )
+                              )}
+                            </span>
+                          </li>
+                        )
+                      })}
                     </ul>
                   )}
-                  <p className="mt-1.5 text-sm text-brand-muted">
+
+                  <p className="mt-2 text-xs text-brand-muted">
                     {new Date(order.created_at).toLocaleDateString(DATE_LOCALE[locale])}
                   </p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <p className="font-bold">{fmtPrice(order.total)}</p>
-                  <button type="button" className="btn btn-outline text-sm">{t('buy_again')}</button>
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>
