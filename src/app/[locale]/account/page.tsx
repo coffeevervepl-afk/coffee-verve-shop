@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
-import { Package, ShieldCheck, Settings } from 'lucide-react'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { fmtPrice } from '@/lib/pricing'
 import type { Locale } from '@/types/shop'
@@ -42,7 +41,6 @@ function getTier(orderCount: number) {
   return 'classic' as const
 }
 
-const TIER_PCT   = { classic: 0, silver: 5, gold: 10 }
 const TIER_COLOR = { classic: '#9C9C9C', silver: '#B8BCC2', gold: '#C47B2A' }
 
 export default async function AccountPage({ params }: Props) {
@@ -87,7 +85,6 @@ export default async function AccountPage({ params }: Props) {
 
   const emailName = email.split('@')[0]
   const tier = getTier(orderCount)
-  const tierPct = TIER_PCT[tier]
   const tierColor = TIER_COLOR[tier]
   const nextThreshold = tier === 'classic' ? 3 : tier === 'silver' ? 10 : null
   const progressPct = nextThreshold ? Math.min(100, Math.round((orderCount / nextThreshold) * 100)) : 100
@@ -96,61 +93,38 @@ export default async function AccountPage({ params }: Props) {
   const regDate = new Date(user.created_at)
   const registeredDate = `${String(regDate.getDate()).padStart(2, '0')}.${String(regDate.getMonth() + 1).padStart(2, '0')}.${regDate.getFullYear()}`
 
-  const quickActions = [
-    { href: `/${locale}/account/orders`,    icon: Package,     label: t('quick_orders') },
-    { href: `/${locale}/account/guarantee`, icon: ShieldCheck, label: t('quick_guarantee') },
-    { href: `/${locale}/account/settings`,  icon: Settings,    label: t('quick_settings') },
-  ]
-
   return (
     <div className="mx-auto max-w-3xl space-y-6 rounded-3xl bg-[#F4F3F0] p-4 md:p-8">
 
       {/* 1. Welcome / loyalty block */}
-      <div className="rounded-2xl bg-[#3A2115] p-6 text-white md:p-8">
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <p className="text-lg font-semibold md:text-xl">{t('welcome')}, {emailName}</p>
+      <div className="flex min-h-[80px] items-center justify-between gap-4 rounded-2xl border border-[rgba(255,255,255,0.4)] bg-[rgba(255,255,255,0.6)] px-5 py-4 shadow-sm backdrop-blur-xl">
+        <p className="min-w-0 truncate text-[15px] font-semibold text-[#3A2115]">
+          {t('welcome')}, {emailName}
+        </p>
 
-            <span
-              className="mt-4 inline-block rounded-full px-3 py-1 text-[13px] font-bold"
-              style={{ backgroundColor: tierColor, color: tier === 'gold' ? '#fff' : '#2A2620' }}
-            >
-              {t(`tier_${tier}`)} • {tierPct}%
-            </span>
+        <span
+          className="shrink-0 rounded-full px-3 py-1 text-xs font-semibold text-white"
+          style={{ backgroundColor: '#412618' }}
+        >
+          {t(`tier_${tier}`)}
+        </span>
 
-            <div className="mt-3 max-w-[240px]">
-              <div className="h-2 overflow-hidden rounded-full bg-white/20">
-                <div
-                  className="h-full rounded-full transition-all"
-                  style={{ width: `${progressPct}%`, backgroundColor: tierColor }}
-                />
-              </div>
-              <p className="mt-1.5 text-[12px] text-white/70">
-                {nextThreshold
-                  ? t('progress_to_next', { count: orderCount, target: nextThreshold, next: t(`tier_${nextTierKey}`) })
-                  : t('max_level')}
-              </p>
-            </div>
+        <div className="w-[120px] shrink-0">
+          <div className="h-1.5 overflow-hidden rounded-full bg-black/10">
+            <div
+              className="h-full rounded-full transition-all"
+              style={{ width: `${progressPct}%`, backgroundColor: tierColor }}
+            />
           </div>
-          <div className="shrink-0 text-5xl md:text-6xl">☕</div>
+          <p className="mt-1 truncate text-[11px] text-brand-muted">
+            {nextThreshold
+              ? t('progress_to_next', { count: orderCount, target: nextThreshold, next: t(`tier_${nextTierKey}`) })
+              : t('max_level')}
+          </p>
         </div>
       </div>
 
-      {/* 2. Quick actions */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {quickActions.map(({ href, icon: Icon, label }) => (
-          <Link
-            key={href}
-            href={href}
-            className="flex items-center gap-3 rounded-2xl border border-brand-border bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform hover:-translate-y-0.5 hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)]"
-          >
-            <Icon size={22} className="shrink-0 text-[#3A2115]" />
-            <span className="font-medium text-[#3A2115]">{label}</span>
-          </Link>
-        ))}
-      </div>
-
-      {/* 3. Recent orders */}
+      {/* 2. Recent orders */}
       <div className="rounded-2xl border border-brand-border bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
         <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{t('recent_orders_title')}</h2>
 
@@ -187,7 +161,7 @@ export default async function AccountPage({ params }: Props) {
         )}
       </div>
 
-      {/* 4. Profile data */}
+      {/* 3. Profile data */}
       <div className="rounded-2xl border border-brand-border bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
         <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{t('profile_title')}</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
