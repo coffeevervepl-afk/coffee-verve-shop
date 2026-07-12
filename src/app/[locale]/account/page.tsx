@@ -38,7 +38,9 @@ interface OrderItemRow {
   line_total:      number
   grind:           string | null
   grind_option:    string | null
-  shop_products:   { crm_product_id: string | null } | null
+  // supabase-js (no generated DB types) infers this embed as an array, so match
+  // that shape here and read the first element when mapping to a qr_token.
+  shop_products:   { crm_product_id: string | null }[] | null
 }
 
 interface OrderRow {
@@ -222,7 +224,7 @@ export default async function AccountPage({ params }: Props) {
                   {order.shop_order_items && order.shop_order_items.length > 0 && (
                     <ul className="mt-2 space-y-1">
                       {order.shop_order_items.map((item, i) => {
-                        const qrToken = qrByKey.get(`${order.id}|${item.shop_products?.crm_product_id}|${item.weight}`)
+                        const qrToken = qrByKey.get(`${order.id}|${item.shop_products?.[0]?.crm_product_id}|${item.weight}`)
                         const qrEnabled = delivered && !!qrToken
                         return (
                           <li key={i} className="flex items-center justify-between gap-2 text-xs text-brand-muted">
