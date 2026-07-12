@@ -83,6 +83,7 @@ export default function Header({ locale }: { locale: Locale }) {
   const [accountOpen, setAccountOpen] = useState(false)
   const accountRef = useRef<HTMLDivElement | null>(null)
   const [sessionEmail, setSessionEmail] = useState<string | null>(null)
+  const [sessionName, setSessionName] = useState<string | null>(null)
 
   useEffect(() => {
     function onClickOutside(event: MouseEvent) {
@@ -95,7 +96,17 @@ export default function Header({ locale }: { locale: Locale }) {
 
   useEffect(() => {
     const sb = createClient()
-    sb.auth.getSession().then(({ data }) => setSessionEmail(data.session?.user?.email ?? null))
+    sb.auth.getSession().then(async ({ data }) => {
+      const sessEmail = data.session?.user?.email ?? null
+      setSessionEmail(sessEmail)
+      if (sessEmail) {
+        // Same source as /account: shop_users.name keyed by the current
+        // auth user's email — so the header reflects an edited profile name
+        // instead of a name derived from the email local-part.
+        const { data: row } = await sb.from('shop_users').select('name').eq('email', sessEmail).single()
+        setSessionName(row?.name?.trim() || null)
+      }
+    })
   }, [])
 
   async function handleSignOut() {
@@ -177,7 +188,7 @@ export default function Header({ locale }: { locale: Locale }) {
                   onClick={() => setAccountOpen(v => !v)}
                   className="flex cursor-pointer items-center gap-1 text-[14px] font-medium text-[#3A2115] transition-colors hover:text-[#2A2620]"
                 >
-                  {getDisplayName(sessionEmail)} <span aria-hidden>▾</span>
+                  {sessionName ? sessionName.split(/\s+/)[0] : getDisplayName(sessionEmail)} <span aria-hidden>▾</span>
                 </button>
                 <div className={`${DROPDOWN} min-w-[190px] p-1 ${
                   accountOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'
