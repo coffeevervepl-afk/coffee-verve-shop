@@ -45,7 +45,7 @@ export default function FeaturedCarousel({ products, locale }: Props) {
           className="no-scrollbar flex flex-nowrap snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth"
         >
           {products.map(p => (
-            <div key={p.id} className="w-[85vw] shrink-0 snap-start md:w-[calc((100%-32px)/3)]">
+            <div key={p.id} className="w-[78vw] shrink-0 snap-start md:w-[calc((100%-32px)/3)]">
               <ProductCard product={p} locale={locale} />
             </div>
           ))}
