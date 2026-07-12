@@ -110,6 +110,7 @@ export default async function AccountPage({ params }: Props) {
   const nextTierKey = NEXT_TIER[tier]
   const progressPct = nextThreshold ? Math.min(100, Math.round((spent / nextThreshold) * 100)) : 100
   const remainingToNext = nextThreshold ? Math.max(nextThreshold - spent, 0) : 0
+  const remainingFormatted = remainingToNext.toFixed(2).replace('.', ',')
 
   const regDate = new Date(user.created_at)
   const registeredDate = `${String(regDate.getDate()).padStart(2, '0')}.${String(regDate.getMonth() + 1).padStart(2, '0')}.${regDate.getFullYear()}`
@@ -118,28 +119,41 @@ export default async function AccountPage({ params }: Props) {
     <div className="mx-auto max-w-3xl space-y-6 rounded-3xl bg-[#F4F3F0] p-4 md:p-8">
 
       {/* 1. Welcome / loyalty block */}
-      <div className="flex min-h-[80px] items-center justify-between gap-4 rounded-2xl border border-[rgba(255,255,255,0.4)] bg-[rgba(255,255,255,0.6)] px-5 py-4 shadow-sm backdrop-blur-xl">
-        <p className="min-w-0 truncate text-[15px] font-semibold text-[#3A2115]">
-          {firstName ? `${t('welcome')}, ${firstName}` : `${t('welcome')}!`}
-        </p>
-
-        <span className="shrink-0 rounded-full border border-[rgba(65,38,24,0.2)] bg-[rgba(255,255,255,0.5)] px-3 py-1 text-xs font-semibold text-[#412618] backdrop-blur">
-          {t(`tier_${tier}`)} · {tierPct}%
-        </span>
-
-        <div className="w-[120px] shrink-0">
-          <div className="h-1.5 overflow-hidden rounded-full bg-gray-200">
-            <div
-              className="h-full rounded-full transition-all"
-              style={{ width: `${progressPct}%`, backgroundColor: '#412618' }}
-            />
-          </div>
-          <p className="mt-1 truncate text-[11px] text-brand-muted">
-            {nextThreshold && nextTierKey
-              ? t('progress_remaining', { amount: fmtPrice(remainingToNext), next: t(`tier_${nextTierKey}`), pct: DISCOUNT_PCT[nextTierKey] })
-              : t('max_level')}
+      <div className="rounded-2xl border border-[rgba(255,255,255,0.4)] bg-[rgba(255,255,255,0.6)] px-5 py-4 shadow-sm backdrop-blur-xl">
+        <div className="flex items-center justify-between gap-4">
+          <p className="min-w-0 truncate text-[15px] font-semibold text-[#3A2115]">
+            {firstName ? `${t('welcome')}, ${firstName}` : `${t('welcome')}!`}
           </p>
+          <span className="shrink-0 rounded-full border border-[rgba(65,38,24,0.2)] bg-[rgba(255,255,255,0.5)] px-3 py-1 text-xs font-semibold text-[#412618] backdrop-blur">
+            {t(`tier_${tier}`)} · {tierPct}%
+          </span>
         </div>
+
+        {nextThreshold && nextTierKey ? (
+          <div className="mt-2.5">
+            <p className="text-[15px] leading-tight text-[#3A2115]">
+              {t.rich('progress_line', {
+                amount: remainingFormatted,
+                next: t(`tier_${nextTierKey}`),
+                big: chunks => <span className="text-[22px] font-bold text-[#412618]">{chunks}</span>,
+              })}
+            </p>
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-gray-200">
+              <div
+                className="h-full rounded-full transition-all duration-700"
+                style={{ width: `${progressPct}%`, backgroundColor: '#412618' }}
+              />
+            </div>
+            <p className="mt-1.5 text-sm text-gray-600">
+              🎁 {t('reward_line', { pct: DISCOUNT_PCT[nextTierKey] })}
+            </p>
+          </div>
+        ) : (
+          <div className="mt-2.5">
+            <p className="text-[17px] font-bold text-[#412618]">{t('max_level_title')}</p>
+            <p className="mt-0.5 text-sm text-gray-600">{t('max_level_desc', { pct: tierPct })}</p>
+          </div>
+        )}
       </div>
 
       {/* 2. Recent orders */}
