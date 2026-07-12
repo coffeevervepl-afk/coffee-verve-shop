@@ -13,6 +13,27 @@ const languages = [
   { value: 'ua', label: 'Українська' },
 ]
 
+const EMAIL_FORMAT = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+const DOMAIN_TYPOS: Record<string, string> = {
+  gmaal:   'gmail',
+  gmai:    'gmail',
+  iclod:   'icloud',
+  iclould: 'icloud',
+  yaho:    'yahoo',
+  hotmal:  'hotmail',
+  outook:  'outlook',
+}
+
+function suggestEmailFix(value: string): string | null {
+  const domain = value.split('@')[1]
+  if (!domain || !domain.includes('.')) return null
+  const [domainName, ...rest] = domain.split('.')
+  const fixedName = DOMAIN_TYPOS[domainName.toLowerCase()]
+  if (!fixedName) return null
+  return `${value.split('@')[0]}@${fixedName}.${rest.join('.')}`
+}
+
 export default function RegisterPage() {
   const params = useParams()
   const locale = params.locale as string
@@ -27,9 +48,34 @@ export default function RegisterPage() {
   const [consentTerms, setConsentTerms] = useState(false)
   const [consentEmailMarketing, setConsentEmailMarketing] = useState(false)
   const [consentSmsMarketing, setConsentSmsMarketing] = useState(false)
+  const [emailError, setEmailError] = useState('')
+  const [emailSuggestion, setEmailSuggestion] = useState<string | null>(null)
+
+  function validateEmail(value: string): boolean {
+    if (!value) {
+      setEmailError('')
+      setEmailSuggestion(null)
+      return true
+    }
+    if (!EMAIL_FORMAT.test(value)) {
+      setEmailError(t('email_invalid'))
+      setEmailSuggestion(null)
+      return false
+    }
+    setEmailError('')
+    setEmailSuggestion(suggestEmailFix(value))
+    return true
+  }
+
+  function applyEmailSuggestion() {
+    if (!emailSuggestion) return
+    setEmail(emailSuggestion)
+    setEmailSuggestion(null)
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (!validateEmail(email)) return
     setLoading(true)
     try {
       const res = await fetch('/api/register', {
@@ -89,12 +135,26 @@ export default function RegisterPage() {
                 required
                 value={email}
                 onChange={e => setEmail(e.target.value)}
+                onBlur={e => validateEmail(e.target.value)}
                 className="input mt-2 w-full"
                 placeholder="you@example.com"
                 autoComplete="new-email"
                 readOnly
                 onFocus={e => e.target.removeAttribute('readonly')}
               />
+              {emailError && <p className="mt-1 text-xs text-red-600">{emailError}</p>}
+              {emailSuggestion && (
+                <p className="mt-1 text-xs text-brand-muted">
+                  {t('email_typo_suggestion', { email: emailSuggestion })}{' '}
+                  <button
+                    type="button"
+                    onClick={applyEmailSuggestion}
+                    className="font-semibold text-brand-accent underline"
+                  >
+                    {t('email_fix_button')}
+                  </button>
+                </p>
+              )}
             </label>
             <label className="block text-sm">
               <span className="text-brand-muted">{t('name')}</span>
@@ -192,7 +252,7 @@ export default function RegisterPage() {
               </label>
             </div>
 
-            <button type="submit" disabled={loading || !consentTerms} className="btn btn-primary w-full">
+            <button type="submit" disabled={loading || !consentTerms || !!emailError} className="btn btn-primary w-full">
               {loading ? '…' : t('register_button')}
             </button>
           </form>
