@@ -240,6 +240,8 @@
     "go_to_catalog": "Перейти в каталог",
     "buy_again": "Купить снова",
     "qr_after_delivery": "QR доступен после доставки",
+    "added_to_cart": "Добавлено в корзину",
+    "reorder_unavailable": "Товар больше недоступен",
     "status_new": "Новый",
     "status_confirmed": "Подтверждён",
     "status_processing": "В обработке",

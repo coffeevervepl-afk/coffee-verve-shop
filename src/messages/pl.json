@@ -236,6 +236,8 @@
     "go_to_catalog": "Przejdź do katalogu",
     "buy_again": "Kup ponownie",
     "qr_after_delivery": "QR dostępny po dostawie",
+    "added_to_cart": "Dodano do koszyka",
+    "reorder_unavailable": "Produkt jest już niedostępny",
     "status_new": "Nowe",
     "status_confirmed": "Potwierdzone",
     "status_processing": "W realizacji",

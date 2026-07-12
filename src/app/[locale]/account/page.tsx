@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { fmtPrice } from '@/lib/pricing'
 import ProfileCard from '@/components/account/ProfileCard'
+import BuyAgainButton from '@/components/account/BuyAgainButton'
 import type { Locale } from '@/types/shop'
 
 interface Props {
@@ -29,11 +30,15 @@ interface AddressRow {
 }
 
 interface OrderItemRow {
-  product_name:  string
-  weight:        number
-  quantity:      number
-  line_total:    number
-  shop_products: { crm_product_id: string | null } | null
+  product_name:    string
+  product_slug:    string | null
+  shop_product_id: string | null
+  weight:          number
+  quantity:        number
+  line_total:      number
+  grind:           string | null
+  grind_option:    string | null
+  shop_products:   { crm_product_id: string | null } | null
 }
 
 interface OrderRow {
@@ -96,7 +101,7 @@ export default async function AccountPage({ params }: Props) {
         .eq('email', email)
         .single(),
       supabase.from('shop_orders')
-        .select('id, order_number, total, status, created_at, shop_order_items(product_name, weight, quantity, line_total, shop_products(crm_product_id))')
+        .select('id, order_number, total, status, created_at, shop_order_items(product_name, product_slug, shop_product_id, weight, quantity, line_total, grind, grind_option, shop_products(crm_product_id))')
         .eq('customer_email', email)
         .order('created_at', { ascending: false })
         .limit(3),
@@ -225,12 +230,14 @@ export default async function AccountPage({ params }: Props) {
                               {item.product_name} · {item.weight}г × {item.quantity} — {fmtPrice(item.line_total)}
                             </span>
                             <span className="flex shrink-0 items-center gap-1.5">
-                              <button
-                                type="button"
-                                className="rounded-full border border-brand-border px-2 py-0.5 text-[11px] font-medium text-[#3A2115] transition-colors hover:bg-gray-50"
-                              >
-                                {t('buy_again')}
-                              </button>
+                              <BuyAgainButton
+                                locale={locale}
+                                shopProductId={item.shop_product_id}
+                                slug={item.product_slug}
+                                weight={item.weight}
+                                grind={item.grind}
+                                grindOption={item.grind_option}
+                              />
                               {item.weight === 250 && (
                                 qrEnabled ? (
                                   <a
