@@ -1,5 +1,5 @@
 'use client'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import ProductCard from './ProductCard'
@@ -15,6 +15,7 @@ const CARD_GAP = 16
 export default function FeaturedCarousel({ products, locale }: Props) {
   const t = useTranslations('home')
   const scrollerRef = useRef<HTMLDivElement>(null)
+  const [activeIndex, setActiveIndex] = useState(0)
 
   if (products.length === 0) return null
 
@@ -24,6 +25,16 @@ export default function FeaturedCarousel({ products, locale }: Props) {
     const card = el.firstElementChild as HTMLElement | null
     const cardWidth = card?.offsetWidth ?? el.clientWidth / 3
     el.scrollBy({ left: direction * (cardWidth + CARD_GAP), behavior: 'smooth' })
+  }
+
+  function handleScroll() {
+    const el = scrollerRef.current
+    if (!el) return
+    const card = el.firstElementChild as HTMLElement | null
+    const cardWidth = card?.offsetWidth ?? el.clientWidth
+    const step = cardWidth + CARD_GAP
+    const index = Math.round(el.scrollLeft / step)
+    setActiveIndex(Math.min(Math.max(index, 0), products.length - 1))
   }
 
   return (
@@ -42,6 +53,7 @@ export default function FeaturedCarousel({ products, locale }: Props) {
 
         <div
           ref={scrollerRef}
+          onScroll={handleScroll}
           className="no-scrollbar flex flex-nowrap snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth [-webkit-overflow-scrolling:touch]"
         >
           {products.map(p => (
@@ -59,6 +71,20 @@ export default function FeaturedCarousel({ products, locale }: Props) {
         >
           <ChevronRight size={20} className="text-[#3A2115]" />
         </button>
+      </div>
+
+      <div className="mt-3 flex md:hidden items-center justify-center gap-1.5">
+        {products.map((p, i) => (
+          <span
+            key={p.id}
+            className="rounded-full transition-all duration-200"
+            style={{
+              width:  i === activeIndex ? 8 : 6,
+              height: i === activeIndex ? 8 : 6,
+              backgroundColor: i === activeIndex ? '#412618' : '#E8E7E3',
+            }}
+          />
+        ))}
       </div>
     </section>
   )
