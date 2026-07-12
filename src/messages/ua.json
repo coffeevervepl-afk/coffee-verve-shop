@@ -246,7 +246,20 @@
     "consent_sms_label": "SMS",
     "consent_yes": "Так",
     "consent_no": "Ні",
-    "not_provided": "Не вказано"
+    "not_provided": "Не вказано",
+    "name_label": "Ім'я",
+    "edit": "Редагувати",
+    "save": "Зберегти",
+    "cancel": "Скасувати",
+    "saved": "Збережено",
+    "save_error": "Помилка збереження",
+    "address_title": "Адреса доставки",
+    "no_address": "Адресу не вказано",
+    "add_address": "Додати адресу",
+    "street_label": "Вулиця та номер будинку",
+    "postal_label": "Поштовий індекс",
+    "city_label": "Місто",
+    "save_address": "Зберегти адресу"
   },
   "settings": {
     "page_title": "Налаштування",

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { fmtPrice } from '@/lib/pricing'
+import ProfileCard from '@/components/account/ProfileCard'
 import type { Locale } from '@/types/shop'
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 }
 
 interface ShopUserRow {
+  id:                        string
   name:                      string | null
   phone:                    string | null
   created_at:               string
@@ -17,6 +19,13 @@ interface ShopUserRow {
   consent_sms_marketing:    boolean | null
   loyalty_level:             'classic' | 'gold' | 'platinum'
   spent_12m:                 number
+}
+
+interface AddressRow {
+  id:          string
+  street:      string | null
+  postal_code: string | null
+  city:        string | null
 }
 
 interface OrderRow {
@@ -61,11 +70,12 @@ export default async function AccountPage({ params }: Props) {
 
   let shopUser: ShopUserRow | null = null
   let recentOrders: OrderRow[] = []
+  let address: AddressRow | null = null
 
   try {
     const [shopUserRes, ordersRes] = await Promise.all([
       supabase.from('shop_users')
-        .select('name, phone, created_at, consent_email_marketing, consent_sms_marketing, loyalty_level, spent_12m')
+        .select('id, name, phone, created_at, consent_email_marketing, consent_sms_marketing, loyalty_level, spent_12m')
         .eq('email', email)
         .single(),
       supabase.from('shop_orders')
@@ -77,6 +87,17 @@ export default async function AccountPage({ params }: Props) {
 
     if (!shopUserRes.error) shopUser = shopUserRes.data
     if (!ordersRes.error) recentOrders = ordersRes.data ?? []
+
+    if (shopUser) {
+      const addrRes = await supabase.from('shop_addresses')
+        .select('id, street, postal_code, city')
+        .eq('shop_user_id', shopUser.id)
+        .order('is_default', { ascending: false })
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      if (!addrRes.error) address = addrRes.data
+    }
   } catch {
     // Keep defaults — render placeholders instead of crashing.
   }
@@ -158,32 +179,16 @@ export default async function AccountPage({ params }: Props) {
         )}
       </div>
 
-      {/* 3. Profile data */}
-      <div className="rounded-2xl border border-brand-border bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-        <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{t('profile_title')}</h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <p className="text-xs text-brand-muted">{t('email_label')}</p>
-            <p className="font-medium">{email}</p>
-          </div>
-          <div>
-            <p className="text-xs text-brand-muted">{t('phone_label')}</p>
-            <p className="font-medium">{shopUser?.phone || t('not_provided')}</p>
-          </div>
-          <div>
-            <p className="text-xs text-brand-muted">{t('registered_label')}</p>
-            <p className="font-medium">{registeredDate}</p>
-          </div>
-          <div>
-            <p className="text-xs text-brand-muted">{t('consents_label')}</p>
-            <p className="font-medium">
-              {t('consent_email_label')}: {shopUser?.consent_email_marketing ? t('consent_yes') : t('consent_no')}
-              {' · '}
-              {t('consent_sms_label')}: {shopUser?.consent_sms_marketing ? t('consent_yes') : t('consent_no')}
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* 3. Profile data — editable name + address */}
+      <ProfileCard
+        initialName={shopUser?.name ?? ''}
+        email={email}
+        phone={shopUser?.phone ?? ''}
+        registeredDate={registeredDate}
+        consentEmail={!!shopUser?.consent_email_marketing}
+        consentSms={!!shopUser?.consent_sms_marketing}
+        initialAddress={address}
+      />
     </div>
   )
 }

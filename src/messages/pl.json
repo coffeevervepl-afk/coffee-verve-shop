@@ -246,7 +246,20 @@
     "consent_sms_label": "SMS",
     "consent_yes": "Tak",
     "consent_no": "Nie",
-    "not_provided": "Nie podano"
+    "not_provided": "Nie podano",
+    "name_label": "Imię",
+    "edit": "Edytuj",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "saved": "Zapisano",
+    "save_error": "Błąd zapisu",
+    "address_title": "Adres dostawy",
+    "no_address": "Brak adresu",
+    "add_address": "Dodaj adres",
+    "street_label": "Ulica i numer domu",
+    "postal_label": "Kod pocztowy",
+    "city_label": "Miasto",
+    "save_address": "Zapisz adres"
   },
   "settings": {
     "page_title": "Ustawienia",

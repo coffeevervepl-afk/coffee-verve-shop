@@ -89,10 +89,14 @@ export async function POST(req: NextRequest) {
     await sb.from('shop_addresses').update({ is_default: false }).eq('shop_user_id', shopUser.id)
   }
 
-  const { error } = await sb.from('shop_addresses').insert(insertData)
+  const { data: inserted, error } = await sb
+    .from('shop_addresses')
+    .insert(insertData)
+    .select('id')
+    .single()
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  return NextResponse.json({ ok: true })
+  return NextResponse.json({ ok: true, id: inserted?.id })
 }
 
 export async function PATCH(req: NextRequest) {

@@ -250,7 +250,20 @@
     "consent_sms_label": "SMS",
     "consent_yes": "Да",
     "consent_no": "Нет",
-    "not_provided": "Не указан"
+    "not_provided": "Не указан",
+    "name_label": "Имя",
+    "edit": "Редактировать",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "saved": "Сохранено",
+    "save_error": "Ошибка сохранения",
+    "address_title": "Адрес доставки",
+    "no_address": "Адрес не указан",
+    "add_address": "Добавить адрес",
+    "street_label": "Улица и номер дома",
+    "postal_label": "Почтовый индекс",
+    "city_label": "Город",
+    "save_address": "Сохранить адрес"
   },
   "settings": {
     "page_title": "Настройки",
