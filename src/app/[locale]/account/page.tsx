@@ -212,70 +212,73 @@ export default async function AccountPage({ params }: Props) {
               const delivered = order.status === 'delivered'
               return (
                 <div key={order.id} className="rounded-xl border border-brand-border p-4">
-                  {/* header: number + status · total */}
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="flex flex-wrap items-center gap-2 font-medium">
-                      #{order.order_number}
-                      <span className={`rounded-full px-2 py-0.5 text-xs ${STATUS_STYLES[order.status] ?? 'bg-gray-100 text-gray-600'}`}>
-                        {t(`status_${order.status}`)}
-                      </span>
-                    </p>
-                    <p className="shrink-0 font-bold">{fmtPrice(order.total)}</p>
-                  </div>
+                  {/* header: order number + status (once per order) */}
+                  <p className="flex flex-wrap items-center gap-2 font-medium">
+                    #{order.order_number}
+                    <span className={`rounded-full px-2 py-0.5 text-xs ${STATUS_STYLES[order.status] ?? 'bg-gray-100 text-gray-600'}`}>
+                      {t(`status_${order.status}`)}
+                    </span>
+                  </p>
 
-                  {/* items — one compact row per position */}
+                  {/* items — one row per physical unit (qty>1 → several rows) */}
                   {order.shop_order_items && order.shop_order_items.length > 0 && (
-                    <ul className="mt-2 space-y-1">
-                      {order.shop_order_items.map((item, i) => {
-                        // All qr_tokens for this position — one per physical unit.
+                    <ul className="mt-2 space-y-1.5">
+                      {order.shop_order_items.flatMap((item, i) => {
+                        // One CRM order (qr_token) per physical unit.
                         const qrTokens = qrByKey.get(`${order.id}|${item.shop_products?.[0]?.crm_product_id}|${item.weight}`) ?? []
-                        return (
-                          <li key={i} className="flex items-center justify-between gap-2 text-xs text-brand-muted">
-                            <span className="min-w-0 truncate">
-                              {item.product_name} · {item.weight}г × {item.quantity} — {fmtPrice(item.line_total)}
-                            </span>
-                            <span className="flex shrink-0 items-center gap-1.5">
-                              <BuyAgainButton
-                                locale={locale}
-                                shopProductId={item.shop_product_id}
-                                slug={item.product_slug}
-                                weight={item.weight}
-                                grind={item.grind}
-                                grindOption={item.grind_option}
-                              />
-                              {item.weight === 250 && Array.from({ length: item.quantity }).map((_, u) => {
-                                const token = qrTokens[u]
-                                return delivered && token ? (
-                                  <a
-                                    key={u}
-                                    href={`${CRM_URL}/passport/${token}?lang=${locale}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="rounded-full border border-[#412618] px-2 py-0.5 text-[11px] font-medium text-[#412618] transition-colors hover:bg-[#412618]/5"
-                                  >
-                                    QR
-                                  </a>
-                                ) : (
-                                  <span
-                                    key={u}
-                                    aria-disabled="true"
-                                    title={t('qr_after_delivery')}
-                                    className="cursor-not-allowed rounded-full border border-gray-200 px-2 py-0.5 text-[11px] font-medium text-gray-300"
-                                  >
-                                    QR
-                                  </span>
-                                )
-                              })}
-                            </span>
-                          </li>
-                        )
+                        const perPack = fmtPrice(item.line_total / item.quantity)
+                        return Array.from({ length: item.quantity }).map((_, u) => {
+                          const token = qrTokens[u]
+                          return (
+                            <li key={`${i}-${u}`} className="flex items-center justify-between gap-2 leading-tight">
+                              <span className="min-w-0 truncate">
+                                <span className="text-[13px] font-medium text-[#3A2115]">{item.product_name}</span>
+                                <span className="text-xs text-gray-500"> · {item.weight}г — {perPack}</span>
+                              </span>
+                              <span className="flex shrink-0 items-center gap-1.5">
+                                <BuyAgainButton
+                                  locale={locale}
+                                  shopProductId={item.shop_product_id}
+                                  slug={item.product_slug}
+                                  weight={item.weight}
+                                  grind={item.grind}
+                                  grindOption={item.grind_option}
+                                />
+                                {item.weight === 250 && (
+                                  delivered && token ? (
+                                    <a
+                                      href={`${CRM_URL}/passport/${token}?lang=${locale}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="rounded-full border border-[#412618] px-2 py-0.5 text-[11px] font-medium text-[#412618]"
+                                    >
+                                      QR
+                                    </a>
+                                  ) : (
+                                    <span
+                                      aria-disabled="true"
+                                      title={t('qr_after_delivery')}
+                                      className="cursor-not-allowed rounded-full border border-gray-200 px-2 py-0.5 text-[11px] font-medium text-gray-300"
+                                    >
+                                      QR
+                                    </span>
+                                  )
+                                )}
+                              </span>
+                            </li>
+                          )
+                        })
                       })}
                     </ul>
                   )}
 
-                  <p className="mt-2 text-xs text-brand-muted">
-                    {new Date(order.created_at).toLocaleDateString(DATE_LOCALE[locale])}
-                  </p>
+                  {/* footer: date · order total */}
+                  <div className="mt-3 flex items-center justify-between gap-2">
+                    <span className="text-xs text-brand-muted">
+                      {new Date(order.created_at).toLocaleDateString(DATE_LOCALE[locale])}
+                    </span>
+                    <span className="text-sm font-bold text-[#3A2115]">{fmtPrice(order.total)}</span>
+                  </div>
                 </div>
               )
             })}

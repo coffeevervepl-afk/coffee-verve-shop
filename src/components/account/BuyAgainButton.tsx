@@ -73,7 +73,7 @@ export default function BuyAgainButton({ locale, shopProductId, slug, weight, gr
       type="button"
       onClick={handleClick}
       disabled={loading}
-      className="rounded-full border border-brand-border px-2 py-0.5 text-[11px] font-medium text-[#3A2115] transition-colors hover:bg-gray-50 disabled:opacity-50"
+      className="rounded-full border border-brand-border px-2 py-0.5 text-[11px] font-medium text-[#3A2115] disabled:opacity-50"
     >
       {loading ? '…' : t('buy_again')}
     </button>
