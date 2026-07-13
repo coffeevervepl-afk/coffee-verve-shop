@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Playfair+Display:wght@700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -191,4 +191,17 @@ p  { line-height: 1.7; }
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* ── Hero typewriter caret ──────────────────────────────────────────────── */
+.hero-caret {
+  display: inline-block;
+  margin-left: 2px;
+  font-weight: 400;
+  color: #3A2115;
+  animation: hero-blink 1s step-end infinite;
+}
+@keyframes hero-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-caret { animation: none; }
 }

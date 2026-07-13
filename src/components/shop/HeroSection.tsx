@@ -1,19 +1,7 @@
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
+import HeroHeadline from './HeroHeadline'
 import type { Locale } from '@/types/shop'
-
-function renderAccentTitle(raw: string) {
-  const match = raw.match(/^([\s\S]*)\[(.+)\]([\s\S]*)$/)
-  if (!match) return raw
-  const [, before, accent, after] = match
-  return (
-    <>
-      {before}
-      <span className="text-brand-accent">{accent}</span>
-      {after}
-    </>
-  )
-}
 
 export default async function HeroSection({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'hero' })
@@ -30,13 +18,11 @@ export default async function HeroSection({ locale }: { locale: Locale }) {
             {t('badge')}
           </div>
 
-          <h1 className="mb-4 text-4xl font-bold leading-tight md:text-6xl">
-            {renderAccentTitle(t('title'))}
-          </h1>
-
-          <p className="mx-auto mb-8 max-w-2xl text-lg text-brand-muted">
-            {t('subtitle')}
-          </p>
+          <HeroHeadline
+            title={t('title')}
+            subtitle={t('subtitle')}
+            guaranteeLabel={t('guarantee_link')}
+          />
 
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link href="#products" className="btn btn-primary px-8">

@@ -52,8 +52,9 @@
   },
   "hero": {
     "badge": "Palimy co tydzień",
-    "title": "Kawa, która [wciąga]",
-    "subtitle": "Świeżo palona kawa specialty z dostawą w całej Polsce. Nie smakuje? Wymienimy kawę lub zwrócimy pieniądze.",
+    "title": "Palimy po Twoim zamówieniu",
+    "subtitle": "Wysyłamy w ciągu 24 godzin od palenia. Nie zasmakuje — wymienimy lub zwrócimy pieniądze.",
+    "guarantee_link": "Gwarancja smaku →",
     "cta_primary": "Wybierz kawę",
     "cta_secondary": "O nas"
   },
