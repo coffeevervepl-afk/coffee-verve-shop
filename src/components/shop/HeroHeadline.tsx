@@ -47,7 +47,7 @@ export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props)
       {/* min-height is reserved by an invisible copy of the full title, so the
           page never jumps while the visible text is typed over it. */}
       <h1
-        className="relative mx-auto mb-4 max-w-4xl text-[42px] font-[600] leading-[1.05] text-[#3A2115] md:text-[70px]"
+        className="relative mx-auto mb-4 max-w-4xl text-center text-[42px] font-[600] leading-[1.05] text-[#3A2115] md:text-[70px]"
         style={{
           fontFamily: "'Lora', Georgia, 'Times New Roman', serif",
         }}
@@ -60,20 +60,19 @@ export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props)
         <span className="sr-only">{title}</span>
       </h1>
 
-      <p
-        className={`mx-auto mb-8 max-w-none text-[18px] font-medium leading-relaxed text-[#5A4A3A] transition-opacity duration-700 md:text-[23px] ${
-          showSub ? 'opacity-100' : 'opacity-0'
-        }`}
-      >
-        {subtitle}{' '}
+      <div className={`mb-8 transition-opacity duration-700 ${showSub ? 'opacity-100' : 'opacity-0'}`}>
+        <p className="mx-auto max-w-none text-center text-[18px] font-medium leading-relaxed text-[#5A4A3A] md:text-[25px]">
+          {subtitle}
+        </p>
+        {/* Guarantee note — always its own centered line under the subtitle. */}
         {/* TODO: point href to the guarantee page/anchor once it exists. */}
         <Link
           href="#"
-          className="whitespace-nowrap text-[13px] font-normal text-[#8A7A66] underline-offset-2 transition-colors hover:text-[#6B5A47] hover:underline"
+          className="mt-2.5 inline-block text-[13px] font-normal text-[#8A7A66] underline-offset-2 transition-colors hover:text-[#6B5A47] hover:underline"
         >
           {guaranteeLabel}
         </Link>
-      </p>
+      </div>
     </>
   )
 }
