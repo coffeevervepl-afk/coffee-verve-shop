@@ -4,89 +4,117 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 interface Props {
-  locale:         string
+  // Title is two sentences separated by "\n" — each becomes its own line.
   title:          string
   subtitle:       string
   guaranteeLabel: string
 }
 
-const SPEED = 90 // ms per character — slower, more contemplative
+const SPEED       = 50    // ms per character
+const PAUSE       = 900   // ms dramatic pause between the two sentences
+const CARET_HOLD  = 2200  // ms the caret keeps blinking after typing finishes
+const CARET_FADE  = 600   // ms caret fade-out
+const BLINK       = 500   // ms blink half-cycle
 
-// Shared styling for the small, muted guarantee note.
 const GUARANTEE_CLS =
   'text-[13px] font-normal text-[#8A7A66] underline-offset-2 transition-colors hover:text-[#6B5A47] hover:underline'
 
-export default function HeroHeadline({ locale, title, subtitle, guaranteeLabel }: Props) {
-  const [typed, setTyped]       = useState('')
-  const [cursorOn, setCursorOn] = useState(true)
-  const [showSub, setShowSub]   = useState(false)
+export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props) {
+  const parts = title.split('\n')
+  const s1 = parts[0] ?? ''
+  const s2 = parts[1] ?? ''
+
+  const [typed1, setTyped1]           = useState('')
+  const [typed2, setTyped2]           = useState('')
+  const [broke, setBroke]             = useState(false) // <br> shown → line 2 started
+  const [caretOpacity, setCaretOpacity] = useState(1)
+  const [caretFading, setCaretFading] = useState(false)
+  const [caretGone, setCaretGone]     = useState(false)
+  const [showSub, setShowSub]         = useState(false)
 
   useEffect(() => {
-    // Respect reduced-motion: show everything immediately, no typing.
+    // Reduced motion → render the whole title/subtitle at once, no caret.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setTyped(title)
-      setCursorOn(false)
+      setTyped1(s1)
+      setTyped2(s2)
+      setBroke(!!s2)
+      setCaretGone(true)
       setShowSub(true)
       return
     }
 
     const timers: ReturnType<typeof setTimeout>[] = []
-    let i = 0
-    const tick = () => {
-      i += 1
-      setTyped(title.slice(0, i))
-      if (i < title.length) {
-        timers.push(setTimeout(tick, SPEED))
-      } else {
-        // Typing done: fade the subtitle in shortly after, hide caret ~1s later.
-        timers.push(setTimeout(() => setShowSub(true), 300))
-        timers.push(setTimeout(() => setCursorOn(false), 1000))
-      }
+    const at = (fn: () => void, ms: number) => timers.push(setTimeout(fn, ms))
+    const blink = setInterval(() => setCaretOpacity(o => (o ? 0 : 1)), BLINK)
+
+    const finish = () => {
+      at(() => setShowSub(true), 300)                    // subtitle fades in ~0.3s later
+      at(() => {                                         // ~2-3 blinks, then fade the caret
+        clearInterval(blink)
+        setCaretOpacity(1)
+        setCaretFading(true)
+      }, CARET_HOLD)
+      at(() => setCaretOpacity(0), CARET_HOLD + 40)
+      at(() => setCaretGone(true), CARET_HOLD + 40 + CARET_FADE)
     }
-    timers.push(setTimeout(tick, SPEED))
-    return () => timers.forEach(clearTimeout)
-  }, [title])
+
+    let j = 0
+    const type2 = () => {
+      j += 1
+      setTyped2(s2.slice(0, j))
+      if (j < s2.length) at(type2, SPEED)
+      else finish()
+    }
+    const pause = () => {
+      if (!s2) { finish(); return }
+      setBroke(true)            // insert the <br> — caret jumps to line 2
+      at(type2, SPEED)
+    }
+    let i = 0
+    const type1 = () => {
+      i += 1
+      setTyped1(s1.slice(0, i))
+      if (i < s1.length) at(type1, SPEED)
+      else at(pause, PAUSE)     // first sentence done → dramatic pause
+    }
+
+    at(type1, SPEED)
+    return () => { timers.forEach(clearTimeout); clearInterval(blink) }
+  }, [s1, s2])
 
   return (
     <>
-      {/* min-height is reserved by an invisible copy of the full title, so the
-          page never jumps while the visible text is typed over it. */}
+      {/* The invisible full title (both sentences + hard break) reserves the
+          height, so the layout never jumps while the text is typed over it —
+          on desktop and mobile, where each sentence may itself wrap. */}
       <h1
         className="relative mx-auto mb-4 max-w-4xl text-center text-[42px] font-[600] leading-[1.05] text-[#3A2115] md:text-[70px]"
-        style={{
-          fontFamily: "'Lora', Georgia, 'Times New Roman', serif",
-        }}
+        style={{ fontFamily: "'Lora', Georgia, 'Times New Roman', serif" }}
       >
-        <span className="invisible" aria-hidden="true">{title}</span>
+        <span className="invisible" aria-hidden="true">{s1}<br />{s2}</span>
         <span className="absolute inset-0" aria-hidden="true">
-          {typed}
-          {cursorOn && <span className="hero-caret">|</span>}
+          {typed1}
+          {broke && <br />}
+          {typed2}
+          {!caretGone && (
+            <span
+              className="hero-caret"
+              style={{ opacity: caretOpacity, transition: caretFading ? `opacity ${CARET_FADE}ms ease` : 'none' }}
+            >
+              |
+            </span>
+          )}
         </span>
-        <span className="sr-only">{title}</span>
+        <span className="sr-only">{s1} {s2}</span>
       </h1>
 
-      {/* PL fits on one wide line with the note inline (already ideal — untouched).
-          RU/UA are longer: keep a narrower column so they wrap cleanly to two
-          lines, and drop the guarantee note onto its own centered line below. */}
       <div className={`mb-8 transition-opacity duration-700 ${showSub ? 'opacity-100' : 'opacity-0'}`}>
-        <p
-          className={`mx-auto text-center text-[18px] font-medium leading-relaxed text-[#5A4A3A] md:text-[25px] ${
-            locale === 'pl' ? 'max-w-none' : 'max-w-2xl'
-          }`}
-        >
+        <p className="mx-auto max-w-2xl text-center text-[18px] font-medium leading-relaxed text-[#5A4A3A] md:text-[25px]">
           {subtitle}
-          {locale === 'pl' && (
-            <>
-              {' '}
-              {/* TODO: point href to the guarantee page/anchor once it exists. */}
-              <Link href="#" className={`whitespace-nowrap ${GUARANTEE_CLS}`}>{guaranteeLabel}</Link>
-            </>
-          )}
         </p>
-        {locale !== 'pl' && (
-          // TODO: point href to the guarantee page/anchor once it exists.
-          <Link href="#" className={`mt-2.5 inline-block ${GUARANTEE_CLS}`}>{guaranteeLabel}</Link>
-        )}
+        {/* Guarantee note — its own centered line under the subtitle (all locales). */}
+        {/* TODO: point href to the guarantee page/anchor once it exists. */}
+        <Link href="#" className={`mt-2.5 inline-block ${GUARANTEE_CLS}`}>{guaranteeLabel}</Link>
       </div>
     </>
   )
