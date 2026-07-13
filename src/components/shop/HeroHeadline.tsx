@@ -61,7 +61,7 @@ export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props)
       </h1>
 
       <p
-        className={`mx-auto mb-8 max-w-2xl text-[17px] leading-relaxed text-[#6B5A47] transition-opacity duration-700 md:text-[19px] ${
+        className={`mx-auto mb-8 max-w-2xl text-[18px] font-medium leading-relaxed text-[#5A4A3A] transition-opacity duration-700 md:text-[21px] ${
           showSub ? 'opacity-100' : 'opacity-0'
         }`}
       >
@@ -69,7 +69,7 @@ export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props)
         {/* TODO: point href to the guarantee page/anchor once it exists. */}
         <Link
           href="#"
-          className="whitespace-nowrap font-semibold text-[#3A2115] underline underline-offset-4 transition-opacity hover:opacity-70"
+          className="whitespace-nowrap text-[13px] font-normal text-[#8A7A66] underline-offset-2 transition-colors hover:text-[#6B5A47] hover:underline"
         >
           {guaranteeLabel}
         </Link>
