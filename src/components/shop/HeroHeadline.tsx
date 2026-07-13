@@ -49,10 +49,7 @@ export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props)
       <h1
         className="relative mx-auto mb-4 max-w-4xl text-[42px] font-[600] leading-[1.05] text-[#3A2115] md:text-[70px]"
         style={{
-          fontFamily: "'Fraunces', Georgia, 'Times New Roman', serif",
-          // Upright roman; a moderate optical size keeps the face's character
-          // without the extreme display distortion of opsz 144.
-          fontVariationSettings: "'opsz' 50, 'wght' 600",
+          fontFamily: "'Newsreader', Georgia, 'Times New Roman', serif",
         }}
       >
         <span className="invisible" aria-hidden="true">{title}</span>
