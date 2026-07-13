@@ -47,12 +47,12 @@ export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props)
       {/* min-height is reserved by an invisible copy of the full title, so the
           page never jumps while the visible text is typed over it. */}
       <h1
-        className="relative mx-auto mb-4 max-w-4xl text-[42px] font-[600] italic leading-[1.05] text-[#3A2115] md:text-[70px]"
+        className="relative mx-auto mb-4 max-w-4xl text-[42px] font-[600] leading-[1.05] text-[#3A2115] md:text-[70px]"
         style={{
           fontFamily: "'Fraunces', Georgia, 'Times New Roman', serif",
-          fontStyle: 'italic',
-          // Max optical size for high-contrast display letterforms + pinned weight.
-          fontVariationSettings: "'opsz' 144, 'wght' 600",
+          // Upright roman; a moderate optical size keeps the face's character
+          // without the extreme display distortion of opsz 144.
+          fontVariationSettings: "'opsz' 50, 'wght' 600",
         }}
       >
         <span className="invisible" aria-hidden="true">{title}</span>
