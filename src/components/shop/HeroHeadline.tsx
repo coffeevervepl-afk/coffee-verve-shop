@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 interface Props {
+  locale:         string
   title:          string
   subtitle:       string
   guaranteeLabel: string
@@ -11,7 +12,11 @@ interface Props {
 
 const SPEED = 90 // ms per character — slower, more contemplative
 
-export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props) {
+// Shared styling for the small, muted guarantee note.
+const GUARANTEE_CLS =
+  'text-[13px] font-normal text-[#8A7A66] underline-offset-2 transition-colors hover:text-[#6B5A47] hover:underline'
+
+export default function HeroHeadline({ locale, title, subtitle, guaranteeLabel }: Props) {
   const [typed, setTyped]       = useState('')
   const [cursorOn, setCursorOn] = useState(true)
   const [showSub, setShowSub]   = useState(false)
@@ -60,18 +65,28 @@ export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props)
         <span className="sr-only">{title}</span>
       </h1>
 
+      {/* PL fits on one wide line with the note inline (already ideal — untouched).
+          RU/UA are longer: keep a narrower column so they wrap cleanly to two
+          lines, and drop the guarantee note onto its own centered line below. */}
       <div className={`mb-8 transition-opacity duration-700 ${showSub ? 'opacity-100' : 'opacity-0'}`}>
-        <p className="mx-auto max-w-none text-center text-[18px] font-medium leading-relaxed text-[#5A4A3A] md:text-[25px]">
-          {subtitle}
-        </p>
-        {/* Guarantee note — always its own centered line under the subtitle. */}
-        {/* TODO: point href to the guarantee page/anchor once it exists. */}
-        <Link
-          href="#"
-          className="mt-2.5 inline-block text-[13px] font-normal text-[#8A7A66] underline-offset-2 transition-colors hover:text-[#6B5A47] hover:underline"
+        <p
+          className={`mx-auto text-center text-[18px] font-medium leading-relaxed text-[#5A4A3A] md:text-[25px] ${
+            locale === 'pl' ? 'max-w-none' : 'max-w-2xl'
+          }`}
         >
-          {guaranteeLabel}
-        </Link>
+          {subtitle}
+          {locale === 'pl' && (
+            <>
+              {' '}
+              {/* TODO: point href to the guarantee page/anchor once it exists. */}
+              <Link href="#" className={`whitespace-nowrap ${GUARANTEE_CLS}`}>{guaranteeLabel}</Link>
+            </>
+          )}
+        </p>
+        {locale !== 'pl' && (
+          // TODO: point href to the guarantee page/anchor once it exists.
+          <Link href="#" className={`mt-2.5 inline-block ${GUARANTEE_CLS}`}>{guaranteeLabel}</Link>
+        )}
       </div>
     </>
   )

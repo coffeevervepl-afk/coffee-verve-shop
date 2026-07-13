@@ -11,6 +11,7 @@ export default async function HeroSection({ locale }: { locale: Locale }) {
       <div className="container">
         <div className="mx-auto max-w-6xl text-center">
           <HeroHeadline
+            locale={locale}
             title={t('title')}
             subtitle={t('subtitle')}
             guaranteeLabel={t('guarantee_link')}
