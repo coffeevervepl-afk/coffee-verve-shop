@@ -9,7 +9,7 @@ interface Props {
   guaranteeLabel: string
 }
 
-const SPEED = 50 // ms per character
+const SPEED = 90 // ms per character — slower, more contemplative
 
 export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props) {
   const [typed, setTyped]       = useState('')
@@ -47,8 +47,13 @@ export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props)
       {/* min-height is reserved by an invisible copy of the full title, so the
           page never jumps while the visible text is typed over it. */}
       <h1
-        className="relative mx-auto mb-4 max-w-3xl text-[36px] font-[600] leading-tight text-[#3A2115] md:text-[56px]"
-        style={{ fontFamily: "'Fraunces', Georgia, 'Times New Roman', serif" }}
+        className="relative mx-auto mb-4 max-w-4xl text-[42px] font-[600] italic leading-[1.05] text-[#3A2115] md:text-[70px]"
+        style={{
+          fontFamily: "'Fraunces', Georgia, 'Times New Roman', serif",
+          fontStyle: 'italic',
+          // Max optical size for high-contrast display letterforms + pinned weight.
+          fontVariationSettings: "'opsz' 144, 'wght' 600",
+        }}
       >
         <span className="invisible" aria-hidden="true">{title}</span>
         <span className="absolute inset-0" aria-hidden="true">
@@ -59,7 +64,7 @@ export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props)
       </h1>
 
       <p
-        className={`mx-auto mb-8 max-w-2xl text-base leading-relaxed text-[#6B5A47] transition-opacity duration-700 md:text-[17px] ${
+        className={`mx-auto mb-8 max-w-2xl text-[17px] leading-relaxed text-[#6B5A47] transition-opacity duration-700 md:text-[19px] ${
           showSub ? 'opacity-100' : 'opacity-0'
         }`}
       >
