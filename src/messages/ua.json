@@ -19,7 +19,9 @@
   "topbar": {
     "delivery": "Доставка по всій Польщі",
     "b2b": "Оптовим покупцям",
-    "contacts": "Контакти"
+    "contacts": "Контакти",
+    "social": "Соцмережі",
+    "telegram_channel": "Telegram-канал"
   },
   "product_tabs": {
     "description": "Опис",

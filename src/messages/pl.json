@@ -19,7 +19,9 @@
   "topbar": {
     "delivery": "Dostawa na terenie całej Polski",
     "b2b": "Klienci hurtowi",
-    "contacts": "Kontakt"
+    "contacts": "Kontakt",
+    "social": "Media społecznościowe",
+    "telegram_channel": "Kanał Telegram"
   },
   "product_tabs": {
     "description": "Opis",
