@@ -61,7 +61,7 @@ export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props)
       </h1>
 
       <p
-        className={`mx-auto mb-8 max-w-2xl text-[18px] font-medium leading-relaxed text-[#5A4A3A] transition-opacity duration-700 md:text-[21px] ${
+        className={`mx-auto mb-8 max-w-none text-[18px] font-medium leading-relaxed text-[#5A4A3A] transition-opacity duration-700 md:text-[23px] ${
           showSub ? 'opacity-100' : 'opacity-0'
         }`}
       >

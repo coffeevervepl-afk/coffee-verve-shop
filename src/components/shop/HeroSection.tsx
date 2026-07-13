@@ -9,7 +9,7 @@ export default async function HeroSection({ locale }: { locale: Locale }) {
   return (
     <section className="bg-gradient-to-b from-[#FAF7F2] to-white py-16 md:py-24">
       <div className="container">
-        <div className="mx-auto max-w-4xl text-center">
+        <div className="mx-auto max-w-6xl text-center">
           <HeroHeadline
             title={t('title')}
             subtitle={t('subtitle')}
