@@ -238,10 +238,12 @@ export default function Header({ locale }: { locale: Locale }) {
               <Image src="/logo.png" alt="Coffee Verve" width={120} height={120} className="-my-8 h-[120px] w-auto" />
             </Link>
             <nav className="hidden items-center gap-8 md:flex">
-              {/* "Wybierz kawę" — primary CTA: same pulsing pill style as the
-                  Subskrypcja / Klienci hurtowi buttons (nav-cta-btn animation).
-                  Keeps the ▾ category-dropdown affordance and home link. */}
-              <Link href={`/${locale}`} className={NAV_CTA}>
+              {/* "Wybierz kawę" — main catalog entry. Plain nav-link style
+                  (ROW2_LINK) with just the shared pulse (nav-cta-btn) to draw
+                  attention — intentionally NOT a CTA pill like Subskrypcja /
+                  Klienci hurtowi, so it keeps a higher place in the hierarchy.
+                  inline-block so the pulse's scale transform applies. ▾ kept. */}
+              <Link href={`/${locale}`} className={`${ROW2_LINK} nav-cta-btn inline-block`}>
                 {t('catalog')} <span aria-hidden>▾</span>
               </Link>
               <Link href="#reviews" className={ROW2_LINK}>{t('reviews')}</Link>
