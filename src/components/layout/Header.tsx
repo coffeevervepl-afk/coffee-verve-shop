@@ -258,18 +258,18 @@ export default function Header({ locale }: { locale: Locale }) {
                 </button>
                 <div
                   role="menu"
-                  className={`absolute left-0 top-[calc(100%+10px)] z-20 min-w-[210px] rounded-[12px] bg-[rgba(255,255,255,0.85)] p-1 text-[#3A2115] shadow-lg backdrop-blur-md transition-all duration-200 ${
+                  className={`absolute left-0 top-[calc(100%+10px)] z-20 min-w-[240px] rounded-[12px] bg-[rgba(255,255,255,0.85)] p-2 text-[#3A2115] shadow-lg backdrop-blur-md transition-all duration-200 ${
                     catalogOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'
                   }`}
                 >
                   {/* TODO: point at the real coffee catalog route once /shop exists */}
-                  <Link href="#products" role="menuitem" onClick={() => setCatalogOpen(false)} className="block rounded-lg px-3 py-2 text-[13px] hover:bg-black/5">{t('menu_coffee')}</Link>
+                  <Link href="#products" role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[15px] hover:bg-black/5">{t('menu_coffee')}</Link>
                   {/* TODO: dedicated sets route/filter once the bundles range exists */}
-                  <Link href="#products" role="menuitem" onClick={() => setCatalogOpen(false)} className="block rounded-lg px-3 py-2 text-[13px] hover:bg-black/5">{t('menu_sets')}</Link>
+                  <Link href="#products" role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[15px] hover:bg-black/5">{t('menu_sets')}</Link>
                   {/* Same target as the existing "Subskrypcja kawy" nav item */}
-                  <Link href="#subscription" role="menuitem" onClick={() => setCatalogOpen(false)} className="block rounded-lg px-3 py-2 text-[13px] hover:bg-black/5">{t('subscription')}</Link>
+                  <Link href="#subscription" role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[15px] hover:bg-black/5">{t('subscription')}</Link>
                   {/* TODO: replace with the B2B section page once it's ready */}
-                  <Link href="#products" role="menuitem" onClick={() => setCatalogOpen(false)} className="block rounded-lg px-3 py-2 text-[13px] hover:bg-black/5">{t('menu_office')}</Link>
+                  <Link href="#products" role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[15px] hover:bg-black/5">{t('menu_office')}</Link>
                 </div>
               </div>
               <Link href="#reviews" className={ROW2_LINK}>{t('reviews')}</Link>
