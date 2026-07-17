@@ -113,6 +113,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: authError.message }, { status: 500 })
   }
 
+  // Primary, reliable link shop_users -> auth.users. Kept IN ADDITION to the
+  // existing user_metadata.shop_user_id + email matching (nothing removed).
+  // Non-critical: log but don't fail registration if the link doesn't stick.
+  if (authData.user?.id && shopUserId) {
+    const { error: linkError } = await sb
+      .from('shop_users')
+      .update({ auth_user_id: authData.user.id })
+      .eq('id', shopUserId)
+    if (linkError) console.error('Registration: auth_user_id link failed:', linkError)
+  }
+
   // Run loyalty recalc
   if (shopUserId) await sb.rpc('recalc_loyalty', { p_user_id: shopUserId })
 
