@@ -1,4 +1,19 @@
 {
+  "shop": {
+    "meta_title": "Katalog kawy — Coffee Verve",
+    "meta_description": "Świeżo palona kawa specialty: monoodmiany i mieszanki. Palenie na zamówienie, dostawa w całej Polsce.",
+    "title": "Katalog kawy",
+    "count": "{count, plural, one {# rodzaj} few {# rodzaje} many {# rodzajów} other {# rodzaju}}",
+    "tab_all": "Wszystkie",
+    "tab_featured": "Polecane",
+    "tab_new": "Nowości",
+    "tab_popular": "Popularne",
+    "empty": "W tej kategorii nie ma jeszcze kawy. Zajrzyj nieco później.",
+    "promo_title": "Zarejestruj się i odbieraj rabat na całą kawę",
+    "promo_text": "5% rabatu od razu po rejestracji. Im więcej zamówień, tym wyższy poziom: Gold 10%, Platinum 15%.",
+    "promo_login": "Zaloguj się",
+    "promo_register": "Zarejestruj się"
+  },
   "nav": {
     "catalog": "Wybierz kawę",
     "menu_coffee": "Kawa",

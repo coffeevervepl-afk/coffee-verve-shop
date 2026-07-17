@@ -262,8 +262,7 @@ export default function Header({ locale }: { locale: Locale }) {
                     catalogOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'
                   }`}
                 >
-                  {/* TODO: point at the real coffee catalog route once /shop exists */}
-                  <Link href="#products" role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[16px] font-semibold hover:bg-black/5">{t('menu_coffee')}</Link>
+                  <Link href={`/${locale}/shop`} role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[16px] font-semibold hover:bg-black/5">{t('menu_coffee')}</Link>
                   {/* TODO: dedicated sets route/filter once the bundles range exists */}
                   <Link href="#products" role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[16px] font-semibold hover:bg-black/5">{t('menu_sets')}</Link>
                   {/* Same target as the existing "Subskrypcja kawy" nav item */}
