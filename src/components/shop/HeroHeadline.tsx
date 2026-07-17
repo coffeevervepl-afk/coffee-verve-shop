@@ -108,7 +108,7 @@ export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props)
         <span className="sr-only">{s1} {s2}</span>
       </h1>
 
-      <div className={`mb-8 transition-opacity duration-700 ${showSub ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`transition-opacity duration-700 ${showSub ? 'opacity-100' : 'opacity-0'}`}>
         <p className="mx-auto max-w-2xl text-center text-[18px] font-medium leading-relaxed text-[#5A4A3A] md:text-[25px]">
           {subtitle}
         </p>

@@ -238,7 +238,10 @@ export default function Header({ locale }: { locale: Locale }) {
               <Image src="/logo.png" alt="Coffee Verve" width={120} height={120} className="-my-8 h-[120px] w-auto" />
             </Link>
             <nav className="hidden items-center gap-8 md:flex">
-              <Link href={`/${locale}`} className={ROW2_LINK}>
+              {/* "Wybierz kawę" — primary CTA: same pulsing pill style as the
+                  Subskrypcja / Klienci hurtowi buttons (nav-cta-btn animation).
+                  Keeps the ▾ category-dropdown affordance and home link. */}
+              <Link href={`/${locale}`} className={NAV_CTA}>
                 {t('catalog')} <span aria-hidden>▾</span>
               </Link>
               <Link href="#reviews" className={ROW2_LINK}>{t('reviews')}</Link>
