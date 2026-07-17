@@ -1,6 +1,9 @@
 {
   "nav": {
     "catalog": "Выбрать кофе",
+    "menu_coffee": "Кофе",
+    "menu_sets": "Наборы",
+    "menu_office": "Кофе для офиса",
     "cart": "Корзина",
     "about": "О нас",
     "search": "Поиск",

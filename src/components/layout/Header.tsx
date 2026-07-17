@@ -83,6 +83,8 @@ export default function Header({ locale }: { locale: Locale }) {
   const contactsRef = useRef<HTMLDivElement | null>(null)
   const [accountOpen, setAccountOpen] = useState(false)
   const accountRef = useRef<HTMLDivElement | null>(null)
+  const [catalogOpen, setCatalogOpen] = useState(false)
+  const catalogRef = useRef<HTMLDivElement | null>(null)
   const [sessionEmail, setSessionEmail] = useState<string | null>(null)
   const [sessionName, setSessionName] = useState<string | null>(null)
 
@@ -90,6 +92,7 @@ export default function Header({ locale }: { locale: Locale }) {
     function onClickOutside(event: MouseEvent) {
       if (contactsRef.current && !contactsRef.current.contains(event.target as Node)) setContactsOpen(false)
       if (accountRef.current && !accountRef.current.contains(event.target as Node)) setAccountOpen(false)
+      if (catalogRef.current && !catalogRef.current.contains(event.target as Node)) setCatalogOpen(false)
     }
     document.addEventListener('mousedown', onClickOutside)
     return () => document.removeEventListener('mousedown', onClickOutside)
@@ -238,14 +241,37 @@ export default function Header({ locale }: { locale: Locale }) {
               <Image src="/logo.png" alt="Coffee Verve" width={120} height={120} className="-my-8 h-[120px] w-auto" />
             </Link>
             <nav className="hidden items-center gap-8 md:flex">
-              {/* "Wybierz kawę" — main catalog entry. Plain nav-link style
-                  (ROW2_LINK) with just the shared pulse (nav-cta-btn) to draw
-                  attention — intentionally NOT a CTA pill like Subskrypcja /
-                  Klienci hurtowi, so it keeps a higher place in the hierarchy.
-                  inline-block so the pulse's scale transform applies. ▾ kept. */}
-              <Link href={`/${locale}`} className={`${ROW2_LINK} nav-cta-btn inline-block`}>
-                {t('catalog')} <span aria-hidden>▾</span>
-              </Link>
+              {/* "Wybierz kawę" — main catalog entry: plain nav-link style
+                  (ROW2_LINK) + shared pulse (nav-cta-btn). Click toggles the
+                  category dropdown — same click-to-open + click-outside pattern
+                  as the Kontakt/account menus. inline-flex so the pulse's scale
+                  transform applies and the ▾ aligns. */}
+              <div ref={catalogRef} className="relative">
+                <button
+                  type="button"
+                  onClick={() => setCatalogOpen(v => !v)}
+                  aria-haspopup="menu"
+                  aria-expanded={catalogOpen}
+                  className={`${ROW2_LINK} nav-cta-btn inline-flex items-center gap-1`}
+                >
+                  {t('catalog')} <span aria-hidden>▾</span>
+                </button>
+                <div
+                  role="menu"
+                  className={`absolute left-0 top-[calc(100%+10px)] z-20 min-w-[210px] rounded-[12px] bg-[rgba(255,255,255,0.85)] p-1 text-[#3A2115] shadow-lg backdrop-blur-md transition-all duration-200 ${
+                    catalogOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'
+                  }`}
+                >
+                  {/* TODO: point at the real coffee catalog route once /shop exists */}
+                  <Link href="#products" role="menuitem" onClick={() => setCatalogOpen(false)} className="block rounded-lg px-3 py-2 text-[13px] hover:bg-black/5">{t('menu_coffee')}</Link>
+                  {/* TODO: dedicated sets route/filter once the bundles range exists */}
+                  <Link href="#products" role="menuitem" onClick={() => setCatalogOpen(false)} className="block rounded-lg px-3 py-2 text-[13px] hover:bg-black/5">{t('menu_sets')}</Link>
+                  {/* Same target as the existing "Subskrypcja kawy" nav item */}
+                  <Link href="#subscription" role="menuitem" onClick={() => setCatalogOpen(false)} className="block rounded-lg px-3 py-2 text-[13px] hover:bg-black/5">{t('subscription')}</Link>
+                  {/* TODO: replace with the B2B section page once it's ready */}
+                  <Link href="#products" role="menuitem" onClick={() => setCatalogOpen(false)} className="block rounded-lg px-3 py-2 text-[13px] hover:bg-black/5">{t('menu_office')}</Link>
+                </div>
+              </div>
               <Link href="#reviews" className={ROW2_LINK}>{t('reviews')}</Link>
               <Link href="#delivery" className={ROW2_LINK}>{t('delivery_payment')}</Link>
               <Link href="#subscription" className={NAV_CTA}>

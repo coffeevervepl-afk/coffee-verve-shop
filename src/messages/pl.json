@@ -1,6 +1,9 @@
 {
   "nav": {
     "catalog": "Wybierz kawę",
+    "menu_coffee": "Kawa",
+    "menu_sets": "Zestawy",
+    "menu_office": "Kawa dla biura",
     "cart": "Koszyk",
     "about": "O nas",
     "search": "Szukaj",

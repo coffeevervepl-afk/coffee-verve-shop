@@ -1,6 +1,9 @@
 {
   "nav": {
     "catalog": "Обрати каву",
+    "menu_coffee": "Кава",
+    "menu_sets": "Набори",
+    "menu_office": "Кава для офісу",
     "cart": "Кошик",
     "about": "Про нас",
     "search": "Пошук",
