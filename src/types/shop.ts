@@ -35,6 +35,19 @@ export interface ShopProduct {
   sca_score?: number | null
   caffeine?: string | null
   roaster?: string | null
+  // Catalog-filter fields (Phase 1)
+  country?: string | null
+  is_decaf: boolean
+  is_blend: boolean
+  flavor_tags: string[]
+  // DB columns previously missing from this type
+  stock_status: string
+  old_price_250: number | null
+  old_price_500: number | null
+  created_at: string
+  updated_at?: string
+  seo_title?: string | null
+  seo_description?: string | null
 }
 
 export interface CartItem {
