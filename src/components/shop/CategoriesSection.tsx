@@ -33,8 +33,9 @@ export default async function CategoriesSection({ locale }: { locale: Locale }) 
               src={cat.video}
             />
 
-            {/* Dark overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+            {/* Dark overlay — kept strong at the bottom for text legibility,
+                lighter through the middle so bright videos aren't dimmed. */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
 
             {/* Content */}
             <div className="absolute bottom-0 left-0 p-6 text-white">
