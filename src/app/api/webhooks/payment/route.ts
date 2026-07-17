@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabase } from '@/lib/supabase/server'
+import { createServiceSupabase } from '@/lib/supabase/service'
 import { getPaymentProvider } from '@/lib/payment'
 
 export const runtime = 'nodejs'
@@ -14,11 +14,17 @@ export async function POST(req: NextRequest) {
 
   try {
     const provider = getPaymentProvider()
+    // Authenticity gate: throws on a missing/placeholder secret or a bad
+    // signature, so nothing below runs for a forged request. (Stripe:
+    // stripe.webhooks.constructEvent with STRIPE_WEBHOOK_SECRET.)
     const result   = await provider.verifyWebhook(Buffer.from(body), signature)
 
     if (!result.orderId) return NextResponse.json({ ok: true })
 
-    const sb = await createServerSupabase()
+    // Service-role client: order status writes bypass RLS. Safe here ONLY
+    // because the signature was verified above. Anon/customers can no longer
+    // UPDATE shop_orders directly (see shop_orders_staff_update policy).
+    const sb = createServiceSupabase()
 
     // Update payment status
     if (result.status === 'paid') {

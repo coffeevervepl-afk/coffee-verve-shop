@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabase } from '@/lib/supabase/server'
+import { createServiceSupabase } from '@/lib/supabase/service'
 import { getPaymentProvider } from '@/lib/payment'
 import { normalizeTelegramUsername } from '@/lib/telegram'
 import type { CartItem, DeliveryType, PricingSummary } from '@/types/shop'
@@ -164,8 +165,9 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    // Save payment ref
-    await sb
+    // Save payment ref via service-role: order UPDATEs are no longer allowed
+    // under RLS for anon/customers (only the service role + CRM staff can).
+    await createServiceSupabase()
       .from('shop_orders')
       .update({ payment_ref: result.paymentRef })
       .eq('id', order.id)
