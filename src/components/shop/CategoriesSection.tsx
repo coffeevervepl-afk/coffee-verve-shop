@@ -4,9 +4,13 @@ import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/types/shop'
 
 const CATEGORIES = [
-  { key: 'espresso',    video: '/videos/espresso.mp4',    brew: 'espresso' },
-  { key: 'filter',      video: '/videos/filter.mp4',      brew: 'filter' },
-  { key: 'alternative', video: '/videos/alternative.mp4', brew: 'alternative' },
+  { key: 'espresso', video: '/videos/espresso.mp4', brew: 'espresso' },
+  { key: 'filter',   video: '/videos/filter.mp4',   brew: 'filter' },
+  // Decaf is a product TYPE, not a brew method. There's no decaf filter yet
+  // (the `caffeine` product field is free-text and unused for filtering), so
+  // this tile temporarily links to the homepage catalog instead of a brew query.
+  // TODO: point at a real decaf filter once a /shop listing route exists.
+  { key: 'decaf',    video: '/videos/decaf.mp4',    brew: null },
 ] as const
 
 export default async function CategoriesSection({ locale }: { locale: Locale }) {
@@ -18,7 +22,7 @@ export default async function CategoriesSection({ locale }: { locale: Locale }) 
         {CATEGORIES.map(cat => (
           <Link
             key={cat.key}
-            href={`/${locale}/shop?brew=${cat.brew}`}
+            href={cat.brew ? `/${locale}/shop?brew=${cat.brew}` : '#products'}
             className="group relative block h-72 overflow-hidden rounded-2xl md:h-96"
           >
             {/* Fallback background if the video fails to load */}

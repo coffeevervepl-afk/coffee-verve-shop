@@ -50,7 +50,7 @@
   "categories": {
     "espresso":    { "label": "Для эспрессо", "title": "Эспрессо", "count": "43 сорта" },
     "filter":      { "label": "Для фильтра", "title": "Фильтр", "count": "37 сортов" },
-    "alternative": { "label": "Альтернативные методы", "title": "Альтернатива", "count": "12 видов" }
+    "decaf": { "label": "Кофе без кофеина", "title": "Decaf", "count": "новинка" }
   },
   "hero": {
     "badge": "Обжариваем каждую неделю",

@@ -50,7 +50,7 @@
   "categories": {
     "espresso":    { "label": "Do espresso", "title": "Espresso", "count": "43 rodzaje" },
     "filter":      { "label": "Do filtra", "title": "Filtr", "count": "37 rodzajów" },
-    "alternative": { "label": "Metody alternatywne", "title": "Alternatywa", "count": "12 rodzajów" }
+    "decaf": { "label": "Kawa bezkofeinowa", "title": "Decaf", "count": "nowość" }
   },
   "hero": {
     "badge": "Palimy co tydzień",
