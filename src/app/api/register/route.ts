@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabase } from '@/lib/supabase/server'
+import { createServiceSupabase } from '@/lib/supabase/service'
 
 export async function POST(req: NextRequest) {
   const {
@@ -27,7 +28,12 @@ export async function POST(req: NextRequest) {
       : {}),
   }
 
-  const sb = await createServerSupabase()
+  // Service-role for DB ops: this route runs BEFORE the user has a session
+  // (signUp happens below), so shop_users SELECT/UPDATE would be blocked by the
+  // locked-down RLS. recalc_loyalty is SECURITY INVOKER, so its internal UPDATE
+  // must run privileged too. auth.signUp itself uses the standard SSR client
+  // (sbAuth) to preserve the email-confirmation flow.
+  const sb = createServiceSupabase()
 
   // Check if shop_user already registered
   const { data: existing } = await sb
@@ -99,7 +105,8 @@ export async function POST(req: NextRequest) {
 
   // Create the Supabase Auth user via the standard signUp flow, so Supabase
   // sends the confirmation email through SMTP instead of auto-confirming.
-  const { data: authData, error: authError } = await sb.auth.signUp({
+  const sbAuth = await createServerSupabase()
+  const { data: authData, error: authError } = await sbAuth.auth.signUp({
     email,
     password,
     options: { data: { name, shop_user_id: shopUserId } },

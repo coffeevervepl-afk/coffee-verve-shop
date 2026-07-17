@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabase } from '@/lib/supabase/server'
 import { createServiceSupabase } from '@/lib/supabase/service'
 import { getPaymentProvider } from '@/lib/payment'
 import { normalizeTelegramUsername } from '@/lib/telegram'
@@ -33,7 +32,11 @@ export async function POST(req: NextRequest) {
   if (!customer?.email)     return NextResponse.json({ error: 'Email required' }, { status: 400 })
   if (!customer?.name)      return NextResponse.json({ error: 'Name required' }, { status: 400 })
 
-  const sb = await createServerSupabase()
+  // Service-role client: checkout must SELECT (find user by email) + INSERT +
+  // UPDATE shop_users/shop_orders. Runs server-side with no user session
+  // (guests included), so it bypasses RLS instead of relying on open anon
+  // policies (which are being locked down). service_role never leaves the server.
+  const sb = createServiceSupabase()
   const normalizedTelegram = normalizeTelegramUsername(customer.telegram)
 
   // 1. Create or find shop_user
@@ -165,9 +168,8 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    // Save payment ref via service-role: order UPDATEs are no longer allowed
-    // under RLS for anon/customers (only the service role + CRM staff can).
-    await createServiceSupabase()
+    // Save payment ref (same service-role client as the rest of checkout).
+    await sb
       .from('shop_orders')
       .update({ payment_ref: result.paymentRef })
       .eq('id', order.id)

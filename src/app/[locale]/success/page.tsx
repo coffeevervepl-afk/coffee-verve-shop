@@ -32,12 +32,12 @@ export default function SuccessPage() {
   useEffect(() => {
     setItems([])
     if (!orderId) return
-    const sb = createClient()
-    sb.from('shop_orders')
-      .select('id,order_number,customer_email,customer_name,total,payment_status')
-      .eq('id', orderId)
-      .single()
-      .then(({ data }) => setOrder(data))
+    // Guests/just-registered users have no session here, so shop_orders is not
+    // readable under RLS. Fetch confirmation fields via the service-role route.
+    fetch(`/api/order/${orderId}`)
+      .then(r => (r.ok ? r.json() : null))
+      .then(data => setOrder(data))
+      .catch(() => setOrder(null))
   }, [orderId, setItems])
 
   useEffect(() => {

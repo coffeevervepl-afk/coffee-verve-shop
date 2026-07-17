@@ -209,7 +209,7 @@ export default async function AccountPage({ params }: Props) {
       </div>
 
       {/* 2. Recent orders — live status via Realtime + polling */}
-      <RecentOrders locale={locale} email={email} initialOrders={orderViews} />
+      <RecentOrders locale={locale} shopUserId={shopUser?.id ?? null} initialOrders={orderViews} />
 
       {/* 3. Profile data — editable name + address */}
       <ProfileCard

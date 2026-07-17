@@ -44,11 +44,11 @@ export interface OrderView {
 
 interface Props {
   locale:        Locale
-  email:         string
+  shopUserId:    string | null
   initialOrders: OrderView[]
 }
 
-export default function RecentOrders({ locale, email, initialOrders }: Props) {
+export default function RecentOrders({ locale, shopUserId, initialOrders }: Props) {
   const t = useTranslations('dashboard')
   const [orders, setOrders] = useState<OrderView[]>(initialOrders)
 
@@ -56,7 +56,7 @@ export default function RecentOrders({ locale, email, initialOrders }: Props) {
   // fallback if the realtime channel drops (same pattern as the CRM Orders view).
   useEffect(() => {
     const ids = initialOrders.map(o => o.id)
-    if (ids.length === 0) return
+    if (ids.length === 0 || !shopUserId) return
     const sb = createClient()
 
     async function refreshStatuses() {
@@ -68,11 +68,15 @@ export default function RecentOrders({ locale, email, initialOrders }: Props) {
       }))
     }
 
+    // Filter by shop_user_id so the Realtime subscription matches the RLS SELECT
+    // policy (orders visible via shop_users.auth_user_id = auth.uid()). Filtering
+    // by customer_email would not line up with RLS and could silently deliver
+    // nothing.
     const channel = sb
       .channel('account-orders-realtime')
       .on(
         'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'shop_orders', filter: `customer_email=eq.${email}` },
+        { event: 'UPDATE', schema: 'public', table: 'shop_orders', filter: `shop_user_id=eq.${shopUserId}` },
         payload => {
           const row = payload.new as { id: string; status: string }
           setOrders(prev => prev.map(o => (o.id === row.id ? { ...o, status: row.status } : o)))
@@ -86,7 +90,7 @@ export default function RecentOrders({ locale, email, initialOrders }: Props) {
       sb.removeChannel(channel)
       clearInterval(interval)
     }
-  }, [email, initialOrders])
+  }, [shopUserId, initialOrders])
 
   return (
     <div className="rounded-2xl border border-brand-border bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
