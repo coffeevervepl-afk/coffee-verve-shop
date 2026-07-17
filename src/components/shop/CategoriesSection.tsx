@@ -23,7 +23,7 @@ export default async function CategoriesSection({ locale }: { locale: Locale }) 
           <Link
             key={cat.key}
             href={cat.brew ? `/${locale}/shop?brew=${cat.brew}` : '#products'}
-            className="group relative block h-72 overflow-hidden rounded-2xl md:h-96"
+            className="group relative block h-72 overflow-hidden rounded-2xl md:h-64"
           >
             {/* Fallback background if the video fails to load */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#2C1810] to-[#111110]" />

@@ -88,7 +88,7 @@ export default function HeroHeadline({ title, subtitle, guaranteeLabel }: Props)
           height, so the layout never jumps while the text is typed over it —
           on desktop and mobile, where each sentence may itself wrap. */}
       <h1
-        className="relative mx-auto mb-5 max-w-6xl text-center text-[clamp(30px,4vw,52px)] font-[600] leading-[1.15] text-[#3A2115]"
+        className="relative mx-auto mb-3 max-w-6xl text-center text-[clamp(30px,4vw,52px)] font-[600] leading-[1.15] text-[#3A2115]"
         style={{ fontFamily: "'Lora', Georgia, 'Times New Roman', serif" }}
       >
         <span className="invisible" aria-hidden="true">{s1}<br />{s2}</span>

@@ -6,7 +6,7 @@ export default async function HeroSection({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'hero' })
 
   return (
-    <section className="bg-gradient-to-b from-[#FAF7F2] to-white py-16 md:py-24">
+    <section className="bg-gradient-to-b from-[#FAF7F2] to-white py-10 md:py-14">
       <div className="container">
         <div className="mx-auto max-w-6xl text-center">
           <HeroHeadline
