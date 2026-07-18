@@ -22,11 +22,9 @@ export default async function CategoriesSection({ locale }: { locale: Locale }) 
         {CATEGORIES.map(cat => (
           <Link
             key={cat.key}
-            // All tiles go to the full catalog for now. TODO: restore the
-            // per-tile filter once it exists — ?brew=espresso|filter for the
-            // brew tiles (needs a working brew_method filter) and a decaf
-            // filter (?is_decaf=1 or similar) for the Decaf tile.
-            href={`/${locale}/shop`}
+            // Filter the /shop catalog by this category and jump to the grid.
+            // (espresso/filter -> brew_method, decaf -> is_decaf.) Later: /shop/<cat>.
+            href={`/${locale}/shop?category=${cat.key}#products-grid`}
             className="group relative block h-72 overflow-hidden rounded-2xl md:h-64"
           >
             {/* Fallback background if the video fails to load */}
