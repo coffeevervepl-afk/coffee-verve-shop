@@ -4,6 +4,8 @@ import { getTranslations } from 'next-intl/server'
 import { getProducts } from '@/lib/supabase/products'
 import CategoriesSection from '@/components/shop/CategoriesSection'
 import ProductCard from '@/components/shop/ProductCard'
+import TagFilters from '@/components/shop/TagFilters'
+import { TAG_KEYS, TAG_FILTERS } from '@/lib/shopTags'
 import type { Locale, ShopProduct } from '@/types/shop'
 
 const CATEGORIES = ['espresso', 'filter', 'decaf'] as const
@@ -24,7 +26,7 @@ function byDefault(a: ShopProduct, b: ShopProduct): number {
 
 interface Props {
   params:       { locale: Locale }
-  searchParams: { category?: string }
+  searchParams: { category?: string; tag?: string }
 }
 
 export default async function ShopPage({ params, searchParams }: Props) {
@@ -37,14 +39,21 @@ export default async function ShopPage({ params, searchParams }: Props) {
       ? (searchParams.category as Category)
       : null
 
+  // Multi-select tags (AND logic), validated against the known set.
+  const activeTags = (searchParams.tag ?? '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(s => (TAG_KEYS as readonly string[]).includes(s))
+
   // Public catalog — reuse the homepage data layer (is_active only; shop_products
-  // is publicly readable). Category filtering is applied in-memory.
+  // is publicly readable). Category + tag filtering applied in-memory (server side).
   const products = await getProducts()
 
   let list = products
-  if (category === 'espresso')    list = products.filter(p => p.brew_method === 'espresso')
-  else if (category === 'filter') list = products.filter(p => p.brew_method === 'filter')
-  else if (category === 'decaf')  list = products.filter(p => p.is_decaf === true)
+  if (category === 'espresso')    list = list.filter(p => p.brew_method === 'espresso')
+  else if (category === 'filter') list = list.filter(p => p.brew_method === 'filter')
+  else if (category === 'decaf')  list = list.filter(p => p.is_decaf === true)
+  for (const tag of activeTags) list = list.filter(TAG_FILTERS[tag])
   list = [...list].sort(byDefault)
 
   return (
@@ -66,14 +75,15 @@ export default async function ShopPage({ params, searchParams }: Props) {
         </nav>
       </div>
 
-      {/* Category tiles (video-background) — reused from the homepage. Each tile
-          links to /shop?category=<key>#products-grid to filter the grid below. */}
-      <div className="pt-6">
-        <CategoriesSection locale={locale} />
+      {/* Compact category strip (video tiles) — links to ?category=<key> */}
+      <div className="pt-5">
+        <CategoriesSection locale={locale} variant="compact" />
       </div>
 
-      {/* Product grid */}
-      <section id="products-grid" className="container scroll-mt-24 pb-16 md:pb-24">
+      {/* Product grid (with the tag filter row above it) */}
+      <section id="products-grid" className="container scroll-mt-24 pb-16 pt-6 md:pb-24">
+        <TagFilters locale={locale} category={category} activeTags={activeTags} />
+
         <div className="mb-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <h1 className="text-2xl font-semibold md:text-3xl">
             {category ? tc(`${category}.title`) : t('title')}
