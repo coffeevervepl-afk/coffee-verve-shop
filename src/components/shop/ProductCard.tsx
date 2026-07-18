@@ -236,7 +236,7 @@ export default function ProductCard({ product, locale }: Props) {
             </div>
           )}
 
-          {!isBundle && (
+          {!isBundle && (<>
           <div className="mt-1.5 flex gap-1 rounded-full p-0.5 transition-colors duration-300" style={{ backgroundColor: switchBg }}>
             <button
               onClick={e => selectGrind(e, 'whole')}
@@ -290,7 +290,7 @@ export default function ProductCard({ product, locale }: Props) {
               ))}
             </div>
           </div>
-          )}
+          </>)}
 
           <div className="mt-auto flex items-center justify-between pt-1.5">
             <div className="flex flex-col">
