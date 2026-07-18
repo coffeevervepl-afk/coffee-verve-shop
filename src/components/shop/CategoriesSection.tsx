@@ -36,7 +36,7 @@ export default async function CategoriesSection({ locale, variant = 'default' }:
             key={cat.key}
             // Filter the /shop catalog by this category and jump to the grid.
             // (espresso/filter -> brew_method, decaf -> is_decaf.) Later: /shop/<cat>.
-            href={`/${locale}/shop?category=${cat.key}#products-grid`}
+            href={`/${locale}/shop/${cat.key}`}
             className={`group relative block overflow-hidden ${tileCls}`}
           >
             {/* Fallback background if the video fails to load */}
