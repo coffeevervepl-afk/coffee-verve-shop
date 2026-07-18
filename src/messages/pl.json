@@ -13,6 +13,26 @@
     "breadcrumb_catalog": "Katalog",
     "intro": "Coffee Verve to palarnia kawy specialty w Warszawie z dostawą w całej Polsce. Palimy każdą partię na zamówienie i wysyłamy w ciągu 24 godzin. Jeśli smak Ci nie odpowiada — wymienimy kawę lub zwrócimy pieniądze.",
     "faq_title": "Częste pytania",
+    "quiz": {
+      "back": "Wstecz",
+      "close": "Zamknij",
+      "step1_title": "Jaką kawę zwykle pijesz?",
+      "type_black": "Czarną",
+      "type_milk": "Z mlekiem lub śmietanką",
+      "type_both": "Oba warianty",
+      "step2_title": "Jak parzysz kawę?",
+      "method_espresso": "Ekspres ciśnieniowy",
+      "method_turka": "Tygielek (turka)",
+      "method_frenchpress": "French press",
+      "method_aeropress": "Aeropress",
+      "method_moka": "Kawiarka (moka)",
+      "method_filter": "Przelew / dripper",
+      "method_cup": "W filiżance",
+      "step3_title": "Jaki smak preferujesz?",
+      "taste_classic": "Klasyczny, zbalansowany i gęsty",
+      "taste_fruity": "Wyrazisty, owocowy i soczysty",
+      "taste_fermented": "Nietypowy i wyrazisty (fermentowany)"
+    },
     "seo": {
       "espresso": {
         "title": "Kawa do espresso | Coffee Verve Warszawa",
