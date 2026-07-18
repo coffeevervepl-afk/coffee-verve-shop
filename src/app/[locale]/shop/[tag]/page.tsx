@@ -2,20 +2,19 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import ShopCatalog from '@/components/shop/ShopCatalog'
-import { SHOP_SLUGS, SLUG_MAP } from '@/lib/shopSlugs'
+import { SLUG_MAP } from '@/lib/shopSlugs'
 import type { Locale } from '@/types/shop'
 
 interface Props {
   params: { locale: Locale; tag: string }
 }
 
-const LOCALES: Locale[] = ['ru', 'pl', 'ua']
-
-// One indexable page per slug × locale. (This project renders /[locale] dynamically
-// — no parent generateStaticParams — so we enumerate the locale dimension here.)
-export function generateStaticParams() {
-  return LOCALES.flatMap(locale => SHOP_SLUGS.map(s => ({ locale, tag: s.slug })))
-}
+// Rendered dynamically (like the rest of /[locale] in this app: next-intl runs
+// without unstable_setRequestLocale and getProducts reads cookies). We deliberately
+// DON'T use generateStaticParams — declaring these paths static made Next try to
+// prerender them at build, which fails on those dynamic APIs. dynamicParams stays
+// true, so any slug resolves on demand: known -> render, unknown -> notFound().
+export const dynamicParams = true
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const def = SLUG_MAP[params.tag]
