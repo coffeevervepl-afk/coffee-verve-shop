@@ -31,7 +31,7 @@ export default function TagFilters({ locale, category, activeTags }: Props) {
           just scrolls to the grid. */}
       <Link
         href="#products-grid"
-        className="quiz-shimmer rounded-full px-4 py-2 text-[14px] font-medium transition hover:brightness-[0.98]"
+        className="quiz-shimmer rounded-full px-4 py-2 text-[14px] transition hover:brightness-[0.98]"
       >
         ✨ {t('tags.quiz')}
       </Link>
@@ -44,7 +44,7 @@ export default function TagFilters({ locale, category, activeTags }: Props) {
             key={key}
             href={buildHref(locale, category, nextTags)}
             aria-pressed={isActive}
-            className={`rounded-full px-4 py-2 text-[14px] font-medium transition ${
+            className={`rounded-full px-4 py-2 text-[15px] font-semibold transition ${
               isActive
                 ? 'bg-[#412618] text-white'
                 : 'bg-[#F4F3F0] text-[#3A2115] hover:bg-[#E9E7E1]'

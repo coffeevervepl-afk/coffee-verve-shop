@@ -186,11 +186,13 @@ p  { line-height: 1.7; }
 
 /* ── Quiz "pick coffee in a minute" chip — pearlescent shimmer ────────────── */
 .quiz-shimmer {
-  background-image: linear-gradient(90deg, #F5EFE6, #F3E1E8, #E8E1F0, #F3E1E8, #F5EFE6);
+  background-image: linear-gradient(90deg, #F5E6D3, #E8C4D8, #D4C8E8, #C6DBE8, #F5E6D3);
   background-size: 200% 100%;
-  animation: quiz-shimmer 3s ease infinite;
+  animation: quiz-shimmer 2s ease infinite;
   border: 1px solid rgba(255, 255, 255, 0.5);
   color: #3A2115;
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(200, 160, 220, 0.3);
 }
 @keyframes quiz-shimmer {
   0%   { background-position: 0% 50%; }
