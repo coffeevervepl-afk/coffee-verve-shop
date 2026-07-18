@@ -103,13 +103,14 @@ export default async function AccountPage({ params }: Props) {
     if (!ordersRes.error) recentOrders = ordersRes.data ?? []
 
     // Pull qr_token + match key from the CRM `orders` mirror for these orders.
+    // `orders` is now staff-only under RLS, so go through a SECURITY DEFINER RPC
+    // scoped to auth.uid() (returns only tokens for the caller's own orders).
     if (recentOrders.length > 0) {
       const orderIds = recentOrders.map(o => o.id)
-      const crmRes = await supabase.from('orders')
-        .select('shop_order_id, product_id, weight, qr_token')
-        .in('shop_order_id', orderIds)
+      const crmRes = await supabase.rpc('get_qr_tokens_for_orders', { p_shop_order_ids: orderIds })
+      const rows = (crmRes.data ?? []) as { shop_order_id: string; product_id: string; weight: number; qr_token: string }[]
       if (!crmRes.error) {
-        for (const r of crmRes.data ?? []) {
+        for (const r of rows) {
           if (!r.qr_token) continue
           const key = `${r.shop_order_id}|${r.product_id}|${r.weight}`
           const tokens = qrByKey.get(key)
