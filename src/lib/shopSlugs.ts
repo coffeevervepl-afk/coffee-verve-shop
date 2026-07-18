@@ -24,6 +24,7 @@ export const SHOP_SLUGS: SlugDef[] = [
   { slug: 'espresso',         key: 'espresso',       filter: p => hasBrew(p, 'espresso') },
   { slug: 'filter',           key: 'filter',         filter: p => hasBrew(p, 'filter') },
   { slug: 'decaf',            key: 'decaf',          filter: p => p.is_decaf === true },
+  { slug: 'nabory',           key: 'nabory',         filter: p => p.product_type === 'bundle' },
   // Attribute tags (filter chips).
   { slug: 'do-ekspresu',      key: 'doEkspresu',     filter: p => hasBrew(p, 'espresso'),    chip: 'ekspres' },
   { slug: 'do-turki',         key: 'doTurki',        filter: p => hasBrew(p, 'turka'),       chip: 'turka' },

@@ -29,6 +29,23 @@ export default function TagFilters({ locale, activeSlug }: Props) {
       </button>
       <CoffeeQuiz open={quizOpen} onClose={() => setQuizOpen(false)} locale={locale} />
 
+      {/* Bundles — always-visible chip (own SEO page /shop/nabory). */}
+      {(() => {
+        const isActive = activeSlug === 'nabory'
+        return (
+          <Link
+            href={isActive ? `/${locale}/shop` : `/${locale}/shop/nabory`}
+            aria-pressed={isActive}
+            className={`rounded-full px-4 py-2 text-[15px] font-semibold transition ${
+              isActive ? 'bg-[#412618] text-white' : 'bg-[#F4F3F0] text-[#3A2115] hover:bg-[#E9E7E1]'
+            }`}
+          >
+            <span aria-hidden className={isActive ? 'text-white/50' : 'text-[#999]'}>#</span>
+            {t('tags.nabory')}
+          </Link>
+        )
+      })()}
+
       {visible.map(({ slug, chip }) => {
         const isActive = slug === activeSlug
         // Each chip is its own indexable page; the active chip clears the filter.

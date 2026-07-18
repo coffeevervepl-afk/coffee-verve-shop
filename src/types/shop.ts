@@ -48,6 +48,9 @@ export interface ShopProduct {
   updated_at?: string
   seo_title?: string | null
   seo_description?: string | null
+  // Bundles (sets of coffees sold as one product)
+  product_type?: 'single' | 'bundle'
+  bundle_items?: { product_id: string; name: string; slug: string; weight: number; price: number }[]
 }
 
 export interface CartItem {

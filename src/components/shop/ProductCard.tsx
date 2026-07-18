@@ -30,6 +30,7 @@ const GRIND_OPTIONS = [
 
 export default function ProductCard({ product, locale }: Props) {
   const t    = useTranslations('product')
+  const tb   = useTranslations('shop')
   const add  = useCartStore(s => s.addItem)
   const open = useCartStore(s => s.openDrawer)
   const [weight, setWeight]           = useState<250 | 1000>(250)
@@ -45,6 +46,14 @@ export default function ProductCard({ product, locale }: Props) {
   const basePrice = getProductPrice(product, weight)
   const has1kg = !!product.price_1000
 
+  const isBundle          = product.product_type === 'bundle'
+  const bundleItems       = product.bundle_items ?? []
+  const bundleCount       = bundleItems.length
+  const bundleUnitWeight  = bundleItems[0]?.weight ?? 250
+  const bundleTotalWeight = bundleItems.reduce((s, b) => s + (b.weight || 0), 0)
+  const bundleNames       = bundleItems.map(b => b.name).filter(Boolean).join(' · ')
+  const bundlePrice       = getProductPrice(product, 250)
+
   useEffect(() => {
     let cancelled = false
     extractDominantColor(image).then(color => {
@@ -57,21 +66,38 @@ export default function ProductCard({ product, locale }: Props) {
   const groundDisabled    = weight === 1000
   const effectiveGrind    = groundDisabled ? 'whole' : grind
   const showGrindOptions  = weight === 250 && grind === 'ground'
-  const displayPrice      = effectiveGrind === 'ground' ? basePrice + GRIND_SURCHARGE : basePrice
+  const displayPrice      = isBundle
+    ? bundlePrice
+    : (effectiveGrind === 'ground' ? basePrice + GRIND_SURCHARGE : basePrice)
 
   function handleAddToCart(e: React.MouseEvent) {
     e.preventDefault()
-    add({
-      product_id:  product.id,
-      slug:        product.slug,
-      name,
-      image,
-      weight,
-      grind:       effectiveGrind,
-      grindOption: effectiveGrind === 'ground' ? grindOption : undefined,
-      unit_price:  displayPrice,
-      qty:         1,
-    })
+    if (isBundle) {
+      // Bundle = one cart line: total weight, whole beans, bundle price.
+      add({
+        product_id:  product.id,
+        slug:        product.slug,
+        name,
+        image,
+        weight:      bundleTotalWeight || 1000,
+        grind:       'whole',
+        grindOption: undefined,
+        unit_price:  bundlePrice,
+        qty:         1,
+      })
+    } else {
+      add({
+        product_id:  product.id,
+        slug:        product.slug,
+        name,
+        image,
+        weight,
+        grind:       effectiveGrind,
+        grindOption: effectiveGrind === 'ground' ? grindOption : undefined,
+        unit_price:  displayPrice,
+        qty:         1,
+      })
+    }
     toast.success(`${name} — добавлено`)
     open()
   }
@@ -110,7 +136,11 @@ export default function ProductCard({ product, locale }: Props) {
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          {product.is_featured && (
+          {isBundle ? (
+            <span className="absolute left-2 top-2 rounded-full bg-[#3A2115] px-2 py-0.5 text-[10px] font-bold uppercase text-white tracking-wider">
+              {tb('bundle.badge')}
+            </span>
+          ) : product.is_featured && (
             <span className="absolute left-2 top-2 rounded-full bg-brand-gold px-2 py-0.5 text-[10px] font-bold uppercase text-white tracking-wider">
               Pick
             </span>
@@ -128,7 +158,18 @@ export default function ProductCard({ product, locale }: Props) {
               {t('details_btn')}
             </button>
           </div>
-          {notes && (
+          {isBundle ? (
+            <>
+              {bundleCount > 0 && (
+                <p className="mt-0.5 text-[11px] font-medium text-[#8A7A66]">
+                  {tb('bundle.composition', { count: bundleCount, weight: bundleUnitWeight, total: bundleTotalWeight })}
+                </p>
+              )}
+              {bundleNames && (
+                <p className="mt-1 line-clamp-2 min-h-[2rem] text-xs md:text-[13px] text-[#6E6D68]">{bundleNames}</p>
+              )}
+            </>
+          ) : notes && (
             <p className="mt-1 line-clamp-2 min-h-[2rem] text-xs md:text-[13px]">
               {noteList.map((note, i) => (
                 <span key={i}>
@@ -144,7 +185,7 @@ export default function ProductCard({ product, locale }: Props) {
             </p>
           )}
 
-          {(product.body != null || product.acidity != null) && (
+          {!isBundle && (product.body != null || product.acidity != null) && (
             <div className="mb-2 mt-1.5 space-y-1.5">
               {product.body != null && (
                 <div className="flex items-center gap-2">
@@ -179,7 +220,7 @@ export default function ProductCard({ product, locale }: Props) {
             </div>
           )}
 
-          {has1kg && (
+          {!isBundle && has1kg && (
             <div className="mt-1.5 flex gap-1 rounded-full p-0.5 transition-colors duration-300" style={{ backgroundColor: switchBg }}>
               {([250, 1000] as const).map(w => (
                 <button
@@ -195,6 +236,7 @@ export default function ProductCard({ product, locale }: Props) {
             </div>
           )}
 
+          {!isBundle && (
           <div className="mt-1.5 flex gap-1 rounded-full p-0.5 transition-colors duration-300" style={{ backgroundColor: switchBg }}>
             <button
               onClick={e => selectGrind(e, 'whole')}
@@ -248,6 +290,7 @@ export default function ProductCard({ product, locale }: Props) {
               ))}
             </div>
           </div>
+          )}
 
           <div className="mt-auto flex items-center justify-between pt-1.5">
             <div className="flex flex-col">

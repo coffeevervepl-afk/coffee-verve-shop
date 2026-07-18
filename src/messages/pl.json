@@ -13,6 +13,10 @@
     "breadcrumb_catalog": "Katalog",
     "intro": "Coffee Verve to palarnia kawy specialty w Warszawie z dostawą w całej Polsce. Palimy każdą partię na zamówienie i wysyłamy w ciągu 24 godzin. Jeśli smak Ci nie odpowiada — wymienimy kawę lub zwrócimy pieniądze.",
     "faq_title": "Częste pytania",
+    "bundle": {
+      "badge": "ZESTAW",
+      "composition": "{count} rodzaje × {weight}g = {total}g"
+    },
     "filters": {
       "acidity": "Kwasowość",
       "density": "Gęstość",
@@ -330,6 +334,22 @@
             "a": "Tak, mikroloty są dostępne w ograniczonej ilości. Jeśli kawa Ci zasmakuje — lepiej nie odkładaj zamówienia."
           }
         ]
+      },
+      "nabory": {
+        "title": "Zestawy kawy | Coffee Verve Warszawa",
+        "description": "Zestawy świeżo palonej kawy specialty — 4 rodzaje po 250g, razem 1 kg. Idealny prezent. Gwarancja smaku.",
+        "h1": "Zestawy kawy",
+        "text": "Zestawy świeżo palonej kawy od Coffee Verve — 4 rodzaje po 250 gramów, razem 1 kg. Idealny sposób, by spróbować różnych smaków lub sprawić prezent bliskim. Dostawa w całej Polsce. Gwarancja smaku.",
+        "faq": [
+          {
+            "q": "Co wchodzi w skład zestawu?",
+            "a": "Każdy zestaw zawiera 4 rodzaje świeżo palonej kawy po 250g. Skład podany jest na karcie zestawu."
+          },
+          {
+            "q": "Czy można samodzielnie ułożyć zestaw?",
+            "a": "Na razie dostępne są gotowe zestawy. Napisz do nas — dobierzemy indywidualnie."
+          }
+        ]
       }
     },
     "tags": {
@@ -347,6 +367,7 @@
       "decaf": "Bezkofeinowa",
       "lowacid": "O niskiej kwasowości",
       "new": "Nowości",
+      "nabory": "Zestawy",
       "more": "więcej",
       "less": "zwiń"
     },

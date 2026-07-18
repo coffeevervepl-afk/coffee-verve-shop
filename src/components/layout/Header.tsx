@@ -264,7 +264,7 @@ export default function Header({ locale }: { locale: Locale }) {
                 >
                   <Link href={`/${locale}/shop`} role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[16px] font-semibold hover:bg-black/5">{t('menu_coffee')}</Link>
                   {/* TODO: dedicated sets route/filter once the bundles range exists */}
-                  <Link href="#products" role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[16px] font-semibold hover:bg-black/5">{t('menu_sets')}</Link>
+                  <Link href={`/${locale}/shop/nabory`} role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[16px] font-semibold hover:bg-black/5">{t('menu_sets')}</Link>
                   {/* Same target as the existing "Subskrypcja kawy" nav item */}
                   <Link href="#subscription" role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[16px] font-semibold hover:bg-black/5">{t('subscription')}</Link>
                   {/* TODO: replace with the B2B section page once it's ready */}
