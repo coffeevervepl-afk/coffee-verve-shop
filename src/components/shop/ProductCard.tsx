@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl'
 import { Plus } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { useCartStore } from '@/hooks/useCartStore'
-import type { Locale, ShopProduct } from '@/types/shop'
+import type { Locale, ShopProduct, ProductWeight } from '@/types/shop'
 import { getProductName, getProductFlavorNotes, getProductImage, getProductPrice } from '@/lib/product-utils'
 import { fmtPrice } from '@/lib/pricing'
 import { getFlavorColor } from '@/lib/flavorColors'
@@ -79,7 +79,7 @@ export default function ProductCard({ product, locale }: Props) {
         slug:        product.slug,
         name,
         image,
-        weight:      bundleTotalWeight || 1000,
+        weight:      (bundleTotalWeight || 1000) as ProductWeight,
         grind:       'whole',
         grindOption: undefined,
         unit_price:  bundlePrice,
