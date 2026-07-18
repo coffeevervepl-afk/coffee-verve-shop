@@ -3,9 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import type { Locale } from '@/types/shop'
-import { TAG_KEYS } from '@/lib/shopTags'
-
-const COLLAPSED = 4   // show first N, rest behind "ещё ▼"
+import { TAG_KEYS, COLLAPSED_TAGS } from '@/lib/shopTags'
 
 interface Props {
   locale:     Locale
@@ -25,15 +23,15 @@ export default function TagFilters({ locale, category, activeTags }: Props) {
   const t = useTranslations('shop')
   const [expanded, setExpanded] = useState(false)
   const active = new Set(activeTags)
-  const visible = expanded ? TAG_KEYS : TAG_KEYS.slice(0, COLLAPSED)
+  const visible = expanded ? TAG_KEYS : TAG_KEYS.slice(0, COLLAPSED_TAGS)
 
   return (
     <div className="mb-8 flex flex-wrap items-center gap-2">
-      {/* Highlighted "pick coffee in a minute" chip — placeholder for a future
-          quiz; for now it just scrolls to the grid. */}
+      {/* Pearlescent shimmer chip — placeholder for a future quiz; for now it
+          just scrolls to the grid. */}
       <Link
         href="#products-grid"
-        className="rounded-full bg-gradient-to-r from-[#B8791F] to-[#8A5A1A] px-4 py-2 text-[13px] font-semibold text-white transition hover:opacity-90"
+        className="quiz-shimmer rounded-full px-4 py-2 text-[14px] font-medium transition hover:brightness-[0.98]"
       >
         ✨ {t('tags.quiz')}
       </Link>
@@ -46,22 +44,23 @@ export default function TagFilters({ locale, category, activeTags }: Props) {
             key={key}
             href={buildHref(locale, category, nextTags)}
             aria-pressed={isActive}
-            className={`rounded-full px-4 py-2 text-[13px] font-medium transition ${
+            className={`rounded-full px-4 py-2 text-[14px] font-medium transition ${
               isActive
                 ? 'bg-[#412618] text-white'
-                : 'bg-[#F4F3F0] text-[#4A4540] hover:bg-[#E9E7E1]'
+                : 'bg-[#F4F3F0] text-[#3A2115] hover:bg-[#E9E7E1]'
             }`}
           >
+            <span aria-hidden className={isActive ? 'text-white/50' : 'text-[#999]'}>#</span>
             {t(`tags.${key}`)}
           </Link>
         )
       })}
 
-      {TAG_KEYS.length > COLLAPSED && (
+      {TAG_KEYS.length > COLLAPSED_TAGS && (
         <button
           type="button"
           onClick={() => setExpanded(v => !v)}
-          className="rounded-full px-3 py-2 text-[13px] font-medium text-[#8A7A66] transition-colors hover:text-[#4A4540]"
+          className="rounded-full px-3 py-2 text-[14px] font-medium text-[#8A7A66] transition-colors hover:text-[#4A4540]"
         >
           {expanded ? `${t('tags.less')} ▲` : `${t('tags.more')} ▼`}
         </button>

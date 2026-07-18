@@ -81,7 +81,7 @@ export default async function ShopPage({ params, searchParams }: Props) {
       </div>
 
       {/* Product grid (with the tag filter row above it) */}
-      <section id="products-grid" className="container scroll-mt-24 pb-16 pt-6 md:pb-24">
+      <section id="products-grid" className="container scroll-mt-24 pb-16 pt-7 md:pb-24 md:pt-8">
         <TagFilters locale={locale} category={category} activeTags={activeTags} />
 
         <div className="mb-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">

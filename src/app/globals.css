@@ -184,6 +184,23 @@ p  { line-height: 1.7; }
   .nav-cta-btn { animation: none; }
 }
 
+/* ── Quiz "pick coffee in a minute" chip — pearlescent shimmer ────────────── */
+.quiz-shimmer {
+  background-image: linear-gradient(90deg, #F5EFE6, #F3E1E8, #E8E1F0, #F3E1E8, #F5EFE6);
+  background-size: 200% 100%;
+  animation: quiz-shimmer 3s ease infinite;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: #3A2115;
+}
+@keyframes quiz-shimmer {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quiz-shimmer { animation: none; }
+}
+
 /* ── Hide scrollbar on horizontally-scrollable carousels ──────────────────── */
 .no-scrollbar {
   scrollbar-width: none;

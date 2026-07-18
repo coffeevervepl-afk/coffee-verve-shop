@@ -21,7 +21,7 @@ export default async function CategoriesSection({ locale, variant = 'default' }:
 
   const sectionCls = compact ? 'container' : 'container pb-8 md:pb-12'
   const gridCls    = compact ? 'grid grid-cols-3 gap-2 sm:gap-3' : 'grid grid-cols-1 gap-4 md:grid-cols-3'
-  const tileCls    = compact ? 'h-[120px] rounded-xl md:h-[132px]' : 'h-72 rounded-2xl md:h-64'
+  const tileCls    = compact ? 'h-[160px] rounded-xl md:h-[168px]' : 'h-72 rounded-2xl md:h-64'
   const padCls     = compact ? 'p-3 md:p-4' : 'p-6'
   const labelCls   = compact ? 'text-[10px] tracking-wide' : 'mb-1 text-xs tracking-wider'
   const titleCls   = compact ? 'text-sm leading-tight md:text-lg' : 'text-2xl'
