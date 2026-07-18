@@ -42,7 +42,7 @@ export default function FilterPanel({ products, selected, onToggle, onReset }: P
             {t(`filters.${g.titleKey}`)}
             <InfoTooltip text={t(`filters.tooltip.${g.tooltipKey}`)} />
           </h4>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1">
             {g.options.map(o => {
               const n = optionCount(products, groups, g, o, selected)
               const checked = selected.has(o.id)
