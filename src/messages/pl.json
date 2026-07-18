@@ -13,6 +13,15 @@
     "breadcrumb_catalog": "Katalog",
     "intro": "Coffee Verve to palarnia kawy specialty w Warszawie z dostawą w całej Polsce. Palimy każdą partię na zamówienie i wysyłamy w ciągu 24 godzin. Jeśli smak Ci nie odpowiada — wymienimy kawę lub zwrócimy pieniądze.",
     "faq_title": "Częste pytania",
+    "promo": {
+      "title": "ZALOGUJ SIĘ — BĘDZIE TANIEJ",
+      "subtitle": "Na koncie więcej zniżek",
+      "login": "ZALOGUJ SIĘ",
+      "register": "REJESTRACJA",
+      "loyalty": "Classic 5% → Gold 10% → Platinum 15%",
+      "your_discount": "Twoja zniżka:",
+      "mobile": "Zaloguj się — 5% zniżki"
+    },
     "quiz": {
       "back": "Wstecz",
       "close": "Zamknij",
