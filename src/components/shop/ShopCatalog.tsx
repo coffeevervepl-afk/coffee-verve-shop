@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import { getProducts } from '@/lib/supabase/products'
 import CategoriesSection from '@/components/shop/CategoriesSection'
-import ProductCard from '@/components/shop/ProductCard'
 import TagFilters from '@/components/shop/TagFilters'
 import FaqAccordion, { type FaqItem } from '@/components/shop/FaqAccordion'
 import CatalogLayout from '@/components/shop/CatalogLayout'
@@ -128,27 +127,8 @@ export default async function ShopCatalog({ locale, activeSlug }: Props) {
         {/* Answer-style intro paragraph */}
         <p className="mb-6 max-w-3xl text-[15px] leading-relaxed text-brand-muted">{introText}</p>
 
-        {/* Sidebar (guest promo) + product grid */}
-        <CatalogLayout
-          locale={locale}
-          isEmpty={list.length === 0}
-          emptyState={
-            <div className="rounded-2xl border border-brand-border p-16 text-center text-brand-muted">
-              <p className="mb-4 text-5xl">☕</p>
-              <p>{t('empty')}</p>
-            </div>
-          }
-        >
-          {list.map((p, i) => (
-            <div
-              key={p.id}
-              className="animate-fade-up"
-              style={{ animationDelay: `${i * 60}ms`, animationFillMode: 'both' }}
-            >
-              <ProductCard product={p} locale={locale} />
-            </div>
-          ))}
-        </CatalogLayout>
+        {/* Sidebar (guest promo + facet filters) + client-filtered product grid */}
+        <CatalogLayout locale={locale} products={list} />
 
         {/* FAQ (per-slug) — only on tag landing pages */}
         {def && faqItems.length > 0 && <FaqAccordion items={faqItems} title={t('faq_title')} />}
