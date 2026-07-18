@@ -34,7 +34,16 @@
       "feat_single": "Monokawa",
       "reset": "Wyczyść filtry",
       "mobile_filters": "Filtry",
-      "apply": "Zastosuj"
+      "apply": "Zastosuj",
+      "country": "Kraj",
+      "tooltip": {
+        "acidity": "Kwasowość to wyrazistość i soczystość smaku. Niska = łagodny, spokojny. Wysoka = jasny, owocowy.",
+        "density": "Gęstość to jak gęsty i otulający jest smak. Niska = lekki, herbaciany. Wysoka = gęsty, syropowaty.",
+        "roast": "Stopień palenia. Jasne = kwasowość i owoce, do przelewu. Średnie = balans, do espresso. Ciemne = goryczka i body, do mleka.",
+        "country": "Kraj pochodzenia kawy. Wpływa na smak: np. Brazylia — orzech i czekolada, Etiopia — kwiaty i jagody.",
+        "flavor": "Główne nuty smakowe, które wyczujesz w filiżance. Określone przez palarnię podczas cuppingu.",
+        "features": "Dodatkowe cechy. Bezkofeinowa — decaf. Blend — mieszanka odmian. Monokawa — kawa jednego pochodzenia."
+      }
     },
     "promo": {
       "title": "ZALOGUJ SIĘ — BĘDZIE TANIEJ",
