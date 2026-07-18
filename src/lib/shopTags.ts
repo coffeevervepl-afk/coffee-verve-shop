@@ -12,19 +12,27 @@ export type TagKey = (typeof TAG_KEYS)[number]
 
 export const COLLAPSED_TAGS = 3   // ekspres / turka / milk visible; rest under "ещё ▼"
 
-const brew = (p: ShopProduct) => (p.brew_method ?? '').toLowerCase()
+// brew_method is text[] (post-migration). Normalize defensively so a legacy
+// single string is still handled correctly.
+export function brewMethods(p: ShopProduct): string[] {
+  const bm = p.brew_method as unknown
+  if (Array.isArray(bm)) return bm as string[]
+  return typeof bm === 'string' && bm ? [bm] : []
+}
+const hasBrew = (p: ShopProduct, method: string) => brewMethods(p).includes(method)
 const MS_30D = 30 * 24 * 3600 * 1000
 
 // Tag → server-side predicate. Grind (whole/ground) is a cart-time option, NOT
 // a product attribute, so `ziarnista`/`mielona` match every coffee (no-op).
+// Pourover is grouped under the CRM 'filter' method ("Фильтр / пуровер").
 export const TAG_FILTERS: Record<string, (p: ShopProduct) => boolean> = {
-  ekspres:     p => p.brew_method === 'espresso',
-  turka:       p => brew(p).includes('turk'),
-  milk:        p => p.brew_method === 'espresso',    // same beans as ekspres; separate tag for UX/SEO
-  pourover:    p => brew(p).includes('pourover'),
-  aeropress:   p => brew(p).includes('aeropress'),
-  frenchpress: p => brew(p).includes('french'),
-  cup:         p => brew(p).includes('cup'),
+  ekspres:     p => hasBrew(p, 'espresso'),
+  turka:       p => hasBrew(p, 'turka'),
+  milk:        p => hasBrew(p, 'espresso'),    // same beans as ekspres; separate tag for UX/SEO
+  pourover:    p => hasBrew(p, 'filter'),
+  aeropress:   p => hasBrew(p, 'aeropress'),
+  frenchpress: p => hasBrew(p, 'frenchpress'),
+  cup:         p => hasBrew(p, 'cup'),
   ziarnista:   () => true,
   mielona:     () => true,
   kg1:         p => p.price_1000 != null,

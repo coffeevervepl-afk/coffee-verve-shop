@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import type { Locale, ShopProduct } from '@/types/shop'
+import { brewMethods } from '@/lib/shopTags'
 
 type TabKey = 'description' | 'comments' | 'recipes'
 
@@ -24,7 +25,7 @@ export default function ProductTabs({ product, locale }: Props) {
     { key: 'origin',   labelKey: 'origin',   value: product.origin },
     { key: 'process',  labelKey: 'process',  value: product.process },
     { key: 'roast',    labelKey: 'roast',    value: product.roast_level },
-    { key: 'brew',     labelKey: 'brew',     value: product.brew_method },
+    { key: 'brew',     labelKey: 'brew',     value: brewMethods(product).join(', ') },
     { key: 'altitude', labelKey: 'altitude', value: product.altitude },
     { key: 'variety',  labelKey: 'variety',  value: product.variety },
     { key: 'sca',      labelKey: 'sca',      value: product.sca_score?.toString() },

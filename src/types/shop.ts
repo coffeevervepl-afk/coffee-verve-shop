@@ -18,7 +18,7 @@ export interface ShopProduct {
   origin: string | null
   process: string | null
   roast_level: 'light' | 'medium' | 'medium-dark' | 'dark' | null
-  brew_method: string | null
+  brew_method: string[] | null
   price_250: number
   price_500: number | null
   price_1000: number | null

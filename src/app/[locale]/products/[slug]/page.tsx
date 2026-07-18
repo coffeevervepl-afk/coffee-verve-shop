@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { getProductBySlug } from '@/lib/supabase/products'
 import { getProductName, getProductDescription, getProductFlavorNotes, getProductImage, getProductPrice } from '@/lib/product-utils'
+import { brewMethods } from '@/lib/shopTags'
 import type { Locale, ProductWeight } from '@/types/shop'
 import AddToCartSection from '@/components/shop/AddToCartSection'
 import ProductGallery from '@/components/shop/ProductGallery'
@@ -87,9 +88,9 @@ export default async function ProductPage({ params, searchParams }: Props) {
                 {t('roast')}: {roastLabel[product.roast_level]}
               </span>
             )}
-            {product.brew_method && (
+            {brewMethods(product).length > 0 && (
               <span className="rounded-full border border-brand-border px-4 py-2 text-[19px] text-[#3D3C39]">
-                {t('brew')}: {product.brew_method}
+                {t('brew')}: {brewMethods(product).join(', ')}
               </span>
             )}
             {product.process && (

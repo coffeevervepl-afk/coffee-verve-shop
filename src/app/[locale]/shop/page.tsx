@@ -5,7 +5,7 @@ import { getProducts } from '@/lib/supabase/products'
 import CategoriesSection from '@/components/shop/CategoriesSection'
 import ProductCard from '@/components/shop/ProductCard'
 import TagFilters from '@/components/shop/TagFilters'
-import { TAG_KEYS, TAG_FILTERS } from '@/lib/shopTags'
+import { TAG_KEYS, TAG_FILTERS, brewMethods } from '@/lib/shopTags'
 import type { Locale, ShopProduct } from '@/types/shop'
 
 const CATEGORIES = ['espresso', 'filter', 'decaf'] as const
@@ -50,8 +50,8 @@ export default async function ShopPage({ params, searchParams }: Props) {
   const products = await getProducts()
 
   let list = products
-  if (category === 'espresso')    list = list.filter(p => p.brew_method === 'espresso')
-  else if (category === 'filter') list = list.filter(p => p.brew_method === 'filter')
+  if (category === 'espresso')    list = list.filter(p => brewMethods(p).includes('espresso'))
+  else if (category === 'filter') list = list.filter(p => brewMethods(p).includes('filter'))
   else if (category === 'decaf')  list = list.filter(p => p.is_decaf === true)
   for (const tag of activeTags) list = list.filter(TAG_FILTERS[tag])
   list = [...list].sort(byDefault)
