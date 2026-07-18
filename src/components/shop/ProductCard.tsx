@@ -46,8 +46,10 @@ export default function ProductCard({ product, locale }: Props) {
   const basePrice = getProductPrice(product, weight)
   const has1kg = !!product.price_1000
 
-  const isBundle          = product.product_type === 'bundle'
   const bundleItems       = product.bundle_items ?? []
+  // Strict: a set only when explicitly typed 'bundle' AND it has real
+  // composition. Anything else (single / null / mis-typed empty) is a normal card.
+  const isBundle          = product.product_type === 'bundle' && bundleItems.length > 0
   const bundleCount       = bundleItems.length
   const bundleUnitWeight  = bundleItems[0]?.weight ?? 250
   const bundleTotalWeight = bundleItems.reduce((s, b) => s + (b.weight || 0), 0)
