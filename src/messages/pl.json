@@ -11,23 +11,265 @@
     "empty": "W tej kategorii nie ma jeszcze kawy. Zajrzyj nieco później.",
     "breadcrumb_home": "Strona główna",
     "breadcrumb_catalog": "Katalog",
+    "intro": "Coffee Verve to palarnia kawy specialty w Warszawie z dostawą w całej Polsce. Palimy każdą partię na zamówienie i wysyłamy w ciągu 24 godzin. Jeśli smak Ci nie odpowiada — wymienimy kawę lub zwrócimy pieniądze.",
+    "faq_title": "Częste pytania",
     "seo": {
-      "espresso": { "title": "Kawa do espresso | Coffee Verve Warszawa", "description": "Kawa do espresso — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa do espresso" },
-      "filter": { "title": "Kawa do przelewu | Coffee Verve Warszawa", "description": "Kawa do przelewu — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa do przelewu" },
-      "decaf": { "title": "Kawa bezkofeinowa | Coffee Verve Warszawa", "description": "Kawa bezkofeinowa — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa bezkofeinowa" },
-      "doEkspresu": { "title": "Kawa do ekspresu | Coffee Verve Warszawa", "description": "Kawa do ekspresu — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa do ekspresu" },
-      "doTurki": { "title": "Kawa do turki | Coffee Verve Warszawa", "description": "Kawa do turki — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa do turki" },
-      "doMlecznych": { "title": "Kawa do mlecznych napojów | Coffee Verve Warszawa", "description": "Kawa do mlecznych napojów — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa do mlecznych napojów" },
-      "doPourovera": { "title": "Kawa do pour-over | Coffee Verve Warszawa", "description": "Kawa do pour-over — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa do pour-over" },
-      "doAeropressu": { "title": "Kawa do aeropressu | Coffee Verve Warszawa", "description": "Kawa do aeropressu — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa do aeropressu" },
-      "doFrenchPressu": { "title": "Kawa do french pressa | Coffee Verve Warszawa", "description": "Kawa do french pressa — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa do french pressa" },
-      "doFilizanki": { "title": "Kawa do filiżanki | Coffee Verve Warszawa", "description": "Kawa do filiżanki — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa do filiżanki" },
-      "ziarnista": { "title": "Kawa ziarnista | Coffee Verve Warszawa", "description": "Kawa ziarnista — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa ziarnista" },
-      "mielona": { "title": "Kawa mielona | Coffee Verve Warszawa", "description": "Kawa mielona — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa mielona" },
-      "kg1": { "title": "Kawa 1 kg | Coffee Verve Warszawa", "description": "Kawa 1 kg — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa 1 kg" },
-      "bezkofeinowa": { "title": "Kawa bezkofeinowa | Coffee Verve Warszawa", "description": "Kawa bezkofeinowa — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa bezkofeinowa" },
-      "niskaKwasowosc": { "title": "Kawa o niskiej kwasowości | Coffee Verve Warszawa", "description": "Kawa o niskiej kwasowości — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Kawa o niskiej kwasowości" },
-      "nowosci": { "title": "Nowości kawowe | Coffee Verve Warszawa", "description": "Nowości kawowe — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.", "h1": "Nowości kawowe" }
+      "espresso": {
+        "title": "Kawa do espresso | Coffee Verve Warszawa",
+        "description": "Kawa do espresso — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa do espresso",
+        "text": "Kawa do ekspresu ciśnieniowego od palarni Coffee Verve w Warszawie: średnie i ciemne palenie, gęste body i stabilna crema. Palimy na zamówienie i dostarczamy w całej Polsce w ciągu 24 godzin. Jeśli smak Ci nie odpowiada — wymienimy kawę lub zwrócimy pieniądze.",
+        "faq": [
+          {
+            "q": "Jaka kawa nadaje się do ekspresu ciśnieniowego?",
+            "a": "Najlepiej średnie i ciemne palenie — daje gęste body, słodycz i wyraźną cremę. W katalogu Coffee Verve takie kawy zebraliśmy na tej stronie."
+          },
+          {
+            "q": "Jak szybko dostarczacie kawę w Polsce?",
+            "a": "Palimy w dniu zamówienia i wysyłamy w ciągu 24 godzin — kurierem i do punktów odbioru w całej Polsce, z Warszawy."
+          }
+        ]
+      },
+      "filter": {
+        "title": "Kawa do przelewu | Coffee Verve Warszawa",
+        "description": "Kawa do przelewu — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa do przelewu",
+        "text": "Kawa do metod przelewowych od Coffee Verve: jasne palenie, wyrazista kwasowość i czysty smak z nutami owoców i jagód. Świeżo palona na zamówienie w Warszawie, dostawa w całej Polsce w 24 godziny. Gwarancja smaku — wymienimy lub zwrócimy pieniądze.",
+        "faq": [
+          {
+            "q": "Czym kawa do przelewu różni się od espresso?",
+            "a": "Kawę przelewową palimy jaśniej — to podkreśla kwasowość, nuty kwiatowe i owocowe oraz daje lekkie, czyste body. Idealna do V60, Chemex i przelewu."
+          },
+          {
+            "q": "Jaki stopień palenia ma kawa do przelewu Coffee Verve?",
+            "a": "Jasny i jasno-średni. Palimy na zamówienie w Warszawie, żeby docierała do Ciebie maksymalnie świeża."
+          }
+        ]
+      },
+      "decaf": {
+        "title": "Kawa bezkofeinowa | Coffee Verve Warszawa",
+        "description": "Kawa bezkofeinowa — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa bezkofeinowa",
+        "text": "Kawa bezkofeinowa od Coffee Verve: dekofeinizacja metodą Swiss Water bez chemii, usuwamy do 99,9% kofeiny, zachowując smak i aromat. Świeżo palona na zamówienie w Warszawie, dostawa w całej Polsce. Idealna na wieczór, z gwarancją smaku.",
+        "faq": [
+          {
+            "q": "Jak usuwa się kofeinę z kawy bezkofeinowej?",
+            "a": "Stosujemy metodę Swiss Water — wodę i filtry węglowe, bez rozpuszczalników chemicznych. Usuwa do 99,9% kofeiny, zachowując smak i aromat ziarna."
+          },
+          {
+            "q": "Czy kawę bezkofeinową można pić wieczorem?",
+            "a": "Tak, to jej główna zaleta: filiżanka aromatycznej kawy bez pobudzającego efektu, która nie zaburzy snu."
+          }
+        ]
+      },
+      "doEkspresu": {
+        "title": "Kawa do ekspresu | Coffee Verve Warszawa",
+        "description": "Kawa do ekspresu — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa do ekspresu",
+        "text": "Świeżo palona kawa do ekspresu z dostawą w Warszawie i całej Polsce. Palimy każdą partię na zamówienie i wysyłamy w ciągu 24 godzin. Jeśli smak Ci nie odpowiada — wymienimy kawę lub zwrócimy pieniądze.",
+        "faq": [
+          {
+            "q": "Jaka kawa jest najlepsza do ekspresu?",
+            "a": "Do ekspresu najlepiej sprawdza się kawa o średnim i ciemnym profilu palenia — daje gęste body, słodycz i dobrą cremę. Wszystkie pasujące kawy Coffee Verve znajdziesz na tej stronie."
+          },
+          {
+            "q": "Jak szybko dostarczacie?",
+            "a": "Palimy kawę w dniu zamówienia i wysyłamy w ciągu 24 godzin — kurierem lub do punktów odbioru w całej Polsce."
+          }
+        ]
+      },
+      "doTurki": {
+        "title": "Kawa do turki | Coffee Verve Warszawa",
+        "description": "Kawa do turki — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa do turki",
+        "text": "Kawa do tygielka (turki) od Coffee Verve: idealna do klasycznego parzenia po turecku, najlepiej w bardzo drobnym mieleniu, niemal na pył. Świeżo palona na zamówienie w Warszawie, dostawa w całej Polsce w 24 godziny. Gwarancja smaku.",
+        "faq": [
+          {
+            "q": "Jakie mielenie do tygielka (turki)?",
+            "a": "Bardzo drobne, niemal na pył — dzięki temu kawa oddaje pełnię smaku i tworzy gęstą piankę. Przy zamówieniu mielonej wybierz mielenie „do turki”."
+          },
+          {
+            "q": "Jaki stopień palenia pasuje do turki?",
+            "a": "Średni i średnio-ciemny: daje wyrazisty, słodki smak typowy dla kawy po turecku."
+          }
+        ]
+      },
+      "doMlecznych": {
+        "title": "Kawa do mlecznych napojów | Coffee Verve Warszawa",
+        "description": "Kawa do mlecznych napojów — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa do mlecznych napojów",
+        "text": "Kawa do napojów mlecznych od Coffee Verve — do cappuccino, latte i flat white. Gęste, średnio-ciemne palenie przebija się przez mleko nutami czekolady i orzechów. Świeżo palona na zamówienie w Warszawie, dostawa w całej Polsce. Gwarancja smaku.",
+        "faq": [
+          {
+            "q": "Jaką kawę wybrać do cappuccino i latte?",
+            "a": "Kawę o gęstym body i średnio-ciemnym paleniu — nuty czekolady i orzechów nie giną w mleku i dają zbalansowany napój."
+          },
+          {
+            "q": "Czy ta kawa nadaje się na espresso bez mleka?",
+            "a": "Tak, to te same kawy espresso. W mleku rozkwitają szczególnie wyraźnie, ale smakują też solo."
+          }
+        ]
+      },
+      "doPourovera": {
+        "title": "Kawa do pour-over | Coffee Verve Warszawa",
+        "description": "Kawa do pour-over — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa do pour-over",
+        "text": "Kawa do pour-over (V60, Chemex, Kalita) od Coffee Verve: jasne palenie wydobywa wyrazistą kwasowość, nuty kwiatowe i owocowe oraz czyste body. Świeżo palona na zamówienie w Warszawie, dostawa w całej Polsce w 24 godziny. Gwarancja smaku.",
+        "faq": [
+          {
+            "q": "Jakie mielenie do pour-over?",
+            "a": "Średnie, jak sól morska. Przy zamówieniu mielonej wybierz „do przelewu/pour-over” — dopasujemy do Twojej metody."
+          },
+          {
+            "q": "Jakie palenie najlepsze do V60 i Chemex?",
+            "a": "Jasne: podkreśla kwasowość i aromatykę ziarna, dla których parzy się pour-over."
+          }
+        ]
+      },
+      "doAeropressu": {
+        "title": "Kawa do aeropressu | Coffee Verve Warszawa",
+        "description": "Kawa do aeropressu — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa do aeropressu",
+        "text": "Kawa do aeropressu od Coffee Verve: uniwersalne ziarno, które równie dobrze sprawdza się w stylu espresso i przelewowym. Świeżo palona na zamówienie w Warszawie, dostawa w całej Polsce. Gwarancja smaku — wymienimy lub zwrócimy pieniądze.",
+        "faq": [
+          {
+            "q": "Jakie mielenie do aeropressu?",
+            "a": "Średnio-drobne do krótkiego przepisu i średnie do długiego. Przy zamówieniu mielonej wpisz „do aeropressu”."
+          },
+          {
+            "q": "Jakie palenie pasuje do aeropressu?",
+            "a": "Aeropress jest uniwersalny: sprawdzi się jasne palenie dla nut owocowych i średnie dla słodkiego, gęstego smaku."
+          }
+        ]
+      },
+      "doFrenchPressu": {
+        "title": "Kawa do french pressa | Coffee Verve Warszawa",
+        "description": "Kawa do french pressa — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa do french pressa",
+        "text": "Kawa do french pressa od Coffee Verve: parzenie zanurzeniowe wymaga grubego mielenia i daje gęste, wyraziste body bez papierowego filtra. Świeżo palona na zamówienie w Warszawie, dostawa w całej Polsce w 24 godziny. Gwarancja smaku.",
+        "faq": [
+          {
+            "q": "Jakie mielenie do french pressa?",
+            "a": "Grube, jak gruboziarnista sól morska — inaczej napar będzie mętny i gorzki. Wybierz mielenie „do french pressa” przy zamówieniu."
+          },
+          {
+            "q": "Jakie palenie najlepsze do french pressa?",
+            "a": "Średnie i średnio-ciemne: daje gęste, słodkie body, dobrze wyczuwalne w parzeniu zanurzeniowym."
+          }
+        ]
+      },
+      "doFilizanki": {
+        "title": "Kawa do filiżanki | Coffee Verve Warszawa",
+        "description": "Kawa do filiżanki — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa do filiżanki",
+        "text": "Kawa do zaparzania prosto w filiżance od Coffee Verve — najprostsza metoda bez sprzętu: zalej mieloną kawę gorącą wodą i odczekaj. Świeżo palona na zamówienie w Warszawie, dostawa w całej Polsce. Gwarancja smaku.",
+        "faq": [
+          {
+            "q": "Jak zaparzyć kawę prosto w filiżance?",
+            "a": "Wsyp 2 łyżeczki średnio mielonej kawy, zalej gorącą (92–94 °C) wodą, odczekaj 4 minuty i pij, nie mieszając fusów."
+          },
+          {
+            "q": "Jakie mielenie do zaparzania w filiżance?",
+            "a": "Średnie. Przy zamówieniu mielonej wybierz opcję „do filiżanki/przelewu”."
+          }
+        ]
+      },
+      "ziarnista": {
+        "title": "Kawa ziarnista | Coffee Verve Warszawa",
+        "description": "Kawa ziarnista — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa ziarnista",
+        "text": "Kawa ziarnista od Coffee Verve: całe ziarno dłużej zachowuje aromat i rozwija się w pełni, gdy zmielisz je tuż przed parzeniem. Świeżo palona na zamówienie w Warszawie, dostawa w całej Polsce w 24 godziny. Gwarancja smaku.",
+        "faq": [
+          {
+            "q": "Dlaczego kawa ziarnista smakuje lepiej niż mielona?",
+            "a": "Całe ziarno wolniej traci aromat. Mieląc je tuż przed parzeniem, otrzymujesz maksimum smaku i świeżości."
+          },
+          {
+            "q": "Czy potrzebny jest młynek?",
+            "a": "Tak, do kawy ziarnistej przyda się młynek. Jeśli go nie masz — zamów tę samą kawę mieloną, zmielimy pod Twoją metodę (6 stopni mielenia)."
+          }
+        ]
+      },
+      "mielona": {
+        "title": "Kawa mielona | Coffee Verve Warszawa",
+        "description": "Kawa mielona — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa mielona",
+        "text": "Kawa mielona od Coffee Verve: mielimy pod Twoją metodę parzenia — 6 stopni mielenia od espresso po french press. Świeżo palona na zamówienie w Warszawie, mielenie przed wysyłką, dostawa w całej Polsce. Gwarancja smaku.",
+        "faq": [
+          {
+            "q": "Pod jaką metodę można zmielić kawę?",
+            "a": "Dostępnych jest 6 stopni mielenia: do espresso, kawiarki, turki, przelewu/pour-over, aeropressu i french pressa. Wybierz przy dodawaniu do koszyka."
+          },
+          {
+            "q": "Jak długo można przechowywać mieloną kawę?",
+            "a": "Mieloną kawę najlepiej zużyć w ciągu 2–3 tygodni. Mielimy tuż przed wysyłką, żeby dotarła maksymalnie świeża."
+          }
+        ]
+      },
+      "kg1": {
+        "title": "Kawa 1 kg | Coffee Verve Warszawa",
+        "description": "Kawa 1 kg — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa 1 kg",
+        "text": "Kawa w opakowaniu 1 kg od Coffee Verve — opłacalny format do domu i biura: cena za kilogram niższa, a świeżość ta sama. Świeżo palona na zamówienie w Warszawie, dostawa w całej Polsce. Gwarancja smaku — wymienimy lub zwrócimy pieniądze.",
+        "faq": [
+          {
+            "q": "Czy kawa 1 kg jest bardziej opłacalna?",
+            "a": "Tak, cena za kilogram w dużym opakowaniu jest niższa niż przy zakupie po 250–500 g. Idealna dla rodziny, biura lub codziennego espresso."
+          },
+          {
+            "q": "Czy kilogram kawy pozostanie świeży?",
+            "a": "Palimy na zamówienie, a ziarno w zamkniętym opakowaniu z zaworkiem odgazowującym przechowuje się miesiącami. W ziarnach świeżość utrzymuje się dłużej."
+          }
+        ]
+      },
+      "bezkofeinowa": {
+        "title": "Kawa bezkofeinowa | Coffee Verve Warszawa",
+        "description": "Kawa bezkofeinowa — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa bezkofeinowa",
+        "text": "Kawa bezkofeinowa od Coffee Verve — naturalna dekofeinizacja metodą Swiss Water, bez rozpuszczalników i obcego posmaku. Ten sam wyrazisty smak, ale bez pobudzającego efektu. Świeżo palona w Warszawie, dostawa w całej Polsce. Gwarancja smaku.",
+        "faq": [
+          {
+            "q": "Czy w kawie bezkofeinowej jest chemia?",
+            "a": "Nie. Wybieramy ziarno dekofeinizowane metodą Swiss Water — tylko woda i filtry węglowe, bez rozpuszczalników chemicznych."
+          },
+          {
+            "q": "Czy smak kawy bezkofeinowej różni się od zwykłej?",
+            "a": "Dobra bezkofeinowa jest niemal nie do odróżnienia. Świeże palenie Coffee Verve zachowuje słodycz i aromat ziarna."
+          }
+        ]
+      },
+      "niskaKwasowosc": {
+        "title": "Kawa o niskiej kwasowości | Coffee Verve Warszawa",
+        "description": "Kawa o niskiej kwasowości — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Kawa o niskiej kwasowości",
+        "text": "Kawa o niskiej kwasowości od Coffee Verve: łagodny, okrągły smak z nutami czekolady i orzechów — przyjazna dla wrażliwego żołądka. Świeżo palona na zamówienie w Warszawie, dostawa w całej Polsce. Gwarancja smaku — wymienimy lub zwrócimy pieniądze.",
+        "faq": [
+          {
+            "q": "Jaka kawa mniej drażni żołądek?",
+            "a": "Kawa o niskiej kwasowości i średnio-ciemnym paleniu: jest łagodniejsza i słodsza, z mniejszą kwasowością. Takie kawy zebraliśmy na tej stronie."
+          },
+          {
+            "q": "Jak określa się kwasowość kawy?",
+            "a": "Kwasowość oceniamy w skali 1–5 w karcie produktu. Na tej stronie znajdziesz kawy z oceną 1–2 na 5."
+          }
+        ]
+      },
+      "nowosci": {
+        "title": "Nowości kawowe | Coffee Verve Warszawa",
+        "description": "Nowości kawowe — świeżo palona kawa specialty z dostawą w Warszawie i całej Polsce. Gwarancja smaku.",
+        "h1": "Nowości kawowe",
+        "text": "Nowości Coffee Verve — świeże dostawy i limitowane loty dodane do katalogu w ostatnim miesiącu. Mikroloty i sezonowe obróbki w ograniczonej ilości. Świeżo palona w Warszawie, dostawa w całej Polsce. Gwarancja smaku.",
+        "faq": [
+          {
+            "q": "Jak często pojawiają się nowości?",
+            "a": "Regularnie dodajemy nowe loty — sezonowe obróbki, mikroloty i świeże dostawy. Na tej stronie zebraliśmy to, co pojawiło się w ciągu ostatnich 30 dni."
+          },
+          {
+            "q": "Czy limitowane loty szybko się kończą?",
+            "a": "Tak, mikroloty są dostępne w ograniczonej ilości. Jeśli kawa Ci zasmakuje — lepiej nie odkładaj zamówienia."
+          }
+        ]
+      }
     },
     "tags": {
       "quiz": "Dobierz kawę w minutę",
