@@ -170,7 +170,7 @@ export default function ProductCard({ product, locale }: Props) {
                 </p>
               )}
               {bundleNames && (
-                <p className="mt-1 line-clamp-2 min-h-[2rem] text-xs md:text-[13px] text-[#6E6D68]">{bundleNames}</p>
+                <p title={bundleNames} className="mt-1 min-h-[2rem] truncate text-xs md:text-[13px] text-[#6E6D68]">{bundleNames}</p>
               )}
             </>
           ) : notes && (
@@ -278,12 +278,12 @@ export default function ProductCard({ product, locale }: Props) {
               showGrindOptions ? 'mt-1.5 max-h-40 opacity-100' : 'max-h-0 opacity-0'
             }`}
           >
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-nowrap gap-1 overflow-x-auto no-scrollbar">
               {GRIND_OPTIONS.map(opt => (
                 <button
                   key={opt.value}
                   onClick={e => selectGrindOption(e, opt.value)}
-                  className={`rounded-full border px-2.5 py-0.5 text-[10px] font-medium transition ${
+                  className={`shrink-0 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[10px] font-medium transition ${
                     grindOption === opt.value
                       ? 'border-[#412618] bg-[#412618] text-white'
                       : 'border-gray-200 bg-white text-gray-600 hover:border-[#412618]'
