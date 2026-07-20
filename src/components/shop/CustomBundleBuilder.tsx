@@ -77,7 +77,7 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
       <p className="mt-1 text-[15px] text-brand-muted">{t('custom_bundle.subtitle')}</p>
 
       {/* Sorts grid — mobile 2 cols, md+ 4 cols */}
-      <div className="mt-5 grid grid-cols-2 gap-3 pb-24 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         {products.map(p => {
           const idx = selected.findIndex(x => x.id === p.id)
           const isSel = idx >= 0
@@ -101,10 +101,10 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
         })}
       </div>
 
-      {/* Sticky total panel — appears once anything is selected */}
+      {/* Total panel — normal block under the grid (not fixed) */}
       {count > 0 && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E8E7E3] bg-white/95 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] backdrop-blur">
-          <div className="container flex flex-wrap items-center gap-x-4 gap-y-2 py-3">
+        <div className="mt-6 rounded-2xl border border-[#E8E7E3] bg-white">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 p-4">
             <span className="text-sm font-medium text-[#3A2115]">
               {t('custom_bundle.selected', { n: count })}
             </span>

@@ -13,6 +13,7 @@ export default function CartDrawer() {
   const t          = useTranslations('cart')
   const tCommon    = useTranslations('common')
   const tProduct   = useTranslations('product')
+  const tShop      = useTranslations('shop')
   const drawerOpen = useCartStore(s => s.drawerOpen)
   const closeDrawer = useCartStore(s => s.closeDrawer)
   const items      = useCartStore(s => s.items)
@@ -64,13 +65,17 @@ export default function CartDrawer() {
                 </div>
               ) : (
                 <ul className="space-y-4">
-                  {items.map(item => (
+                  {items.map(item => {
+                    // Custom bundle name is translated live for the active locale
+                    // (the stored name is frozen at the add-time locale).
+                    const displayName = item.customBundle ? tShop('custom_bundle.cart_name') : item.name
+                    return (
                     <li key={`${item.product_id}-${item.weight}`} className="flex gap-3">
                       <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl bg-brand-border/20">
-                        <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" />
+                        <Image src={item.image} alt={displayName} fill sizes="64px" className="object-cover" />
                       </div>
                       <div className="flex flex-1 flex-col">
-                        <p className="text-sm font-medium leading-tight">{item.name}</p>
+                        <p className="text-sm font-medium leading-tight">{displayName}</p>
                         <p className="text-xs text-brand-muted">{item.weight}g</p>
                         {item.grind === 'ground' && (
                           <p className="text-xs text-brand-muted">
@@ -106,7 +111,7 @@ export default function CartDrawer() {
                         <Trash2 size={14} />
                       </button>
                     </li>
-                  ))}
+                  )})}
                 </ul>
               )}
             </div>
