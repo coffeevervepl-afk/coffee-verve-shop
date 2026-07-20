@@ -140,6 +140,10 @@ export interface ShopOrderItem {
   unit_price: number
   quantity: number
   line_total: number
+  grind?: 'whole' | 'ground'
+  grind_option?: string | null
+  // Set (shared uuid) for the rows of one customer-built bundle; null otherwise.
+  custom_bundle_group?: string | null
 }
 
 export interface PricingSummary {

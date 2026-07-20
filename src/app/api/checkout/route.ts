@@ -158,6 +158,7 @@ export async function POST(req: NextRequest) {
       line_total:      item.unit_price * item.qty,
       grind:           item.grind ?? 'whole',
       grind_option:    item.grindOption ?? null,
+      custom_bundle_group: null,
     }]
   })
 
