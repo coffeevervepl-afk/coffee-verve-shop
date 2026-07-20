@@ -53,8 +53,11 @@ export default async function ShopCatalog({ locale, activeSlug }: Props) {
   const faqItems: FaqItem[] = def ? (t.raw(`seo.${def.key}.faq`) as FaqItem[]) : []
 
   const products = await getProducts()
-  // /shop (no slug) is the general catalog — bundles live only on /shop/nabory.
-  let list = def ? products.filter(def.filter) : products.filter(p => p.product_type !== 'bundle')
+  // Bundles live only on /shop/nabory. /shop and every other slug page show
+  // singles: apply the slug filter (if any) AND exclude bundles.
+  let list = isBundlePage
+    ? products.filter(def!.filter)
+    : products.filter(p => (def ? def.filter(p) : true) && p.product_type !== 'bundle')
   list = [...list].sort(byDefault)
 
   // ── Schema.org JSON-LD ──────────────────────────────────────────────────
