@@ -132,13 +132,13 @@ export default function ProductCard({ product, locale }: Props) {
     >
       <article className="card h-full min-w-0 md:min-w-[300px] flex flex-col">
         {/* Image */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-[#3A2115]">
+        <div className="relative aspect-square overflow-hidden bg-brand-border/30">
           <Image
             src={image}
             alt={name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-contain transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           {isBundle ? (
             <span className="absolute left-2 top-2 rounded-full bg-[#3A2115] px-2 py-0.5 text-[10px] font-bold uppercase text-white tracking-wider">
