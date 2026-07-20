@@ -15,7 +15,8 @@
     "faq_title": "Частые вопросы",
     "bundle": {
       "badge": "НАБОР",
-      "composition": "{count} сортов × {weight}г = {total}г"
+      "composition": "{count} сортов × {weight}г = {total}г",
+      "grind_note": "помол +{price} zł × {count} пачки"
     },
     "filters": {
       "acidity": "Кислотность",

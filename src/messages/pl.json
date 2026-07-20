@@ -15,7 +15,8 @@
     "faq_title": "Częste pytania",
     "bundle": {
       "badge": "ZESTAW",
-      "composition": "{count} rodzaje × {weight}g = {total}g"
+      "composition": "{count} rodzaje × {weight}g = {total}g",
+      "grind_note": "mielenie +{price} zł × {count} paczki"
     },
     "filters": {
       "acidity": "Kwasowość",

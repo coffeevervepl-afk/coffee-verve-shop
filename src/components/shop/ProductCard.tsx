@@ -68,8 +68,10 @@ export default function ProductCard({ product, locale }: Props) {
   const groundDisabled    = weight === 1000
   const effectiveGrind    = groundDisabled ? 'whole' : grind
   const showGrindOptions  = weight === 250 && grind === 'ground'
+  // Grinding a bundle = surcharge per pack (one grind choice for the whole set).
+  const bundleSurcharge   = GRIND_SURCHARGE * bundleCount
   const displayPrice      = isBundle
-    ? bundlePrice
+    ? bundlePrice + (effectiveGrind === 'ground' ? bundleSurcharge : 0)
     : (effectiveGrind === 'ground' ? basePrice + GRIND_SURCHARGE : basePrice)
 
   function handleAddToCart(e: React.MouseEvent) {
@@ -82,9 +84,9 @@ export default function ProductCard({ product, locale }: Props) {
         name,
         image,
         weight:      (bundleTotalWeight || 1000) as ProductWeight,
-        grind:       'whole',
-        grindOption: undefined,
-        unit_price:  bundlePrice,
+        grind:       effectiveGrind,
+        grindOption: effectiveGrind === 'ground' ? grindOption : undefined,
+        unit_price:  displayPrice,
         qty:         1,
       })
     } else {
@@ -238,7 +240,7 @@ export default function ProductCard({ product, locale }: Props) {
             </div>
           )}
 
-          {!isBundle && (<>
+          {(<>
           <div className="mt-1.5 flex gap-1 rounded-full p-0.5 transition-colors duration-300" style={{ backgroundColor: switchBg }}>
             <button
               onClick={e => selectGrind(e, 'whole')}
@@ -301,7 +303,9 @@ export default function ProductCard({ product, locale }: Props) {
               )}
               <span className="text-base font-bold md:text-lg">{fmtPrice(displayPrice)}</span>
               {effectiveGrind === 'ground' && (
-                <span className="text-[10px] text-gray-400">{t('grind_surcharge')}</span>
+                <span className="text-[10px] text-gray-400">
+                  {isBundle ? tb('bundle.grind_note', { price: GRIND_SURCHARGE, count: bundleCount }) : t('grind_surcharge')}
+                </span>
               )}
             </div>
             <button
