@@ -6,6 +6,7 @@ import TagFilters from '@/components/shop/TagFilters'
 import FaqAccordion, { type FaqItem } from '@/components/shop/FaqAccordion'
 import CatalogLayout from '@/components/shop/CatalogLayout'
 import BundleCard from '@/components/shop/BundleCard'
+import CustomBundleBuilder from '@/components/shop/CustomBundleBuilder'
 import { SLUG_MAP } from '@/lib/shopSlugs'
 import type { Locale, ShopProduct } from '@/types/shop'
 
@@ -133,16 +134,15 @@ export default async function ShopCatalog({ locale, activeSlug }: Props) {
         {/* /shop/nabory: full-width horizontal bundle cards, one per row.
             Everywhere else: sidebar (guest promo + facet filters) + product grid. */}
         {isBundlePage ? (
-          list.length === 0 ? (
-            <div className="rounded-2xl border border-brand-border p-16 text-center text-brand-muted">
-              <p className="mb-4 text-5xl">☕</p>
-              <p>{t('empty')}</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {list.map(p => <BundleCard key={p.id} product={p} locale={locale} />)}
-            </div>
-          )
+          <>
+            {list.length > 0 && (
+              <div className="grid grid-cols-1 gap-4">
+                {list.map(p => <BundleCard key={p.id} product={p} locale={locale} />)}
+              </div>
+            )}
+            {/* Build-your-own bundle from active single sorts */}
+            <CustomBundleBuilder products={products.filter(p => p.product_type !== 'bundle')} locale={locale} />
+          </>
         ) : (
           <CatalogLayout locale={locale} products={list} />
         )}

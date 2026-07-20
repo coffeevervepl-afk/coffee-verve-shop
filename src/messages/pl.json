@@ -13,6 +13,16 @@
     "breadcrumb_catalog": "Katalog",
     "intro": "Coffee Verve to palarnia kawy specialty w Warszawie z dostawą w całej Polsce. Palimy każdą partię na zamówienie i wysyłamy w ciągu 24 godzin. Jeśli smak Ci nie odpowiada — wymienimy kawę lub zwrócimy pieniądze.",
     "faq_title": "Częste pytania",
+    "custom_bundle": {
+      "title": "Stwórz własny zestaw",
+      "subtitle": "Wybierz 4 rodzaje po 250g — złożymy i wyślemy",
+      "selected": "Wybrano: {n} z 4",
+      "add_more": "Wybierz jeszcze {n}",
+      "add_to_cart": "Dodaj zestaw do koszyka",
+      "max_reached": "Maksymalnie 4 rodzaje",
+      "grind_note": "mielenie +{price} zł × {count} paczki",
+      "cart_name": "Własny zestaw"
+    },
     "bundle": {
       "badge": "ZESTAW",
       "composition": "{count} rodzaje × {weight}g = {total}g",

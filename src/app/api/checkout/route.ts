@@ -126,18 +126,40 @@ export async function POST(req: NextRequest) {
   }
 
   // 4. Create order items
-  const orderItems = items.map(item => ({
-    order_id:        order.id,
-    shop_product_id: item.product_id,
-    product_name:    item.name,
-    product_slug:    item.slug,
-    weight:          item.weight,
-    unit_price:      item.unit_price,
-    quantity:        item.qty,
-    line_total:      item.unit_price * item.qty,
-    grind:           item.grind ?? 'whole',
-    grind_option:    item.grindOption ?? null,
-  }))
+  const CUSTOM_GRIND_SURCHARGE = 3 // zł per 250g pack when ground
+  const orderItems = items.flatMap(item => {
+    if (item.customBundle?.items?.length) {
+      // Custom bundle -> one row per selected sort, sharing a group id so the CRM
+      // groups them and each sort goes through the normal finished-goods write-off.
+      const groupId  = crypto.randomUUID()
+      const surcharge = item.grind === 'ground' ? CUSTOM_GRIND_SURCHARGE : 0
+      return item.customBundle.items.map(ci => ({
+        order_id:            order.id,
+        shop_product_id:     ci.product_id,
+        product_name:        ci.name,
+        product_slug:        null,
+        weight:              ci.weight,
+        unit_price:          ci.price + surcharge,
+        quantity:            1,
+        line_total:          ci.price + surcharge,
+        grind:               item.grind ?? 'whole',
+        grind_option:        item.grindOption ?? null,
+        custom_bundle_group: groupId,
+      }))
+    }
+    return [{
+      order_id:        order.id,
+      shop_product_id: item.product_id,
+      product_name:    item.name,
+      product_slug:    item.slug,
+      weight:          item.weight,
+      unit_price:      item.unit_price,
+      quantity:        item.qty,
+      line_total:      item.unit_price * item.qty,
+      grind:           item.grind ?? 'whole',
+      grind_option:    item.grindOption ?? null,
+    }]
+  })
 
   await sb.from('shop_order_items').insert(orderItems)
 

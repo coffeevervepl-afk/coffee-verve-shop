@@ -63,6 +63,8 @@ export interface CartItem {
   grindOption?: string
   unit_price: number
   qty: number
+  // Set for a customer-built bundle: one cart line that expands to N order rows.
+  customBundle?: { group_id: string; items: { product_id: string; name: string; price: number; weight: number }[] }
 }
 
 export interface Cart {
