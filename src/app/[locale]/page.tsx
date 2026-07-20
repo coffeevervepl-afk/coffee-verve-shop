@@ -15,6 +15,9 @@ export default async function HomePage({ params }: { params: { locale: Locale } 
     getProducts(),
     getFeaturedProducts(),
   ])
+  // Bundles have their own page (/shop/nabory) — keep them out of the general catalog.
+  const catalogProducts  = products.filter(p => p.product_type !== 'bundle')
+  const catalogFeatured  = featuredProducts.filter(p => p.product_type !== 'bundle')
 
   return (
     <div className="min-h-screen">
@@ -24,7 +27,7 @@ export default async function HomePage({ params }: { params: { locale: Locale } 
       <CategoriesSection locale={locale} />
 
       {/* ── Featured / Рекомендуем ───────────────────────────────────── */}
-      <FeaturedCarousel products={featuredProducts} locale={locale} />
+      <FeaturedCarousel products={catalogFeatured} locale={locale} />
 
       {/* ── Lead capture (−10% first order) ──────────────────────────── */}
       <section className="container pb-8">
@@ -42,13 +45,13 @@ export default async function HomePage({ params }: { params: { locale: Locale } 
           <h2 className="text-2xl font-semibold">{t('catalog_title')}</h2>
         </div>
 
-        {products.length === 0 ? (
+        {catalogProducts.length === 0 ? (
           <div className="rounded-2xl border border-brand-border p-16 text-center text-brand-muted">
             <p className="text-5xl mb-4">☕</p>
             <p>Товары появятся совсем скоро</p>
           </div>
         ) : (
-          <ProductGrid products={products} locale={locale} />
+          <ProductGrid products={catalogProducts} locale={locale} />
         )}
       </section>
     </div>

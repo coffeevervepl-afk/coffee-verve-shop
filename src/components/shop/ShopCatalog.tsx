@@ -50,7 +50,8 @@ export default async function ShopCatalog({ locale, activeSlug }: Props) {
   const faqItems: FaqItem[] = def ? (t.raw(`seo.${def.key}.faq`) as FaqItem[]) : []
 
   const products = await getProducts()
-  let list = def ? products.filter(def.filter) : products
+  // /shop (no slug) is the general catalog — bundles live only on /shop/nabory.
+  let list = def ? products.filter(def.filter) : products.filter(p => p.product_type !== 'bundle')
   list = [...list].sort(byDefault)
 
   // ── Schema.org JSON-LD ──────────────────────────────────────────────────
