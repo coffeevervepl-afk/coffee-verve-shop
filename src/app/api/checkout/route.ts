@@ -127,13 +127,29 @@ export async function POST(req: NextRequest) {
 
   // 4. Create order items
   const CUSTOM_GRIND_SURCHARGE = 3 // zł per 250g pack when ground
-  const orderItems = items.flatMap(item => {
+  // Shared row shape so both flatMap branches (custom bundle vs normal item)
+  // unify — otherwise TS infers the element type from the first branch and the
+  // other branch's differing field types (string vs null, etc.) fail to assign.
+  type OrderItemRow = {
+    order_id:            string
+    shop_product_id:     string | null
+    product_name:        string
+    product_slug:        string | null
+    weight:              number
+    unit_price:          number
+    quantity:            number
+    line_total:          number
+    grind:               'whole' | 'ground'
+    grind_option:        string | null
+    custom_bundle_group: string | null
+  }
+  const orderItems = items.flatMap((item): OrderItemRow[] => {
     if (item.customBundle?.items?.length) {
       // Custom bundle -> one row per selected sort, sharing a group id so the CRM
       // groups them and each sort goes through the normal finished-goods write-off.
       const groupId  = crypto.randomUUID()
       const surcharge = item.grind === 'ground' ? CUSTOM_GRIND_SURCHARGE : 0
-      return item.customBundle.items.map(ci => ({
+      return item.customBundle.items.map((ci): OrderItemRow => ({
         order_id:            order.id,
         shop_product_id:     ci.product_id,
         product_name:        ci.name,
