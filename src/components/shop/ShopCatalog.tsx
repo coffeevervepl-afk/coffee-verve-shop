@@ -5,6 +5,7 @@ import CategoriesSection from '@/components/shop/CategoriesSection'
 import TagFilters from '@/components/shop/TagFilters'
 import FaqAccordion, { type FaqItem } from '@/components/shop/FaqAccordion'
 import CatalogLayout from '@/components/shop/CatalogLayout'
+import BundleCard from '@/components/shop/BundleCard'
 import { SLUG_MAP } from '@/lib/shopSlugs'
 import type { Locale, ShopProduct } from '@/types/shop'
 
@@ -45,6 +46,7 @@ export default async function ShopCatalog({ locale, activeSlug }: Props) {
   const t = await getTranslations({ locale, namespace: 'shop' })
 
   const def = activeSlug ? SLUG_MAP[activeSlug] : null
+  const isBundlePage = def?.slug === 'nabory'
   const heading   = def ? t(`seo.${def.key}.h1`) : t('title')
   const introText = def ? t(`seo.${def.key}.text`) : t('intro')
   const faqItems: FaqItem[] = def ? (t.raw(`seo.${def.key}.faq`) as FaqItem[]) : []
@@ -128,8 +130,22 @@ export default async function ShopCatalog({ locale, activeSlug }: Props) {
         {/* Answer-style intro paragraph */}
         <p className="mb-6 max-w-3xl text-[15px] leading-relaxed text-brand-muted">{introText}</p>
 
-        {/* Sidebar (guest promo + facet filters) + client-filtered product grid */}
-        <CatalogLayout locale={locale} products={list} />
+        {/* /shop/nabory: full-width horizontal bundle cards, one per row.
+            Everywhere else: sidebar (guest promo + facet filters) + product grid. */}
+        {isBundlePage ? (
+          list.length === 0 ? (
+            <div className="rounded-2xl border border-brand-border p-16 text-center text-brand-muted">
+              <p className="mb-4 text-5xl">☕</p>
+              <p>{t('empty')}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4">
+              {list.map(p => <BundleCard key={p.id} product={p} locale={locale} />)}
+            </div>
+          )
+        ) : (
+          <CatalogLayout locale={locale} products={list} />
+        )}
 
         {/* FAQ (per-slug) — only on tag landing pages */}
         {def && faqItems.length > 0 && <FaqAccordion items={faqItems} title={t('faq_title')} />}

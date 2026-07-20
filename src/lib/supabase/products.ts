@@ -6,7 +6,7 @@ export async function getProducts(): Promise<ShopProduct[]> {
   // Embed bundle composition (empty for normal single products).
   const { data, error } = await sb
     .from('shop_products')
-    .select('*, bundle_items:shop_bundle_items!shop_bundle_items_bundle_id_fkey(product_id, weight, component:shop_products!shop_bundle_items_product_id_fkey(name_ru, slug, price_250))')
+    .select('*, bundle_items:shop_bundle_items!shop_bundle_items_bundle_id_fkey(product_id, weight, component:shop_products!shop_bundle_items_product_id_fkey(name_ru, slug, price_250, images))')
     .eq('is_active', true)
     .order('sort_order', { ascending: true })
   if (error) throw error
@@ -18,6 +18,7 @@ export async function getProducts(): Promise<ShopProduct[]> {
       slug:       bi.component?.slug ?? '',
       weight:     bi.weight,
       price:      Number(bi.component?.price_250 ?? 0),
+      image:      bi.component?.images?.[0] ?? '',
     })),
   })) as ShopProduct[]
 }

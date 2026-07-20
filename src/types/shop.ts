@@ -50,7 +50,7 @@ export interface ShopProduct {
   seo_description?: string | null
   // Bundles (sets of coffees sold as one product)
   product_type?: 'single' | 'bundle'
-  bundle_items?: { product_id: string; name: string; slug: string; weight: number; price: number }[]
+  bundle_items?: { product_id: string; name: string; slug: string; weight: number; price: number; image: string }[]
 }
 
 export interface CartItem {
