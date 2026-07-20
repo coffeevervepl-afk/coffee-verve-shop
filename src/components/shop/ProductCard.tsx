@@ -130,7 +130,7 @@ export default function ProductCard({ product, locale }: Props) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <article className="card h-full min-w-0 md:min-w-[300px] flex flex-col">
+      <article className="card h-full min-w-0 md:min-w-[200px] flex flex-col">
         {/* Image */}
         <div className="relative aspect-square overflow-hidden bg-brand-border/30">
           <Image
@@ -154,7 +154,7 @@ export default function ProductCard({ product, locale }: Props) {
         {/* Info */}
         <div className="flex flex-1 flex-col p-3">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="min-w-0 flex-1 line-clamp-2 text-lg font-semibold leading-snug">{name}</h3>
+            <h3 className="min-w-0 flex-1 line-clamp-2 text-lg md:text-base font-semibold leading-snug">{name}</h3>
             <button
               type="button"
               className="card-details-btn shrink-0 rounded-full border border-[#E8E7E3] bg-white/70 px-4 py-1.5 text-[13px] font-medium text-[#3A2115] shadow-sm backdrop-blur-sm"

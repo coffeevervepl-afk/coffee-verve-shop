@@ -93,7 +93,7 @@ export default function CatalogLayout({ locale, products }: Props) {
         </button>
 
         {filtered.length === 0 ? emptyBox : (
-          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((p, i) => (
               <div key={p.id} className="animate-fade-up"
                    style={{ animationDelay: `${i * 60}ms`, animationFillMode: 'both' }}>
