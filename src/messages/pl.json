@@ -25,7 +25,9 @@
       "add": "Dodaj",
       "chosen": "Wybrano",
       "progress": "Wybrano {n} z 4",
-      "complete": "Zestaw kompletny!"
+      "complete": "Zestaw kompletny!",
+      "banner_title": "Zestaw degustacyjny — 4 smaki × 250g. Oszczędzasz 10 zł!",
+      "banner_guarantee": "Nie smakuje? Zwrócimy pieniądze"
     },
     "bundle": {
       "badge": "ZESTAW",

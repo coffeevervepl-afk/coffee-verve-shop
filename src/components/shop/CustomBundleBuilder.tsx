@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
-import { Plus } from 'lucide-react'
+import { Plus, Gift } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { useCartStore } from '@/hooks/useCartStore'
 import { getProductName, getProductImage } from '@/lib/product-utils'
@@ -76,16 +76,25 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
       <h2 className="text-2xl font-semibold text-[#3A2115] md:text-3xl">{t('custom_bundle.title')}</h2>
       <p className="mt-1 text-[15px] text-brand-muted">{t('custom_bundle.subtitle')}</p>
 
+      {/* Promo banner */}
+      <div className="mt-4 flex flex-col items-center gap-3 rounded-xl bg-[#F8F5F0] p-4 text-center sm:flex-row sm:text-left">
+        <Gift size={26} className="shrink-0 text-[#412618]" aria-hidden />
+        <div>
+          <p className="font-semibold text-[#3A2115]">{t('custom_bundle.banner_title')}</p>
+          <p className="text-sm text-[#3A2115] opacity-70">{t('custom_bundle.banner_guarantee')}</p>
+        </div>
+      </div>
+
       {/* Progress */}
       <div className="mt-4">
         <div className="mb-1.5 text-sm font-semibold">
           {count === MAX
-            ? <span className="text-[#22C55E]">✓ {t('custom_bundle.complete')}</span>
+            ? <span className="text-[#412618]">✓ {t('custom_bundle.complete')}</span>
             : <span className="text-[#3A2115]">{t('custom_bundle.progress', { n: count })}</span>}
         </div>
         <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#E5E7EB]">
           <div
-            className="h-full rounded-full bg-[#6F4E37] transition-[width] duration-300"
+            className="h-full rounded-full bg-[#412618] transition-[width] duration-300"
             style={{ width: `${(count / MAX) * 100}%` }}
           />
         </div>
@@ -103,7 +112,7 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
                 isSel ? 'border-[#3A2115]' : 'border-transparent hover:border-[#E8E7E3]'
               }`}>
               {isSel && (
-                <span className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#6F4E37] text-xs font-bold text-white shadow-md">
+                <span className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-white/30 bg-white/65 text-xs font-bold text-[#3A2115] shadow-[0_2px_8px_rgba(0,0,0,0.1)] backdrop-blur-[10px]">
                   {idx + 1}
                 </span>
               )}
