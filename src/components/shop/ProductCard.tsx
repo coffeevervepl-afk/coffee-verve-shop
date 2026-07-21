@@ -154,7 +154,7 @@ export default function ProductCard({ product, locale }: Props) {
         {/* Info */}
         <div className="flex flex-1 flex-col p-3">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="min-w-0 flex-1 line-clamp-2 min-h-[2.5rem] text-lg md:text-base font-semibold leading-snug">{name}</h3>
+            <h3 className="min-w-0 flex-1 line-clamp-1 text-lg md:text-sm font-semibold leading-snug">{name}</h3>
             <button
               type="button"
               className="card-details-btn shrink-0 rounded-full border border-[#E8E7E3] bg-white/70 px-4 py-1.5 text-[13px] font-medium text-[#3A2115] shadow-sm backdrop-blur-sm"

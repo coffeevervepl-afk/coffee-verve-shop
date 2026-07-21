@@ -57,9 +57,9 @@ export default function CatalogLayout({ locale, products }: Props) {
   if (products.length === 0) return emptyBox
 
   return (
-    <div className="md:flex md:gap-6 xl:gap-4">
+    <div className="md:flex md:gap-4">
       {/* Desktop sidebar (non-sticky): promo for guests, then filters */}
-      <aside className="hidden md:block md:w-[280px] md:shrink-0">
+      <aside className="hidden md:block md:w-[250px] md:shrink-0">
         {guest && (
           <div className="mb-5 rounded-2xl bg-[#3A2115] p-6 text-white">
             <h3 className="text-[20px] font-bold leading-tight">{t('promo.title')}</h3>
