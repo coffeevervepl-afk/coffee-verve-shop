@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { Plus, ChevronDown } from 'lucide-react'
 import { toast } from 'react-hot-toast'
-import CoffeeQuiz from '@/components/shop/CoffeeQuiz'
+import CoffeeQuiz, { type QuizResult } from '@/components/shop/CoffeeQuiz'
 import { brewMethods } from '@/lib/shopTags'
 import { useCartStore } from '@/hooks/useCartStore'
 import { getProductName, getProductImage } from '@/lib/product-utils'
@@ -143,6 +143,16 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
       if (next.has(id)) next.delete(id); else next.add(id)
       return next
     })
+  }
+  // Quiz finished on this page → map its answers to existing chip ids and apply
+  // them as the active filters (no redirect). Only ids that exist are kept.
+  function applyQuiz(res: QuizResult) {
+    const ids: string[] = []
+    if (res.type === 'milk' || res.method === 'espresso' || res.method === 'moka') ids.push('m:espresso')
+    else if (res.method != null && (['filter', 'aeropress', 'frenchpress', 'cup'] as string[]).includes(res.method)) ids.push('m:filter')
+    if (res.taste === 'fruity' || res.taste === 'fermented') ids.push('f:fruit')
+    else if (res.taste === 'classic') ids.push('f:choco', 'f:nuts', 'f:caramel')
+    setActiveFilters(new Set(ids.filter(id => chipById.has(id))))
   }
   const isChosen = (p: ShopProduct) => selected.some(x => x.id === p.id)
   // Selected sorts stay visible (pinned first) even if they don't match the filter.
@@ -338,7 +348,7 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
         </div>
       )}
 
-      <CoffeeQuiz open={quizOpen} onClose={() => setQuizOpen(false)} locale={locale} />
+      <CoffeeQuiz open={quizOpen} onClose={() => setQuizOpen(false)} locale={locale} onComplete={applyQuiz} />
     </section>
   )
 }

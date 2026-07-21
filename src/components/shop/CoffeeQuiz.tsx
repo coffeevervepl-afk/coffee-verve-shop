@@ -9,6 +9,10 @@ type Method = (typeof METHODS)[number]
 type Type   = 'black' | 'milk' | 'both'
 type Taste  = 'classic' | 'fruity' | 'fermented'
 
+// Passed to onComplete so a host page (e.g. the bundle builder) can apply the
+// quiz answers as its own filters instead of navigating to a catalog slug.
+export type QuizResult = { type: Type | null; method: Method | null; taste: Taste }
+
 // Brewing method → SEO slug (moka groups with espresso).
 const METHOD_SLUG: Record<Method, string> = {
   espresso:    'do-ekspresu',
@@ -40,12 +44,15 @@ interface Props {
   open:    boolean
   onClose: () => void
   locale:  Locale
+  // When provided, the final step calls this with the answers instead of
+  // redirecting to a catalog slug (used by the bundle builder).
+  onComplete?: (result: QuizResult) => void
 }
 
 const cardBase =
   'rounded-xl border border-transparent bg-[#F4F3F0] transition-colors hover:border-[#3A2115] focus:border-[#3A2115] focus:outline-none'
 
-export default function CoffeeQuiz({ open, onClose, locale }: Props) {
+export default function CoffeeQuiz({ open, onClose, locale, onComplete }: Props) {
   const t = useTranslations('shop')
   const router = useRouter()
   const [step, setStep]     = useState(1)
@@ -75,6 +82,8 @@ export default function CoffeeQuiz({ open, onClose, locale }: Props) {
   const pickType   = (v: Type)   => { setType(v); setStep(2) }
   const pickMethod = (v: Method) => { setMethod(v); setStep(3) }
   const pickTaste  = (v: Taste)  => {
+    // Host handles the result in-page (bundle builder) — no redirect.
+    if (onComplete) { onComplete({ type, method, taste: v }); onClose(); return }
     // type=milk overrides the method-based slug.
     const slug = type === 'milk' ? 'do-mlecznych' : METHOD_SLUG[method ?? 'espresso']
     const qs = new URLSearchParams()
