@@ -208,8 +208,8 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
         </div>
       </div>
 
-      {/* Filter chips — auto-generated from product data; horizontal scroll on mobile */}
-      <div className="mt-4 flex flex-nowrap gap-2 overflow-x-auto no-scrollbar [-webkit-overflow-scrolling:touch]">
+      {/* Filter chips — auto-generated from product data; wrap to as many rows as needed */}
+      <div className="mt-4 flex flex-wrap gap-2">
         <button type="button" onClick={() => setActiveFilters(new Set())}
           className={`shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors duration-200 ${
             activeFilters.size === 0
@@ -230,7 +230,7 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
           )
         })}
         <button type="button" onClick={() => setQuizOpen(true)}
-          className="shrink-0 whitespace-nowrap rounded-full border border-dashed border-[#412618] bg-transparent px-3.5 py-1.5 text-[13px] font-medium text-[#412618] transition-colors duration-200 hover:bg-[rgba(65,38,24,0.08)]">
+          className="quiz-shimmer rounded-full px-4 py-2 text-[14px] transition hover:brightness-[0.98]">
           ✨ {t('custom_bundle.chip_quiz')}
         </button>
       </div>
