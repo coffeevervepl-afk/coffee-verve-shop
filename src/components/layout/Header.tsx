@@ -266,14 +266,14 @@ export default function Header({ locale }: { locale: Locale }) {
                   {/* TODO: dedicated sets route/filter once the bundles range exists */}
                   <Link href={`/${locale}/shop/nabory`} role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[16px] font-semibold hover:bg-black/5">{t('menu_sets')}</Link>
                   {/* Same target as the existing "Subskrypcja kawy" nav item */}
-                  <Link href="#subscription" role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[16px] font-semibold hover:bg-black/5">{t('subscription')}</Link>
+                  <Link href={`/${locale}/shop/subskrypcja`} role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[16px] font-semibold hover:bg-black/5">{t('subscription')}</Link>
                   {/* TODO: replace with the B2B section page once it's ready */}
                   <Link href="#products" role="menuitem" onClick={() => setCatalogOpen(false)} className="block whitespace-nowrap rounded-lg px-4 py-3 text-[16px] font-semibold hover:bg-black/5">{t('menu_office')}</Link>
                 </div>
               </div>
               <Link href="#reviews" className={ROW2_LINK}>{t('reviews')}</Link>
               <Link href="#delivery" className={ROW2_LINK}>{t('delivery_payment')}</Link>
-              <Link href="#subscription" className={NAV_CTA}>
+              <Link href={`/${locale}/shop/subskrypcja`} className={NAV_CTA}>
                 {t('subscription')}
               </Link>
               <a href="#b2b" className={NAV_CTA}>

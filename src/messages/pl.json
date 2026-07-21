@@ -738,5 +738,62 @@
     "thanks_subtitle": "Twoja kawa już się szykuje do wysyłki",
     "continue": "Kontynuuj zakupy"
   },
-  "common": { "loading": "Ładowanie...", "error": "Błąd", "retry": "Spróbuj ponownie", "pln": "zł" }
+  "common": { "loading": "Ładowanie...", "error": "Błąd", "retry": "Spróbuj ponownie", "pln": "zł" },
+  "subscription": {
+    "seo_title": "Subskrypcja kawy specialty | Coffee Verve",
+    "seo_description": "Subskrypcja świeżo palonej kawy specialty od Coffee Verve — regularna dostawa prosto pod Twoje drzwi, dodatkowe -5% i pełna elastyczność. Anuluj w dowolnym momencie.",
+    "hero_title": "Subskrypcja kawy",
+    "hero_subtitle": "Świeżo palona kawa specialty prosto do Twoich drzwi — regularnie, bez wysiłku",
+    "b1_title": "Przypomnimy dzień wcześniej",
+    "b1_text": "Dostaniesz powiadomienie przed każdą wysyłką",
+    "b2_title": "Anulujesz kiedy chcesz",
+    "b2_text": "Bez zobowiązań — odwołaj w dowolnym momencie",
+    "b3_title": "Automatyczna płatność",
+    "b3_text": "Przelewy24 — bezpiecznie i wygodnie",
+    "b4_title": "Dodatkowe -5% na subskrypcję",
+    "b4_text": "Łączy się ze zniżką Twojej karty lojalnościowej",
+    "promo_title": "Subskrypcja + karta lojalnościowa = podwójna korzyść",
+    "promo_subtitle": "Classic 5% + subskrypcja 5% = 10% • Gold 10% + 5% = 15% • Platinum 15% + 5% = 20%",
+    "section_title": "Zamów subskrypcję",
+    "section_subtitle": "Wybierz kawę, ustaw częstotliwość — resztą zajmiemy się my",
+    "interval_title": "Co ile tygodni wysyłać?",
+    "interval_co": "co",
+    "interval_unit": "tygodni",
+    "interval_note": "Będziemy wysyłać zamówienie co {days} dni. Zmień lub anuluj w dowolnym momencie w swoim koncie.",
+    "min_hint": "Minimum 1 kg w subskrypcji (np. 4 × 250 g)",
+    "summary": "Pozycje: {count} · Waga: {kg} kg",
+    "sum_full": "Cena bez rabatu",
+    "sum_sub": "Subskrypcja −5%",
+    "sum_card": "Karta lojalnościowa −{pct}%",
+    "sum_total": "Razem",
+    "cta": "Zamów subskrypcję",
+    "cta_note": "Pierwsza wysyłka w ciągu 2 dni roboczych",
+    "modal_text": "Subskrypcja będzie dostępna wkrótce! Zostaw e-mail, a powiadomimy Cię o uruchomieniu.",
+    "modal_email_ph": "Twój e-mail",
+    "modal_btn": "Powiadom mnie",
+    "modal_done": "Dziękujemy! Damy znać, gdy subskrypcja ruszy.",
+    "faq_title": "Częste pytania",
+    "faq": [
+      {
+        "q": "Jak działa subskrypcja kawy?",
+        "a": "Wybierasz kawy, które lubisz, ustawiasz częstotliwość wysyłki — a my regularnie dostarczamy świeżo paloną kawę prosto pod Twoje drzwi. Kawę palimy po otrzymaniu zamówienia, więc zawsze jest świeża. Płatność pobierana jest automatycznie dzień przed wysyłką."
+      },
+      {
+        "q": "Czy mogę zmienić skład subskrypcji?",
+        "a": "Tak, w dowolnym momencie w swoim koncie możesz zmienić kawy, ilość, mielenie, wagę i częstotliwość wysyłki. Zmiany wejdą w życie od następnej wysyłki."
+      },
+      {
+        "q": "Czy mogę anulować subskrypcję?",
+        "a": "Tak, bez żadnych zobowiązań. Anulujesz jednym kliknięciem w swoim koncie. Nie pobieramy żadnych opłat za rezygnację."
+      },
+      {
+        "q": "Jaka jest zniżka na subskrypcję?",
+        "a": "Subskrypcja daje dodatkowe -5%, które łączy się ze zniżką Twojej karty lojalnościowej: Classic (5%) + subskrypcja (5%) = 10%, Gold (10%) + 5% = 15%, Platinum (15%) + 5% = 20%. Im dłużej z nami, tym więcej oszczędzasz."
+      },
+      {
+        "q": "Jak wygląda płatność?",
+        "a": "Płatność pobierana jest automatycznie dzień przed każdą wysyłką przez Przelewy24. Obsługujemy karty płatnicze i BLIK. Dzień wcześniej otrzymasz powiadomienie z przypomnieniem i kwotą."
+      }
+    ]
+  }
 }
