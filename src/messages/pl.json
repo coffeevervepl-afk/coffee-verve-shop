@@ -27,7 +27,12 @@
       "progress": "Wybrano {n} z 4",
       "complete": "Zestaw kompletny!",
       "banner_title": "Zestaw degustacyjny — 4 smaki × 250g. Oszczędzasz 10 zł!",
-      "banner_guarantee": "Nie smakuje? Zwrócimy pieniądze"
+      "banner_guarantee": "Nie smakuje? Zwrócimy pieniądze",
+      "tip_title": "Jak to działa?",
+      "tip_text": "Wybierz 4 dowolne kawy po 250g — złożymy je w elegancki zestaw i wyślemy jedną paczką.",
+      "tip_line1": "☕ Miksuj jak chcesz — stwórz swój idealny zestaw",
+      "tip_line2": "💰 Taniej niż 4 paczki osobno",
+      "tip_line3": "✅ Gwarancja smaku — szczegóły poniżej"
     },
     "bundle": {
       "badge": "ZESTAW",

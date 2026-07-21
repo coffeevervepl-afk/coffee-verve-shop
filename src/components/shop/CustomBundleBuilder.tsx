@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { Plus } from 'lucide-react'
@@ -27,6 +27,18 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
   const [selected, setSelected]       = useState<ShopProduct[]>([])
   const [grind, setGrind]             = useState<'whole' | 'ground'>('whole')
   const [grindOption, setGrindOption] = useState('espresso')
+  const [tipOpen, setTipOpen]         = useState(false)
+  const tipRef = useRef<HTMLDivElement>(null)
+
+  // Mobile: close the info tooltip on tap outside (desktop uses hover).
+  useEffect(() => {
+    if (!tipOpen) return
+    function onDoc(e: MouseEvent) {
+      if (tipRef.current && !tipRef.current.contains(e.target as Node)) setTipOpen(false)
+    }
+    document.addEventListener('mousedown', onDoc)
+    return () => document.removeEventListener('mousedown', onDoc)
+  }, [tipOpen])
 
   const count = selected.length
   const basePrice   = selected.reduce((s, p) => s + Number(p.price_250 || 0), 0)
@@ -73,7 +85,30 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
 
   return (
     <section className="mt-12">
-      <h2 className="text-2xl font-semibold text-[#3A2115] md:text-3xl">{t('custom_bundle.title')}</h2>
+      <div ref={tipRef} className="group/tip relative flex items-center gap-2">
+        <h2 className="text-2xl font-semibold text-[#3A2115] md:text-3xl">{t('custom_bundle.title')}</h2>
+        <button type="button" aria-label={t('custom_bundle.tip_title')}
+                onClick={() => setTipOpen(o => !o)}
+                className="flex h-[18px] w-[18px] shrink-0 cursor-pointer items-center justify-center text-[#8A7A66] transition-colors hover:text-[#3A2115]">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+               strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <circle cx="12" cy="12" r="9" /><path d="M12 11.5v4.5" /><path d="M12 7.75h.01" />
+          </svg>
+        </button>
+        <span role="tooltip"
+              className={`absolute left-0 top-full z-40 mt-2 w-[340px] max-w-[calc(100vw-2rem)] rounded-2xl border border-white/40 bg-white/75 p-5 text-left shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-[16px] transition-all duration-200 ease-out opacity-0 -translate-y-1 pointer-events-none group-hover/tip:opacity-100 group-hover/tip:translate-y-0 group-hover/tip:pointer-events-auto group-focus-within/tip:opacity-100 group-focus-within/tip:translate-y-0 ${
+                tipOpen ? '!opacity-100 !translate-y-0 !pointer-events-auto' : ''
+              }`}>
+          <span className="absolute -top-1.5 left-6 h-3 w-3 rotate-45 border-l border-t border-white/40 bg-white/75" />
+          <p className="text-[15px] font-semibold text-[#3A2115]">{t('custom_bundle.tip_title')}</p>
+          <p className="mt-1.5 text-sm text-[#4B4B4B]">{t('custom_bundle.tip_text')}</p>
+          <div className="mt-2.5 space-y-1 text-sm text-[#4B4B4B]">
+            <p>{t('custom_bundle.tip_line1')}</p>
+            <p>{t('custom_bundle.tip_line2')}</p>
+            <p>{t('custom_bundle.tip_line3')}</p>
+          </div>
+        </span>
+      </div>
       <p className="mt-1 text-[15px] text-brand-muted">{t('custom_bundle.subtitle')}</p>
 
       {/* Promo banner — same style as the product-page "login" promo (LoginDiscountHint) */}
