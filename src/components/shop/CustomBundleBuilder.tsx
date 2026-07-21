@@ -28,7 +28,8 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
   const [grind, setGrind]             = useState<'whole' | 'ground'>('whole')
   const [grindOption, setGrindOption] = useState('espresso')
   const [tipOpen, setTipOpen]         = useState(false)
-  const tipRef = useRef<HTMLDivElement>(null)
+  const tipRef   = useRef<HTMLDivElement>(null)
+  const tipTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Mobile: close the info tooltip on tap outside (desktop uses hover).
   useEffect(() => {
@@ -85,7 +86,9 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
 
   return (
     <section className="mt-12">
-      <div ref={tipRef} className="group/tip relative flex items-center gap-2">
+      <div ref={tipRef} className="relative flex items-center gap-2"
+           onPointerEnter={e => { if (e.pointerType === 'mouse') { if (tipTimer.current) clearTimeout(tipTimer.current); setTipOpen(true) } }}
+           onPointerLeave={e => { if (e.pointerType === 'mouse') { tipTimer.current = setTimeout(() => setTipOpen(false), 100) } }}>
         <h2 className="text-2xl font-semibold text-[#3A2115] md:text-3xl">{t('custom_bundle.title')}</h2>
         <button type="button" aria-label={t('custom_bundle.tip_title')}
                 onClick={() => setTipOpen(o => !o)}
@@ -96,8 +99,8 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
           </svg>
         </button>
         <span role="tooltip"
-              className={`absolute left-0 top-full z-40 mt-2 w-[340px] max-w-[calc(100vw-2rem)] rounded-2xl border border-white/40 bg-white/75 p-5 text-left shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-[16px] transition-all duration-200 ease-out opacity-0 -translate-y-1 pointer-events-none group-hover/tip:opacity-100 group-hover/tip:translate-y-0 group-hover/tip:pointer-events-auto group-focus-within/tip:opacity-100 group-focus-within/tip:translate-y-0 ${
-                tipOpen ? '!opacity-100 !translate-y-0 !pointer-events-auto' : ''
+              className={`absolute left-0 top-full z-40 mt-2 w-[340px] max-w-[calc(100vw-2rem)] rounded-2xl border border-white/40 bg-white/75 p-5 text-left shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-[16px] transition-all duration-200 ease-out ${
+                tipOpen ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'
               }`}>
           <span className="absolute -top-1.5 left-6 h-3 w-3 rotate-45 border-l border-t border-white/40 bg-white/75" />
           <p className="text-[15px] font-semibold text-[#3A2115]">{t('custom_bundle.tip_title')}</p>
