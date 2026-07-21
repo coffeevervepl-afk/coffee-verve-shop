@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
-import { Plus, Gift } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { useCartStore } from '@/hooks/useCartStore'
 import { getProductName, getProductImage } from '@/lib/product-utils'
@@ -76,12 +76,12 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
       <h2 className="text-2xl font-semibold text-[#3A2115] md:text-3xl">{t('custom_bundle.title')}</h2>
       <p className="mt-1 text-[15px] text-brand-muted">{t('custom_bundle.subtitle')}</p>
 
-      {/* Promo banner */}
-      <div className="mt-4 flex flex-col items-center gap-3 rounded-xl bg-[#F8F5F0] p-4 text-center sm:flex-row sm:text-left">
-        <Gift size={26} className="shrink-0 text-[#412618]" aria-hidden />
+      {/* Promo banner — same style as the product-page "login" promo (LoginDiscountHint) */}
+      <div className="mt-4 flex flex-col items-center gap-3 rounded-2xl bg-[#F4F3F0] px-4 py-3.5 text-center sm:flex-row sm:text-left">
+        <span className="text-3xl">🎁</span>
         <div>
-          <p className="font-semibold text-[#3A2115]">{t('custom_bundle.banner_title')}</p>
-          <p className="text-sm text-[#3A2115] opacity-70">{t('custom_bundle.banner_guarantee')}</p>
+          <p className="text-[15px] font-semibold">{t('custom_bundle.banner_title')}</p>
+          <p className="text-[13px] text-[#6E6D68]">{t('custom_bundle.banner_guarantee')}</p>
         </div>
       </div>
 
