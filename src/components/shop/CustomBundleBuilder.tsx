@@ -113,8 +113,8 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
               <p className="mt-1.5 truncate text-[13px] font-medium text-[#3A2115]">{getProductName(p, locale)}</p>
               <p className="text-[12px] text-brand-muted">{fmtPrice(Number(p.price_250 || 0))} / {PACK_WEIGHT}г</p>
               <button type="button" onClick={e => { e.stopPropagation(); toggle(p) }}
-                className={`mt-2 w-full rounded-lg py-1.5 text-xs font-semibold text-white transition ${
-                  isSel ? 'bg-[#22C55E] hover:bg-[#16A34A]' : 'bg-[#6F4E37] hover:bg-[#5A3F2C]'
+                className={`mt-2 w-full rounded-lg py-1.5 text-xs font-semibold transition ${
+                  isSel ? 'bg-[#22C55E] text-white hover:bg-[#16A34A]' : 'bundle-add-btn'
                 }`}>
                 {isSel ? `✓ ${t('custom_bundle.chosen')}` : t('custom_bundle.add')}
               </button>
