@@ -21,7 +21,11 @@
       "add_to_cart": "Добавить набор в корзину",
       "max_reached": "Максимум 4 сорта",
       "grind_note": "помол +{price} zł × {count} пачки",
-      "cart_name": "Свой набор"
+      "cart_name": "Свой набор",
+      "add": "Добавить",
+      "chosen": "Выбрано",
+      "progress": "Выбрано {n} из 4",
+      "complete": "Набор собран!"
     },
     "bundle": {
       "badge": "НАБОР",

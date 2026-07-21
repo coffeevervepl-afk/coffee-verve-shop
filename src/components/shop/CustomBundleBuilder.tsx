@@ -76,18 +76,34 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
       <h2 className="text-2xl font-semibold text-[#3A2115] md:text-3xl">{t('custom_bundle.title')}</h2>
       <p className="mt-1 text-[15px] text-brand-muted">{t('custom_bundle.subtitle')}</p>
 
+      {/* Progress */}
+      <div className="mt-4">
+        <div className="mb-1.5 text-sm font-semibold">
+          {count === MAX
+            ? <span className="text-[#22C55E]">✓ {t('custom_bundle.complete')}</span>
+            : <span className="text-[#3A2115]">{t('custom_bundle.progress', { n: count })}</span>}
+        </div>
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#E5E7EB]">
+          <div
+            className="h-full rounded-full bg-[#6F4E37] transition-[width] duration-300"
+            style={{ width: `${(count / MAX) * 100}%` }}
+          />
+        </div>
+      </div>
+
       {/* Sorts grid — mobile 2 cols, md+ 4 cols */}
       <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         {products.map(p => {
           const idx = selected.findIndex(x => x.id === p.id)
           const isSel = idx >= 0
           return (
-            <button key={p.id} type="button" onClick={() => toggle(p)}
-              className={`relative overflow-hidden rounded-xl border-2 bg-white p-2 text-left transition ${
+            <div key={p.id} role="button" tabIndex={0} onClick={() => toggle(p)}
+              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(p) } }}
+              className={`relative flex cursor-pointer flex-col overflow-hidden rounded-xl border-2 bg-white p-2 text-left transition ${
                 isSel ? 'border-[#3A2115]' : 'border-transparent hover:border-[#E8E7E3]'
               }`}>
               {isSel && (
-                <span className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-[#3A2115] text-xs font-bold text-white">
+                <span className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#6F4E37] text-xs font-bold text-white shadow-md">
                   {idx + 1}
                 </span>
               )}
@@ -96,7 +112,13 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
               </div>
               <p className="mt-1.5 truncate text-[13px] font-medium text-[#3A2115]">{getProductName(p, locale)}</p>
               <p className="text-[12px] text-brand-muted">{fmtPrice(Number(p.price_250 || 0))} / {PACK_WEIGHT}г</p>
-            </button>
+              <button type="button" onClick={e => { e.stopPropagation(); toggle(p) }}
+                className={`mt-2 w-full rounded-lg py-1.5 text-xs font-semibold text-white transition ${
+                  isSel ? 'bg-[#22C55E] hover:bg-[#16A34A]' : 'bg-[#6F4E37] hover:bg-[#5A3F2C]'
+                }`}>
+                {isSel ? `✓ ${t('custom_bundle.chosen')}` : t('custom_bundle.add')}
+              </button>
+            </div>
           )
         })}
       </div>

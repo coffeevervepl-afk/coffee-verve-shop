@@ -21,7 +21,11 @@
       "add_to_cart": "Додати набір у кошик",
       "max_reached": "Максимум 4 сорти",
       "grind_note": "помел +{price} zł × {count} пачки",
-      "cart_name": "Свій набір"
+      "cart_name": "Свій набір",
+      "add": "Додати",
+      "chosen": "Обрано",
+      "progress": "Обрано {n} з 4",
+      "complete": "Набір зібрано!"
     },
     "bundle": {
       "badge": "НАБІР",

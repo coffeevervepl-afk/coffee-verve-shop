@@ -21,7 +21,11 @@
       "add_to_cart": "Dodaj zestaw do koszyka",
       "max_reached": "Maksymalnie 4 rodzaje",
       "grind_note": "mielenie +{price} zł × {count} paczki",
-      "cart_name": "Własny zestaw"
+      "cart_name": "Własny zestaw",
+      "add": "Dodaj",
+      "chosen": "Wybrano",
+      "progress": "Wybrano {n} z 4",
+      "complete": "Zestaw kompletny!"
     },
     "bundle": {
       "badge": "ZESTAW",
