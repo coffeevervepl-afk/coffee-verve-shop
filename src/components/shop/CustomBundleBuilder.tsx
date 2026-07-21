@@ -1,9 +1,11 @@
 'use client'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
-import { Plus } from 'lucide-react'
+import { Plus, ChevronDown } from 'lucide-react'
 import { toast } from 'react-hot-toast'
+import CoffeeQuiz from '@/components/shop/CoffeeQuiz'
+import { brewMethods } from '@/lib/shopTags'
 import { useCartStore } from '@/hooks/useCartStore'
 import { getProductName, getProductImage } from '@/lib/product-utils'
 import { fmtPrice } from '@/lib/pricing'
@@ -40,6 +42,51 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
     document.addEventListener('mousedown', onDoc)
     return () => document.removeEventListener('mousedown', onDoc)
   }, [tipOpen])
+
+  const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set())
+  const [shownCount, setShownCount]       = useState(8)
+  const [quizOpen, setQuizOpen]           = useState(false)
+
+  // Filter chips auto-generated from the loaded products (country / flavour / method).
+  const chips = useMemo(() => {
+    const flavourText = (p: ShopProduct) =>
+      [p.flavor_notes_ru, p.flavor_notes_pl, p.flavor_notes_ua, ...(p.flavor_tags ?? [])]
+        .filter(Boolean).join(' ').toLowerCase()
+    const out: { id: string; label: string; match: (p: ShopProduct) => boolean }[] = []
+
+    // Countries — unique, alphabetical
+    Array.from(new Set(products.map(p => p.country?.trim()).filter((c): c is string => !!c)))
+      .sort((a, b) => a.localeCompare(b))
+      .forEach(c => out.push({ id: `c:${c}`, label: c, match: p => p.country?.trim() === c }))
+
+    // Flavour categories — only those actually present
+    const FLAV = [
+      { id: 'f:choco',   key: 'chip_choco',   re: /czekolad|chocolat|шокол/ },
+      { id: 'f:fruit',   key: 'chip_fruit',   re: /owoc|fruit|frukt|фрукт|ягод|berr|jagod/ },
+      { id: 'f:nuts',    key: 'chip_nuts',    re: /orzech|nut|орех|горіх/ },
+      { id: 'f:caramel', key: 'chip_caramel', re: /karmel|caramel|карамел/ },
+    ] as const
+    FLAV.forEach(f => {
+      const match = (p: ShopProduct) => f.re.test(flavourText(p))
+      if (products.some(match)) out.push({ id: f.id, label: t(`custom_bundle.${f.key}`), match })
+    })
+
+    // Brew methods — only those present
+    const METH = [
+      { id: 'm:espresso', key: 'chip_espresso', val: 'espresso' },
+      { id: 'm:filter',   key: 'chip_filter',   val: 'filter' },
+    ] as const
+    METH.forEach(m => {
+      const match = (p: ShopProduct) => brewMethods(p).includes(m.val)
+      if (products.some(match)) out.push({ id: m.id, label: t(`custom_bundle.${m.key}`), match })
+    })
+    return out
+  }, [products, locale, t])
+
+  const chipById = useMemo(() => new Map(chips.map(c => [c.id, c] as const)), [chips])
+
+  // Reset pagination whenever the active filters change.
+  useEffect(() => { setShownCount(8) }, [activeFilters])
 
   const count = selected.length
   const basePrice   = selected.reduce((s, p) => s + Number(p.price_250 || 0), 0)
@@ -81,6 +128,29 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
     setGrind('whole')
     open()
   }
+
+  // A product passes when, for every filter GROUP that has a selection, it
+  // matches at least one chip in that group (AND between groups, OR within).
+  function matchesFilters(p: ShopProduct): boolean {
+    if (activeFilters.size === 0) return true
+    const groups: Record<string, string[]> = {}
+    activeFilters.forEach(id => { const g = id.split(':')[0]; (groups[g] ??= []).push(id) })
+    return Object.values(groups).every(ids => ids.some(id => chipById.get(id)?.match(p)))
+  }
+  function toggleFilter(id: string) {
+    setActiveFilters(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id); else next.add(id)
+      return next
+    })
+  }
+  const isChosen = (p: ShopProduct) => selected.some(x => x.id === p.id)
+  // Selected sorts stay visible (pinned first) even if they don't match the filter.
+  const displayList = products
+    .filter(p => matchesFilters(p) || isChosen(p))
+    .sort((a, b) => (isChosen(b) ? 1 : 0) - (isChosen(a) ? 1 : 0))
+  const shownList   = displayList.slice(0, shownCount)
+  const hiddenCount = displayList.length - shownList.length
 
   if (products.length === 0) return null
 
@@ -138,17 +208,45 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
         </div>
       </div>
 
+      {/* Filter chips — auto-generated from product data; horizontal scroll on mobile */}
+      <div className="mt-4 flex flex-nowrap gap-2 overflow-x-auto no-scrollbar [-webkit-overflow-scrolling:touch]">
+        <button type="button" onClick={() => setActiveFilters(new Set())}
+          className={`shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors duration-200 ${
+            activeFilters.size === 0
+              ? 'border-[#412618] bg-[#412618] text-white'
+              : 'bundle-chip border-[#D1C7BC] bg-transparent text-[#3A2115]'
+          }`}>
+          {t('custom_bundle.chip_all')}
+        </button>
+        {chips.map(c => {
+          const on = activeFilters.has(c.id)
+          return (
+            <button key={c.id} type="button" onClick={() => toggleFilter(c.id)}
+              className={`shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors duration-200 ${
+                on ? 'border-[#412618] bg-[#412618] text-white' : 'bundle-chip border-[#D1C7BC] bg-transparent text-[#3A2115]'
+              }`}>
+              {c.label}
+            </button>
+          )
+        })}
+        <button type="button" onClick={() => setQuizOpen(true)}
+          className="shrink-0 whitespace-nowrap rounded-full border border-dashed border-[#412618] bg-transparent px-3.5 py-1.5 text-[13px] font-medium text-[#412618] transition-colors duration-200 hover:bg-[rgba(65,38,24,0.08)]">
+          ✨ {t('custom_bundle.chip_quiz')}
+        </button>
+      </div>
+
       {/* Sorts grid — mobile 2 cols, md+ 4 cols */}
       <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-        {products.map(p => {
+        {shownList.map(p => {
           const idx = selected.findIndex(x => x.id === p.id)
           const isSel = idx >= 0
+          const dimmed = isSel && !matchesFilters(p)
           return (
             <div key={p.id} role="button" tabIndex={0} onClick={() => toggle(p)}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(p) } }}
               className={`relative flex cursor-pointer flex-col overflow-hidden rounded-xl border-2 bg-white p-2 text-left transition ${
                 isSel ? 'border-[#3A2115]' : 'border-transparent hover:border-[#E8E7E3]'
-              }`}>
+              } ${dimmed ? 'opacity-60' : ''}`}>
               {isSel && (
                 <span className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-white/30 bg-white/65 text-xs font-bold text-[#3A2115] shadow-[0_2px_8px_rgba(0,0,0,0.1)] backdrop-blur-[10px]">
                   {idx + 1}
@@ -171,6 +269,17 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
           )
         })}
       </div>
+
+      {/* Show more */}
+      {hiddenCount > 0 && (
+        <div className="mt-5 flex justify-center">
+          <button type="button" onClick={() => setShownCount(c => c + 8)}
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#D1C7BC] px-5 py-2 text-sm font-medium text-[#3A2115] transition-colors hover:bg-[rgba(65,38,24,0.06)]">
+            <ChevronDown size={16} />
+            {t('custom_bundle.show_more', { n: hiddenCount })}
+          </button>
+        </div>
+      )}
 
       {/* Total panel — normal block under the grid (not fixed) */}
       {count > 0 && (
@@ -228,6 +337,8 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
           </div>
         </div>
       )}
+
+      <CoffeeQuiz open={quizOpen} onClose={() => setQuizOpen(false)} locale={locale} />
     </section>
   )
 }

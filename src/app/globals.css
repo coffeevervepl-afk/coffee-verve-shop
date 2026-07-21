@@ -202,6 +202,18 @@ p  { line-height: 1.7; }
   .bundle-add-btn { animation: none; }
 }
 
+/* ── Bundle filter chips — barely-there breathing pulse (softer than the CTA) ─ */
+.bundle-chip {
+  animation: chip-pulse 2.5s ease-in-out infinite;
+}
+@keyframes chip-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(65, 38, 24, 0); }
+  50%      { box-shadow: 0 0 0 3px rgba(65, 38, 24, 0.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bundle-chip { animation: none; }
+}
+
 /* ── Quiz "pick coffee in a minute" chip — pearlescent shimmer ────────────── */
 .quiz-shimmer {
   background-image: linear-gradient(90deg, #F5E6D3, #E8C4D8, #D4C8E8, #C6DBE8, #F5E6D3);

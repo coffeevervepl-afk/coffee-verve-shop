@@ -32,7 +32,16 @@
       "tip_text": "Wybierz 4 dowolne kawy po 250g — złożymy je w elegancki zestaw i wyślemy jedną paczką.",
       "tip_line1": "☕ Miksuj jak chcesz — każdy sort to nowe odkrycie",
       "tip_line2": "🎁 Idealny sposób, żeby znaleźć swoją ulubioną kawę",
-      "tip_line3": "✅ Gwarancja smaku — wymienimy lub zwrócimy pieniądze"
+      "tip_line3": "✅ Gwarancja smaku — wymienimy lub zwrócimy pieniądze",
+      "chip_all": "Wszystkie",
+      "chip_choco": "Czekoladowe",
+      "chip_fruit": "Owocowe",
+      "chip_nuts": "Orzechowe",
+      "chip_caramel": "Karmelowe",
+      "chip_espresso": "Espresso i mleczne",
+      "chip_filter": "Filtr",
+      "chip_quiz": "Pomóż wybrać",
+      "show_more": "Pokaż więcej ({n})"
     },
     "bundle": {
       "badge": "ZESTAW",
