@@ -16,6 +16,22 @@ const PACK_WEIGHT = 250
 const GRIND_SURCHARGE = 3
 const GRIND_OPTIONS = ['espresso', 'aeropress', 'pourover', 'frenchpress', 'turka', 'moka'] as const
 
+// Country display names per locale (DB stores the Russian name). Filtering still
+// uses the raw DB value — this only translates the chip label. Unknown → as-is.
+const COUNTRY_NAMES: Record<string, { pl: string; ru: string; ua: string }> = {
+  'Бразилия':   { pl: 'Brazylia',  ru: 'Бразилия',   ua: 'Бразилія' },
+  'Эфиопия':    { pl: 'Etiopia',   ru: 'Эфиопия',    ua: 'Ефіопія' },
+  'Гондурас':   { pl: 'Honduras',  ru: 'Гондурас',   ua: 'Гондурас' },
+  'Мексика':    { pl: 'Meksyk',    ru: 'Мексика',    ua: 'Мексика' },
+  'Колумбия':   { pl: 'Kolumbia',  ru: 'Колумбия',   ua: 'Колумбія' },
+  'Кения':      { pl: 'Kenia',     ru: 'Кения',      ua: 'Кенія' },
+  'Коста-Рика': { pl: 'Kostaryka', ru: 'Коста-Рика', ua: 'Коста-Ріка' },
+  'Гватемала':  { pl: 'Gwatemala', ru: 'Гватемала',  ua: 'Гватемала' },
+  'Перу':       { pl: 'Peru',      ru: 'Перу',       ua: 'Перу' },
+  'Индонезия':  { pl: 'Indonezja', ru: 'Индонезия',  ua: 'Індонезія' },
+  'Купаж':      { pl: 'Kupaż',     ru: 'Купаж',      ua: 'Купаж' },
+}
+
 interface Props {
   products: ShopProduct[] // active single products
   locale:   Locale
@@ -54,10 +70,11 @@ export default function CustomBundleBuilder({ products, locale }: Props) {
         .filter(Boolean).join(' ').toLowerCase()
     const out: { id: string; label: string; match: (p: ShopProduct) => boolean }[] = []
 
-    // Countries — unique, alphabetical
+    // Countries — unique, label translated to the active locale, sorted by that label.
     Array.from(new Set(products.map(p => p.country?.trim()).filter((c): c is string => !!c)))
-      .sort((a, b) => a.localeCompare(b))
-      .forEach(c => out.push({ id: `c:${c}`, label: c, match: p => p.country?.trim() === c }))
+      .map(c => ({ raw: c, label: COUNTRY_NAMES[c]?.[locale] ?? c }))
+      .sort((a, b) => a.label.localeCompare(b.label))
+      .forEach(({ raw, label }) => out.push({ id: `c:${raw}`, label, match: p => p.country?.trim() === raw }))
 
     // Flavour categories — only those actually present
     const FLAV = [
