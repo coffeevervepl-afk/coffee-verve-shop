@@ -26,7 +26,7 @@ export default function FaqAccordion({ items, title }: { items: FaqItem[]; title
                 <span aria-hidden className={`shrink-0 text-[#8A7A66] transition-transform ${isOpen ? 'rotate-180' : ''}`}>▾</span>
               </button>
               {isOpen && (
-                <p className="px-5 pb-4 text-[15px] leading-relaxed text-[#4A4540]">{it.a}</p>
+                <p className="whitespace-pre-line px-5 pb-4 text-[15px] leading-relaxed text-[#4A4540]">{it.a}</p>
               )}
             </div>
           )
