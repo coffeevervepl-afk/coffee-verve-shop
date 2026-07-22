@@ -40,15 +40,15 @@ export default function ReviewsSection({ toReview, myReviews, authorName, email 
           <h2 className="text-[18px] font-bold text-[#3A2115]">{t('reviews_title')}</h2>
           <p className="mt-1 text-sm text-gray-500">{t('reviews_subtitle')}</p>
 
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
             {pending.map(p => (
-              <div key={p.productId} className="flex items-center gap-3 rounded-2xl border border-brand-border bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-[#F4F3F0]">
-                  {p.image && <Image src={p.image} alt={p.name} fill sizes="56px" className="object-cover" />}
+              <div key={p.productId} className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white p-2.5 shadow-sm transition-shadow duration-200 hover:shadow-md">
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-50">
+                  {p.image && <Image src={p.image} alt={p.name} fill sizes="48px" className="object-cover" />}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-[#3A2115]">{p.name}</p>
-                  <button type="button" onClick={() => setActive(p)} className="mt-1 text-xs font-semibold text-[#412618] underline underline-offset-2">
+                  <p className="truncate text-[13px] font-medium text-[#3A2115]">{p.name}</p>
+                  <button type="button" onClick={() => setActive(p)} className="mt-0.5 text-xs font-semibold text-[#412618] hover:underline">
                     {t('reviews_write')}
                   </button>
                 </div>
@@ -66,7 +66,7 @@ export default function ReviewsSection({ toReview, myReviews, authorName, email 
           {showMine && (
             <ul className="mt-3 space-y-2">
               {mine.map(r => (
-                <li key={r.id} className="rounded-2xl border border-brand-border bg-white p-3">
+                <li key={r.id} className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
                   <div className="flex items-center justify-between gap-2">
                     <span className="truncate text-sm font-medium text-[#3A2115]">{r.product_name}</span>
                     <span className="shrink-0 text-xs text-amber-500">{'★'.repeat(r.rating)}<span className="text-gray-300">{'★'.repeat(5 - r.rating)}</span></span>
@@ -92,10 +92,10 @@ export default function ReviewsSection({ toReview, myReviews, authorName, email 
 
       {thanks && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setThanks(false)}>
-          <div className="w-full max-w-sm rounded-3xl bg-[#412618] p-8 text-center text-white" onClick={e => e.stopPropagation()}>
-            <p className="text-lg font-bold">{t('reviews_thanks_title')}</p>
-            <p className="mt-2 text-sm text-white/80">{t('reviews_thanks_body')}</p>
-            <button type="button" onClick={() => setThanks(false)} className="mt-6 rounded-full bg-white px-6 py-2 text-sm font-semibold text-[#412618]">
+          <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-lg" onClick={e => e.stopPropagation()}>
+            <p className="text-lg font-bold text-[#412618]">{t('reviews_thanks_title')}</p>
+            <p className="mt-2 text-sm text-gray-500">{t('reviews_thanks_body')}</p>
+            <button type="button" onClick={() => setThanks(false)} className="mt-6 rounded-full bg-[#412618] px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810]">
               {t('reviews_close')}
             </button>
           </div>

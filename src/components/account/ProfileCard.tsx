@@ -114,10 +114,10 @@ export default function ProfileCard({
   }
 
   const primaryBtn = 'rounded-full px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-60'
-  const ghostBtn = 'rounded-full border border-brand-border px-4 py-1.5 text-sm font-semibold text-[#3A2115]'
+  const ghostBtn = 'rounded-full border border-gray-300 px-4 py-1.5 text-sm font-semibold text-[#3A2115]'
 
   return (
-    <div className="rounded-2xl border border-brand-border bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
       <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{t('profile_title')}</h2>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -197,7 +197,7 @@ export default function ProfileCard({
       </div>
 
       {/* Address block */}
-      <div className="mt-6 border-t border-brand-border pt-4">
+      <div className="mt-6 border-t border-gray-200 pt-4">
         <div className="mb-2 flex items-center justify-between gap-3">
           <p className="text-xs font-semibold uppercase text-[#3A2115]">{t('address_title')}</p>
           {!editingAddress && address && (

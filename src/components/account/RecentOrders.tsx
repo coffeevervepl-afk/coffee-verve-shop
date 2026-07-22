@@ -11,13 +11,14 @@ import type { Locale } from '@/types/shop'
 const CRM_URL = process.env.NEXT_PUBLIC_CRM_URL ?? 'https://coffe-verve-crm.vercel.app'
 const GRIND_OPTS = ['espresso', 'aeropress', 'pourover', 'frenchpress', 'turka', 'moka']
 
+// Outline badges — brand brown for in-progress/done, neutral grey otherwise.
 const STATUS_STYLES: Record<string, string> = {
-  new:        'bg-gray-100 text-gray-600',
-  confirmed:  'bg-gray-100 text-gray-600',
-  processing: 'bg-blue-100 text-blue-700',
-  shipped:    'bg-orange-100 text-orange-700',
-  delivered:  'bg-green-100 text-green-700',
-  cancelled:  'bg-red-100 text-red-700',
+  new:        'border border-gray-300 text-gray-500',
+  confirmed:  'border border-gray-300 text-gray-500',
+  processing: 'border border-[#412618] text-[#412618]',
+  shipped:    'border border-[#412618] text-[#412618]',
+  delivered:  'border border-[#412618] text-[#412618]',
+  cancelled:  'border border-gray-300 text-gray-400',
 }
 const DATE_LOCALE: Record<Locale, string> = { ru: 'ru-RU', pl: 'pl-PL', ua: 'uk-UA' }
 
@@ -93,7 +94,7 @@ export default function RecentOrders({ locale, shopUserId, initialOrders }: Prop
   }, [shopUserId, initialOrders])
 
   return (
-    <div className="rounded-2xl border border-brand-border bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
       <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{t('recent_orders_title')}</h2>
 
       {orders.length === 0 ? (
@@ -106,7 +107,7 @@ export default function RecentOrders({ locale, shopUserId, initialOrders }: Prop
           {orders.map(order => {
             const delivered = order.status === 'delivered'
             return (
-              <div key={order.id} className="rounded-xl border border-brand-border p-4">
+              <div key={order.id} className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-shadow duration-200 hover:shadow-md">
                 {/* header: order number + status (once per order) */}
                 <p className="flex flex-wrap items-center gap-2 font-medium">
                   #{order.order_number}

@@ -207,50 +207,58 @@ export default async function AccountPage({ params }: Props) {
   }))
 
   return (
-    <div className="mx-auto max-w-3xl space-y-8 rounded-3xl bg-[#F4F3F0] p-4 md:p-8">
+    <div className="mx-auto max-w-4xl space-y-8 md:space-y-10">
 
-      {/* 1. Hero greeting */}
-      <section className="rounded-3xl bg-[#412618] px-6 py-7 text-white shadow-sm">
-        <h1 className="text-2xl font-bold">{firstName ? `${t(greetKey)}, ${firstName}` : t(greetKey)}</h1>
-        <p className="mt-1.5 text-sm text-white/80">{heroSub}</p>
+      {/* 1. Hero greeting — plain text, no plate */}
+      <section className="animate-fade-up px-1 pt-1" style={{ animationDelay: '0ms' }}>
+        <h1 className="text-3xl font-semibold tracking-tight text-[#412618] md:text-4xl">
+          {firstName ? `${t(greetKey)}, ${firstName}` : t(greetKey)}
+        </h1>
+        <p className="mt-2 text-base text-gray-500">{heroSub}</p>
       </section>
 
       {/* 2. Active subscriptions */}
-      <ActiveSubscriptions locale={locale} initialSubs={activeSubs} />
+      <div className="animate-fade-up" style={{ animationDelay: '60ms' }}>
+        <ActiveSubscriptions locale={locale} initialSubs={activeSubs} />
+      </div>
 
       {/* 3. Reviews (hidden when nothing to review and no history) */}
-      <ReviewsSection
-        toReview={reviewData.toReview}
-        myReviews={reviewData.myReviews}
-        authorName={shopUser?.name ?? ''}
-        email={email}
-      />
+      <div className="animate-fade-up" style={{ animationDelay: '120ms' }}>
+        <ReviewsSection
+          toReview={reviewData.toReview}
+          myReviews={reviewData.myReviews}
+          authorName={shopUser?.name ?? ''}
+          email={email}
+        />
+      </div>
 
       {/* 4. Referral program */}
       {shopUser?.referral_code && (
-        <ReferralCard
-          locale={locale}
-          code={shopUser.referral_code}
-          invited={referralStats.invited}
-          available={referralStats.available}
-        />
+        <div className="animate-fade-up" style={{ animationDelay: '180ms' }}>
+          <ReferralCard
+            locale={locale}
+            code={shopUser.referral_code}
+            invited={referralStats.invited}
+            available={referralStats.available}
+          />
+        </div>
       )}
 
       {/* 5. Recent orders */}
-      <div>
+      <div className="animate-fade-up" style={{ animationDelay: '240ms' }}>
         <RecentOrders locale={locale} shopUserId={shopUser?.id ?? null} initialOrders={orderViews} />
         {ordersCount > orderViews.length && (
-          <Link href={`/${locale}/account/orders`} className="mt-3 block text-center text-sm font-medium text-[#412618] underline underline-offset-2">
+          <Link href={`/${locale}/account/orders`} className="mt-3 block text-center text-sm font-medium text-[#412618] underline-offset-2 hover:underline">
             {t('see_all_orders', { n: ordersCount })}
           </Link>
         )}
       </div>
 
       {/* 6. Loyalty card */}
-      <section className="rounded-2xl border border-brand-border bg-white px-6 py-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+      <section className="animate-fade-up rounded-2xl border border-gray-200 bg-white p-6 shadow-sm" style={{ animationDelay: '300ms' }}>
         <div className="flex items-center justify-between gap-4">
           <p className="text-[15px] font-semibold text-[#3A2115]">{t('loyalty_title')}</p>
-          <span className="shrink-0 rounded-full border border-[rgba(65,38,24,0.2)] bg-[#F4F3F0] px-3 py-1 text-xs font-semibold text-[#412618]">
+          <span className="shrink-0 rounded-full border border-[#412618]/30 bg-white px-3 py-1 text-xs font-semibold text-[#412618]">
             {t(`tier_${tier}`)} · {tierPct}%
           </span>
         </div>
@@ -263,37 +271,41 @@ export default async function AccountPage({ params }: Props) {
                 big: chunks => <span className="text-[22px] font-bold text-[#412618]">{chunks}</span>,
               })}
             </p>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-gray-200">
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-gray-200">
               <div className="h-full rounded-full transition-all duration-700" style={{ width: `${progressPct}%`, backgroundColor: '#412618' }} />
             </div>
-            <p className="mt-1.5 text-sm text-gray-600">🎁 {t('reward_line', { pct: DISCOUNT_PCT[nextTierKey] })}</p>
+            <p className="mt-1.5 text-sm text-gray-500">🎁 {t('reward_line', { pct: DISCOUNT_PCT[nextTierKey] })}</p>
           </div>
         ) : (
           <div className="mt-2.5">
             <p className="text-[17px] font-bold text-[#412618]">{t('max_level_title')}</p>
-            <p className="mt-0.5 text-sm text-gray-600">{t('max_level_desc', { pct: tierPct })}</p>
+            <p className="mt-0.5 text-sm text-gray-500">{t('max_level_desc', { pct: tierPct })}</p>
           </div>
         )}
       </section>
 
       {/* 7. Profile */}
-      <ProfileCard
-        initialName={shopUser?.name ?? ''}
-        email={email}
-        phone={shopUser?.phone ?? ''}
-        registeredDate={registeredDate}
-        consentEmail={!!shopUser?.consent_email_marketing}
-        consentSms={!!shopUser?.consent_sms_marketing}
-        initialAddress={address}
-      />
+      <div className="animate-fade-up" style={{ animationDelay: '360ms' }}>
+        <ProfileCard
+          initialName={shopUser?.name ?? ''}
+          email={email}
+          phone={shopUser?.phone ?? ''}
+          registeredDate={registeredDate}
+          consentEmail={!!shopUser?.consent_email_marketing}
+          consentSms={!!shopUser?.consent_sms_marketing}
+          initialAddress={address}
+        />
+      </div>
 
       {/* 8. Archive */}
-      <AccountArchive
-        locale={locale}
-        cancelledSubs={cancelledSubs}
-        ordersCount={ordersCount}
-        reviewsCount={reviewData.myReviews.length}
-      />
+      <div className="animate-fade-up" style={{ animationDelay: '420ms' }}>
+        <AccountArchive
+          locale={locale}
+          cancelledSubs={cancelledSubs}
+          ordersCount={ordersCount}
+          reviewsCount={reviewData.myReviews.length}
+        />
+      </div>
 
       {/* 9. Logout */}
       <LogoutFooter locale={locale} />

@@ -57,7 +57,7 @@ export default function AccountArchive({ locale, cancelledSubs, ordersCount, rev
   }
 
   return (
-    <section className="rounded-2xl border border-brand-border bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+    <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
       <button type="button" onClick={() => setOpen(v => !v)} className="flex w-full items-center justify-between text-left">
         <span className="text-[15px] font-semibold text-[#3A2115]">{t('archive_title', { n: total })}</span>
         <span aria-hidden className="text-gray-400">{open ? '▴' : '▾'}</span>
@@ -70,8 +70,8 @@ export default function AccountArchive({ locale, cancelledSubs, ordersCount, rev
               <h3 className="mb-2 text-sm font-semibold text-gray-500">{t('archive_cancelled_subs')}</h3>
               <div className="grid gap-3 md:grid-cols-2">
                 {cancelledSubs.map(s => (
-                  <div key={s.id} className="flex flex-col rounded-2xl border border-brand-border bg-[#F4F3F0] p-4 opacity-70">
-                    <span className="self-start rounded-full bg-gray-200 px-2.5 py-0.5 text-[11px] font-semibold text-gray-600">
+                  <div key={s.id} className="flex flex-col rounded-xl border border-gray-200 bg-white p-4 opacity-70 transition-opacity hover:opacity-100">
+                    <span className="self-start rounded-full border border-gray-300 px-2.5 py-0.5 text-[11px] font-semibold text-gray-500">
                       {t('archive_cancelled_on', { date: s.cancelled_at ? fmtDate(s.cancelled_at) : '—' })}
                     </span>
                     <ul className="mt-2 space-y-0.5 text-sm text-[#3A2115]">
@@ -80,7 +80,7 @@ export default function AccountArchive({ locale, cancelledSubs, ordersCount, rev
                       ))}
                     </ul>
                     <button type="button" onClick={() => setConfirm(s)}
-                      className="mt-3 self-start rounded-full bg-[#412618] px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#2A1810]">
+                      className="mt-3 self-start rounded-full border border-[#412618] px-4 py-1.5 text-xs font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5">
                       {t('archive_resume')}
                     </button>
                   </div>
@@ -116,10 +116,10 @@ export default function AccountArchive({ locale, cancelledSubs, ordersCount, rev
 
       {done && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => { setDone(null); router.refresh() }}>
-          <div className="w-full max-w-sm rounded-3xl bg-[#412618] p-8 text-center text-white" onClick={e => e.stopPropagation()}>
-            <p className="text-lg font-bold">{t('archive_resumed_title')}</p>
-            <p className="mt-2 text-sm text-white/80">{t('archive_resumed_body', { date: done })}</p>
-            <button type="button" onClick={() => { setDone(null); router.refresh() }} className="mt-6 rounded-full bg-white px-6 py-2 text-sm font-semibold text-[#412618]">
+          <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-lg" onClick={e => e.stopPropagation()}>
+            <p className="text-lg font-bold text-[#412618]">{t('archive_resumed_title')}</p>
+            <p className="mt-2 text-sm text-gray-500">{t('archive_resumed_body', { date: done })}</p>
+            <button type="button" onClick={() => { setDone(null); router.refresh() }} className="mt-6 rounded-full bg-[#412618] px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810]">
               {td('reviews_close')}
             </button>
           </div>

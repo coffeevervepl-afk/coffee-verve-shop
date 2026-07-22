@@ -59,24 +59,24 @@ export default function ActiveSubscriptions({ locale, initialSubs }: { locale: L
       <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{t('subs_title')}</h2>
 
       {subs.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-[#412618]/30 bg-[#F4F3F0] p-8 text-center">
-          <p className="text-[#3A2115]">{t('subs_empty')}</p>
-          <Link href={`/${locale}/shop/subskrypcja`} className="btn btn-primary mt-4 inline-block text-sm">{t('subs_empty_cta')}</Link>
+        <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center shadow-sm">
+          <p className="text-gray-500">{t('subs_empty')}</p>
+          <Link href={`/${locale}/shop/subskrypcja`} className="mt-4 inline-block rounded-full bg-[#412618] px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810]">{t('subs_empty_cta')}</Link>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {subs.map(s => (
-            <div key={s.id} className="flex flex-col rounded-3xl bg-[#412618] p-5 text-white shadow-sm">
+            <div key={s.id} className="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow duration-200 hover:shadow-md">
               <div className="flex items-start justify-between gap-3">
                 {s.status === 'active' ? (
-                  <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-[#412618]">{t('subs_status_active')}</span>
+                  <span className="rounded-full border border-[#412618] px-3 py-1 text-xs font-semibold text-[#412618]">{t('subs_status_active')}</span>
                 ) : (
-                  <span className="rounded-full border border-white/50 px-3 py-1 text-xs font-semibold text-white">{t('subs_status_paused')}</span>
+                  <span className="rounded-full border border-gray-300 px-3 py-1 text-xs font-semibold text-gray-500">{t('subs_status_paused')}</span>
                 )}
-                <span className="text-xs text-white/60">{t('subs_every', { n: s.interval_weeks })}</span>
+                <span className="text-xs text-gray-400">{t('subs_every', { n: s.interval_weeks })}</span>
               </div>
 
-              <ul className="mt-3 space-y-1 text-sm text-white/90">
+              <ul className="mt-3 space-y-1 text-sm text-[#3A2115]">
                 {(s.items ?? []).map((it, i) => (
                   <li key={i} className="truncate">
                     {it.name} · {wLabel(it.weight)} · {grindLabel(it.grind)}{(it.quantity || 1) > 1 ? ` × ${it.quantity}` : ''}
@@ -84,29 +84,29 @@ export default function ActiveSubscriptions({ locale, initialSubs }: { locale: L
                 ))}
               </ul>
 
-              <div className="mt-4 border-t border-white/15 pt-3">
-                <p className="text-xs text-white/60">{t('subs_next')}</p>
-                <p className="text-xl font-bold">{fmtDate(s.next_delivery_date)}</p>
+              <div className="mt-4 border-t border-gray-200 pt-3">
+                <p className="text-xs text-gray-500">{t('subs_next')}</p>
+                <p className="text-xl font-bold text-[#412618]">{fmtDate(s.next_delivery_date)}</p>
               </div>
 
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div className="mt-4 flex flex-wrap items-center gap-2">
                 <button type="button" disabled={busy === s.id} onClick={() => setEditing(s)}
-                  className="rounded-full border border-white/40 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-50">
+                  className="rounded-full bg-[#412618] px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#2A1810] disabled:opacity-50">
                   {t('subs_edit')}
                 </button>
                 {s.status === 'active' ? (
                   <button type="button" disabled={busy === s.id} onClick={() => setStatus(s.id, 'paused')}
-                    className="rounded-full border border-white/40 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-50">
+                    className="rounded-full border border-[#412618] px-4 py-1.5 text-xs font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5 disabled:opacity-50">
                     {t('subs_pause')}
                   </button>
                 ) : (
                   <button type="button" disabled={busy === s.id} onClick={() => setStatus(s.id, 'active')}
-                    className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-[#412618] hover:bg-white/90 disabled:opacity-50">
+                    className="rounded-full border border-[#412618] px-4 py-1.5 text-xs font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5 disabled:opacity-50">
                     {t('subs_resume')}
                   </button>
                 )}
                 <button type="button" disabled={busy === s.id} onClick={() => setStatus(s.id, 'cancelled')}
-                  className="rounded-full border border-white/25 px-3 py-1.5 text-xs font-semibold text-white/70 hover:bg-white/10 disabled:opacity-50">
+                  className="px-2 py-1.5 text-xs font-semibold text-[#412618] transition-colors hover:underline disabled:opacity-50">
                   {t('subs_cancel')}
                 </button>
               </div>
