@@ -824,7 +824,7 @@
     "greet_evening": "Добрый вечер",
     "hero_sub_coming": "Ваш кофе отправится {date} ☕",
     "hero_sub_transit": "Ваш заказ #{n} уже в пути",
-    "hero_sub_default": "Хорошего дня с кофе specialty ☕",
+    "hero_sub_default": "Загляните в каталог — свежеобжаренный кофе ждёт вас",
     "loyalty_title": "Карта лояльности",
     "see_all_orders": "Показать все заказы ({n})",
     "reviews_title": "Ваш отзыв — лучшая благодарность за нашу работу",
@@ -845,7 +845,13 @@
     "reviews_status_pending": "На модерации",
     "reviews_status_approved": "Опубликован",
     "reviews_status_rejected": "Отклонён",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "hero_welcome_back": "С возвращением",
+    "hero_sub_days": "Следующая отправка кофе — через {n} дней",
+    "hero_sub_today": "Следующая отправка кофе — сегодня",
+    "hero_sub_tomorrow": "Следующая отправка кофе — завтра",
+    "hero_sub_review": "Как вам последняя доставка? Оставьте отзыв",
+    "hero_sub_status": "Ваш статус: {tier} — {pct}% скидки на каждый заказ"
   },
   "settings": {
     "page_title": "Настройки",

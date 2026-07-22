@@ -824,7 +824,7 @@
     "greet_evening": "Dobry wieczór",
     "hero_sub_coming": "Twoja kawa wyruszy {date} ☕",
     "hero_sub_transit": "Twoje zamówienie #{n} jest w drodze",
-    "hero_sub_default": "Miłego dnia z kawą specialty ☕",
+    "hero_sub_default": "Zapraszamy do sklepu — 5 świeżo palonych kaw czeka",
     "loyalty_title": "Karta lojalnościowa",
     "see_all_orders": "Zobacz wszystkie zamówienia ({n})",
     "reviews_title": "Twoja opinia to najlepsze podziękowanie za naszą pracę",
@@ -845,7 +845,13 @@
     "reviews_status_pending": "Oczekuje na moderację",
     "reviews_status_approved": "Opublikowana",
     "reviews_status_rejected": "Odrzucona",
-    "logout": "Wyloguj"
+    "logout": "Wyloguj",
+    "hero_welcome_back": "Witaj z powrotem",
+    "hero_sub_days": "Następna wysyłka kawy — za {n} dni",
+    "hero_sub_today": "Następna wysyłka kawy — dziś",
+    "hero_sub_tomorrow": "Następna wysyłka kawy — jutro",
+    "hero_sub_review": "Jak Ci smakowała ostatnia dostawa? Zostaw opinię",
+    "hero_sub_status": "Twój status: {tier} — {pct}% zniżki na każde zamówienie"
   },
   "settings": {
     "page_title": "Ustawienia",

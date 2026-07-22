@@ -27,7 +27,15 @@ export default function ReferralCard({ locale, code, invited, available }: Props
   }
 
   return (
-    <section className="rounded-2xl border border-[#412618]/30 bg-white p-6 shadow-sm md:p-8">
+    <section
+      className="rounded-2xl p-6 md:p-8"
+      style={{
+        background: 'linear-gradient(135deg, rgba(65,38,24,0.06) 0%, rgba(255,255,255,1) 60%)',
+        border: '1px solid rgba(65,38,24,0.15)',
+        borderTop: '3px solid #412618',
+        boxShadow: '0 4px 20px rgba(65,38,24,0.08), 0 1px 3px rgba(0,0,0,0.04)',
+      }}
+    >
       <h2 className="text-xl font-semibold text-[#412618]">{t('card_title')}</h2>
       <p className="mt-1 text-sm text-gray-600">{t('card_subtitle')}</p>
 

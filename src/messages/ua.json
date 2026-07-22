@@ -824,7 +824,7 @@
     "greet_evening": "Добрий вечір",
     "hero_sub_coming": "Ваша кава вирушить {date} ☕",
     "hero_sub_transit": "Ваше замовлення #{n} вже в дорозі",
-    "hero_sub_default": "Гарного дня з кавою specialty ☕",
+    "hero_sub_default": "Загляньте до каталогу — свіжообсмажена кава чекає на вас",
     "loyalty_title": "Картка лояльності",
     "see_all_orders": "Показати всі замовлення ({n})",
     "reviews_title": "Ваш відгук — найкраща подяка за нашу роботу",
@@ -845,7 +845,13 @@
     "reviews_status_pending": "На модерації",
     "reviews_status_approved": "Опубліковано",
     "reviews_status_rejected": "Відхилено",
-    "logout": "Вийти"
+    "logout": "Вийти",
+    "hero_welcome_back": "З поверненням",
+    "hero_sub_days": "Наступне відправлення кави — через {n} днів",
+    "hero_sub_today": "Наступне відправлення кави — сьогодні",
+    "hero_sub_tomorrow": "Наступне відправлення кави — завтра",
+    "hero_sub_review": "Як вам остання доставка? Залиште відгук",
+    "hero_sub_status": "Ваш статус: {tier} — {pct}% знижки на кожне замовлення"
   },
   "settings": {
     "page_title": "Налаштування",

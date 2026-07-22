@@ -42,7 +42,7 @@ export default function ReviewsSection({ toReview, myReviews, authorName, email 
 
           <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
             {pending.map(p => (
-              <div key={p.productId} className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white p-2.5 shadow-sm transition-shadow duration-200 hover:shadow-md">
+              <div key={p.productId} className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white p-3 shadow-sm transition-shadow duration-200 hover:shadow-md">
                 <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-50">
                   {p.image && <Image src={p.image} alt={p.name} fill sizes="48px" className="object-cover" />}
                 </div>

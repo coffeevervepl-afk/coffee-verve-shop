@@ -53,6 +53,7 @@ interface OrderRow {
   total:             number
   status:            string
   created_at:        string
+  updated_at:        string
   shop_order_items:  OrderItemRow[] | null
 }
 
@@ -68,7 +69,6 @@ interface SubRow {
 const DISCOUNT_PCT   = { classic: 5, gold: 10, platinum: 15 }
 const NEXT_THRESHOLD = { classic: 600, gold: 1800, platinum: null }
 const NEXT_TIER      = { classic: 'gold', gold: 'platinum', platinum: null } as const
-const DATE_LOCALE: Record<Locale, string> = { ru: 'ru-RU', pl: 'pl-PL', ua: 'uk-UA' }
 
 export default async function AccountPage({ params }: Props) {
   const { locale } = params
@@ -97,7 +97,7 @@ export default async function AccountPage({ params }: Props) {
         .eq('email', email)
         .single(),
       supabase.from('shop_orders')
-        .select('id, order_number, total, status, created_at, shop_order_items(product_name, product_slug, shop_product_id, weight, quantity, line_total, grind, grind_option, shop_products(crm_product_id))')
+        .select('id, order_number, total, status, created_at, updated_at, shop_order_items(product_name, product_slug, shop_product_id, weight, quantity, line_total, grind, grind_option, shop_products(crm_product_id))')
         .eq('customer_email', email)
         .order('created_at', { ascending: false })
         .limit(5),
@@ -168,24 +168,35 @@ export default async function AccountPage({ params }: Props) {
     .filter(s => s.status === 'cancelled')
     .map(s => ({ id: s.id, items: s.items ?? [], interval_weeks: s.interval_weeks, cancelled_at: s.cancelled_at }))
 
-  // Greeting by Warsaw time-of-day.
-  const hourPL = Number(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Warsaw', hour: '2-digit', hour12: false }).format(new Date()))
-  const greetKey = hourPL < 12 ? 'greet_morning' : hourPL < 18 ? 'greet_day' : 'greet_evening'
-
-  // Hero subline priority: soon subscription → in-transit order → default.
+  // Hero subline — smart contextual message by priority.
+  const DAY = 86_400_000
   const startToday = new Date(); startToday.setHours(0, 0, 0, 0)
-  const soonDate = subs
+
+  // P1: nearest active-subscription delivery date.
+  const nearestActiveDate = subs
     .filter(s => s.status === 'active' && s.next_delivery_date)
     .map(s => s.next_delivery_date)
-    .sort()
-    .find(d => { const dt = new Date(d); return dt >= startToday && dt.getTime() - startToday.getTime() <= 7 * 86_400_000 })
+    .sort()[0] ?? null
+  // P2: order currently in transit.
   const transitOrder = recentOrders.find(o => o.status === 'processing' || o.status === 'shipped')
-  const fmtDate = (d: string) => new Date(d).toLocaleDateString(DATE_LOCALE[locale])
+  // P3: order delivered within the last 7 days.
+  const recentlyDelivered = recentOrders.some(o =>
+    o.status === 'delivered' && new Date(o.updated_at).getTime() >= Date.now() - 7 * DAY,
+  )
 
   let heroSub: string
-  if (soonDate) heroSub = t('hero_sub_coming', { date: fmtDate(soonDate) })
-  else if (transitOrder) heroSub = t('hero_sub_transit', { n: transitOrder.order_number })
-  else heroSub = t('hero_sub_default')
+  if (nearestActiveDate) {
+    const days = Math.round((new Date(`${nearestActiveDate}T00:00:00`).getTime() - startToday.getTime()) / DAY)
+    heroSub = days <= 0 ? t('hero_sub_today') : days === 1 ? t('hero_sub_tomorrow') : t('hero_sub_days', { n: days })
+  } else if (transitOrder) {
+    heroSub = t('hero_sub_transit', { n: transitOrder.order_number })
+  } else if (recentlyDelivered) {
+    heroSub = t('hero_sub_review')
+  } else if (tier !== 'classic') {
+    heroSub = t('hero_sub_status', { tier: t(`tier_${tier}`), pct: tierPct })
+  } else {
+    heroSub = t('hero_sub_default')
+  }
 
   const orderViews: OrderView[] = recentOrders.map(order => ({
     id:           order.id,
@@ -212,7 +223,7 @@ export default async function AccountPage({ params }: Props) {
       {/* 1. Hero greeting — plain text, no plate */}
       <section className="animate-fade-up px-1 pt-1" style={{ animationDelay: '0ms' }}>
         <h1 className="text-3xl font-semibold tracking-tight text-[#412618] md:text-4xl">
-          {firstName ? `${t(greetKey)}, ${firstName}` : t(greetKey)}
+          {firstName ? `${t('hero_welcome_back')}, ${firstName}` : t('hero_welcome_back')}
         </h1>
         <p className="mt-2 text-base text-gray-500">{heroSub}</p>
       </section>
