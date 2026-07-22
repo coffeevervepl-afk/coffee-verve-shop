@@ -59,6 +59,14 @@ export default function ReferralCard({ locale, code, invited, available }: Props
           >
             {t('share_whatsapp')}
           </a>
+          <a
+            href={`https://t.me/share/url?url=${encodeURIComponent(`https://coffeeverve.pl/${locale}/ref/${code}`)}&text=${encodeURIComponent(t('share_message'))}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full border border-[#412618] px-4 py-2 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5"
+          >
+            {t('share_telegram')}
+          </a>
         </div>
       </div>
 
