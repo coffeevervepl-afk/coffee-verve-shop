@@ -90,10 +90,8 @@ export default function ActiveSubscriptions({
     setResumed(fmtDate(nextDate))
   }
 
-  const single = subs.length === 1
-
   return (
-    <section className="flex flex-col">
+    <section className="flex h-full flex-col">
       <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{t('subs_title')}</h2>
 
       {subs.length === 0 ? (
@@ -102,9 +100,9 @@ export default function ActiveSubscriptions({
           <Link href={`/${locale}/shop/subskrypcja`} className="mt-4 inline-block rounded-full bg-[#412618] px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810]">{t('subs_empty_cta')}</Link>
         </div>
       ) : (
-        <div className="flex flex-1 flex-col gap-4">
+        <div className="flex flex-col gap-4">
           {subs.map(s => (
-            <div key={s.id} className={`flex flex-col rounded-2xl border border-gray-200 border-t-2 border-t-[#412618] bg-white p-6 shadow-md transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg ${single ? 'flex-1' : ''}`}>
+            <div key={s.id} className="flex flex-col rounded-2xl border border-gray-200 border-t-2 border-t-[#412618] bg-white p-6 shadow-md transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg">
               <div className="flex items-start justify-between gap-3">
                 {s.status === 'active' ? (
                   <span className="rounded-full border border-[#412618] px-3 py-1 text-xs font-semibold text-[#412618]">{t('subs_status_active')}</span>

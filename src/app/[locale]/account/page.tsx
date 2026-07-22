@@ -214,16 +214,16 @@ export default async function AccountPage({ params }: Props) {
         <p className="mt-2 text-base text-gray-500">{heroSub}</p>
       </section>
 
-      {/* 2. Subscriptions (2/3) + loyalty (1/3) — natural heights, top-aligned */}
-      <div className="animate-fade-up grid grid-cols-1 gap-6 lg:grid-cols-3 lg:items-start" style={{ animationDelay: '60ms' }}>
+      {/* 2. Subscriptions (2/3) + loyalty (1/3) — same top (heading above card) + same bottom (stretch) */}
+      <div className="animate-fade-up grid grid-cols-1 gap-6 lg:grid-cols-3" style={{ animationDelay: '60ms' }}>
         <div className="lg:col-span-2">
           <ActiveSubscriptions locale={locale} initialSubs={activeSubs} cancelledSubs={cancelledSubs} />
         </div>
-        <div className="lg:col-span-1">
-          {/* Loyalty — level 2 (info), natural height (no stretch) */}
-          <div className="flex flex-col rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-5 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md">
-            <p className="text-xs uppercase tracking-wide text-gray-500">{t('loyalty_title')}</p>
-            <p className="mt-1 text-2xl font-bold text-[#412618]">{t(`tier_${tier}`)}</p>
+        <div className="flex flex-col lg:col-span-1">
+          <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{t('loyalty_title')}</h2>
+          {/* Loyalty — level 2 (info); fills the column height, privileges pinned bottom */}
+          <div className="flex flex-1 flex-col rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-5 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md">
+            <p className="text-2xl font-bold text-[#412618]">{t(`tier_${tier}`)}</p>
             <p className="text-xl font-semibold text-[#412618]">{tierPct}%</p>
 
             {nextThreshold && nextTierKey ? (
@@ -237,7 +237,7 @@ export default async function AccountPage({ params }: Props) {
               <p className="mt-3 text-sm font-semibold text-[#412618]">{t('max_level_title')}</p>
             )}
 
-            <div className="mt-4 border-t border-gray-200 pt-3">
+            <div className="mt-auto border-t border-gray-200 pt-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{t('loyalty_privileges_title')}</p>
               <ul className="mt-2 space-y-1">
                 {privileges.map((p, i) => (
