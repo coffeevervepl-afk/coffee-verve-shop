@@ -279,29 +279,31 @@ export default function SubscriptionPage({ products, locale }: Props) {
         <p className="mx-auto mt-4 max-w-xl text-lg text-brand-muted">{t('hero_subtitle')}</p>
       </Reveal>
 
-      {/* ── Benefits ─────────────────────────────────────────────────────── */}
-      <div className="mt-14 grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4 md:gap-8">
+      {/* ── Benefits — unified cards (match /account + /shop/nabory palette) ── */}
+      <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { icon: <Bell size={30} strokeWidth={1.6} />,       tk: 'b1' },
-          { icon: <XCircle size={30} strokeWidth={1.6} />,    tk: 'b2' },
-          { icon: <CreditCard size={30} strokeWidth={1.6} />, tk: 'b3' },
-          { icon: <Percent size={30} strokeWidth={1.6} />,    tk: 'b4' },
+          { icon: <Bell size={32} strokeWidth={1.6} />,       tk: 'b1' },
+          { icon: <XCircle size={32} strokeWidth={1.6} />,    tk: 'b2' },
+          { icon: <CreditCard size={32} strokeWidth={1.6} />, tk: 'b3' },
+          { icon: <Percent size={32} strokeWidth={1.6} />,    tk: 'b4' },
         ].map((b, i) => (
-          <Reveal key={b.tk} delay={i * 100} className="flex flex-col items-center text-center md:items-start md:text-left">
-            <span className="text-[#412618]">{b.icon}</span>
-            <h3 className="mt-3 font-semibold text-[#3A2115]">{t(`${b.tk}_title`)}</h3>
-            <p className="mt-1 text-sm text-brand-muted">{t(`${b.tk}_text`)}</p>
+          <Reveal key={b.tk} delay={i * 100}>
+            <div className="flex h-full flex-col rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md">
+              <span className="text-[#412618]">{b.icon}</span>
+              <h3 className="mt-3 font-semibold text-[#3A2115]">{t(`${b.tk}_title`)}</h3>
+              <p className="mt-1 text-sm text-gray-600">{t(`${b.tk}_text`)}</p>
+            </div>
           </Reveal>
         ))}
       </div>
 
-      {/* ── Promo banner ─────────────────────────────────────────────────── */}
+      {/* ── Promo banner — light-gray card w/ accent stripe (matches /shop/nabory) ── */}
       <Reveal>
-        <div className="mt-14 flex flex-col items-center gap-4 rounded-2xl bg-[#3A2115] px-6 py-7 text-center text-white sm:flex-row sm:text-left">
-          <span className="text-4xl">🎁</span>
+        <div className="mt-14 flex flex-col items-center gap-4 rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 text-center shadow-sm sm:flex-row sm:items-start sm:text-left">
+          <span className="text-3xl">🎁</span>
           <div>
-            <p className="text-lg font-semibold">{t('promo_title')}</p>
-            <p className="mt-1.5 text-sm text-white/70">{t('promo_subtitle')}</p>
+            <p className="text-lg font-semibold text-[#412618]">{t('promo_title')}</p>
+            <p className="mt-1.5 text-sm text-gray-600">{t('promo_subtitle')}</p>
           </div>
         </div>
       </Reveal>
