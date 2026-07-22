@@ -2,12 +2,12 @@ import { redirect } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { getReviewData, getReferralStats } from '@/lib/account/dashboard'
+import { Check } from 'lucide-react'
 import ProfileCard from '@/components/account/ProfileCard'
 import OrdersAccordion, { type OrderRow as AccOrder } from '@/components/account/OrdersAccordion'
-import ActiveSubscriptions, { type DashSub } from '@/components/account/ActiveSubscriptions'
+import ActiveSubscriptions, { type DashSub, type CancelledSub } from '@/components/account/ActiveSubscriptions'
 import ReviewsSection from '@/components/account/ReviewsSection'
 import ReferralCard from '@/components/account/ReferralCard'
-import AccountArchive, { type ArchSub } from '@/components/account/AccountArchive'
 import LogoutFooter from '@/components/account/LogoutFooter'
 import type { Locale } from '@/types/shop'
 
@@ -136,6 +136,7 @@ export default async function AccountPage({ params }: Props) {
   const progressPct = nextThreshold ? Math.min(100, Math.round((spent / nextThreshold) * 100)) : 100
   const remainingToNext = nextThreshold ? Math.max(nextThreshold - spent, 0) : 0
   const remainingFormatted = remainingToNext.toFixed(2).replace('.', ',')
+  const privileges = (t.raw(`loyalty_priv_${tier}`) as string[] | undefined) ?? []
 
   const regDate = new Date(user.created_at)
   const registeredDate = `${String(regDate.getDate()).padStart(2, '0')}.${String(regDate.getMonth() + 1).padStart(2, '0')}.${regDate.getFullYear()}`
@@ -144,7 +145,7 @@ export default async function AccountPage({ params }: Props) {
   const activeSubs: DashSub[] = subs
     .filter(s => s.status === 'active' || s.status === 'paused')
     .map(s => ({ id: s.id, status: s.status, items: s.items ?? [], interval_weeks: s.interval_weeks, next_delivery_date: s.next_delivery_date }))
-  const cancelledSubs: ArchSub[] = subs
+  const cancelledSubs: CancelledSub[] = subs
     .filter(s => s.status === 'cancelled')
     .map(s => ({ id: s.id, items: s.items ?? [], interval_weeks: s.interval_weeks, cancelled_at: s.cancelled_at }))
 
@@ -203,10 +204,10 @@ export default async function AccountPage({ params }: Props) {
   const reviewedProductIds = reviewData.myReviews.map(r => r.product_id)
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
+    <div className="mx-auto max-w-6xl space-y-8">
 
       {/* 1. Hero greeting — plain text, no plate */}
-      <section className="animate-fade-up px-1 pt-1" style={{ animationDelay: '0ms' }}>
+      <section className="animate-fade-up px-1 pb-2 pt-1" style={{ animationDelay: '0ms' }}>
         <h1 className="text-3xl font-semibold tracking-tight text-[#412618] md:text-4xl">
           {firstName ? `${t('hero_welcome_back')}, ${firstName}` : t('hero_welcome_back')}
         </h1>
@@ -216,12 +217,12 @@ export default async function AccountPage({ params }: Props) {
       {/* 2. Subscriptions (2/3) + loyalty (1/3) */}
       <div className="animate-fade-up grid grid-cols-1 gap-6 lg:grid-cols-3" style={{ animationDelay: '60ms' }}>
         <div className="lg:col-span-2">
-          <ActiveSubscriptions locale={locale} initialSubs={activeSubs} />
+          <ActiveSubscriptions locale={locale} initialSubs={activeSubs} cancelledSubs={cancelledSubs} />
         </div>
         <div className="lg:col-span-1">
-          {/* Loyalty — level 2 (info), compact, fills the column height */}
+          {/* Loyalty — level 2 (info), fills the column height with benefits */}
           <div className="flex h-full flex-col rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md">
-            <p className="text-sm uppercase tracking-wide text-gray-500">{t('loyalty_title')}</p>
+            <p className="text-xs uppercase tracking-wide text-gray-500">{t('loyalty_title')}</p>
             <p className="mt-1 text-2xl font-bold text-[#412618]">{t(`tier_${tier}`)}</p>
             <p className="text-xl font-semibold text-[#412618]">{tierPct}%</p>
 
@@ -236,7 +237,17 @@ export default async function AccountPage({ params }: Props) {
               <p className="mt-4 text-sm font-semibold text-[#412618]">{t('max_level_title')}</p>
             )}
 
-            <p className="mt-auto pt-6 text-xs text-gray-400">{t('loyalty_auto_note')}</p>
+            <div className="mt-auto border-t border-gray-200 pt-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{t('loyalty_privileges_title')}</p>
+              <ul className="mt-2 space-y-1.5">
+                {privileges.map((p, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-[#5A4A3A]">
+                    <Check size={16} strokeWidth={2.4} className="mt-0.5 shrink-0 text-[#412618]" />
+                    <span>{p}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -275,8 +286,8 @@ export default async function AccountPage({ params }: Props) {
         />
       </div>
 
-      {/* 6. Profile + archive (2 columns) */}
-      <div className="animate-fade-up grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start" style={{ animationDelay: '300ms' }}>
+      {/* 6. Profile — full width */}
+      <div className="animate-fade-up" style={{ animationDelay: '300ms' }}>
         <ProfileCard
           initialName={shopUser?.name ?? ''}
           email={email}
@@ -286,16 +297,12 @@ export default async function AccountPage({ params }: Props) {
           consentSms={!!shopUser?.consent_sms_marketing}
           initialAddress={address}
         />
-        <AccountArchive
-          locale={locale}
-          cancelledSubs={cancelledSubs}
-          ordersCount={ordersCount}
-          reviewsCount={reviewData.myReviews.length}
-        />
       </div>
 
       {/* 7. Logout */}
-      <LogoutFooter locale={locale} />
+      <div className="mt-8">
+        <LogoutFooter locale={locale} />
+      </div>
     </div>
   )
 }

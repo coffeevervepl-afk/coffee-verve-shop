@@ -30,7 +30,9 @@ export default function ReferralCard({ locale, code, invited, available }: Props
     <section
       className="rounded-2xl p-6 shadow-[0_4px_20px_rgba(65,38,24,0.08)] transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(65,38,24,0.14)] md:p-8"
       style={{
-        background: 'linear-gradient(135deg, rgba(65,38,24,0.06) 0%, rgba(255,255,255,1) 60%)',
+        // Soft warm gradient adapted from the "✨ pick my coffee" quiz chip
+        // (#F5E6D3 peach / #E8C4D8 pink), lightened toward white for a card.
+        background: 'linear-gradient(135deg, rgba(245,230,211,0.55) 0%, rgba(232,196,216,0.35) 45%, rgba(255,255,255,0.92) 100%)',
         border: '1px solid rgba(65,38,24,0.15)',
         borderTop: '3px solid #412618',
       }}
@@ -38,7 +40,7 @@ export default function ReferralCard({ locale, code, invited, available }: Props
       <h2 className="text-xl font-semibold text-[#412618]">{t('card_title')}</h2>
       <p className="mt-1 text-sm text-gray-600">{t('card_subtitle')}</p>
 
-      <div className="mt-5 rounded-xl bg-[#F9FAFB] p-4">
+      <div className="mt-5 rounded-xl border border-[#E8E7E3] bg-white p-4">
         <p className="text-xs font-medium uppercase tracking-wide text-[#412618]">📤 {t('your_code')}</p>
         <p className="mt-1 select-all text-2xl font-bold tracking-wide text-[#412618]">{code}</p>
 

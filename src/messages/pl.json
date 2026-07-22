@@ -756,7 +756,8 @@
     "archive_resumed_title": "Subskrypcja wznowiona!",
     "archive_resumed_body": "Pierwsza wysyłka: {date}",
     "archive_all_orders": "Wszystkie zamówienia ({n})",
-    "archive_my_reviews": "Moje opinie: {n}"
+    "archive_my_reviews": "Moje opinie: {n}",
+    "subs_show_cancelled": "Pokaż anulowane ({n})"
   },
   "dashboard": {
     "welcome": "Witaj",
@@ -863,7 +864,27 @@
     "orders_sub_badge": "Subskrypcja",
     "orders_pickup": "Odbiór osobisty",
     "loyalty_remaining": "Jeszcze {amount} zł do {next}",
-    "loyalty_auto_note": "Zniżka naliczana automatycznie przy każdym zamówieniu"
+    "loyalty_auto_note": "Zniżka naliczana automatycznie przy każdym zamówieniu",
+    "loyalty_privileges_title": "Twoje korzyści",
+    "edit_profile": "Edytuj profil",
+    "loyalty_priv_classic": [
+      "5% zniżki na wszystkie zamówienia",
+      "Dodatkowe -5% na subskrypcję",
+      "Wczesny dostęp do nowych kaw"
+    ],
+    "loyalty_priv_gold": [
+      "10% zniżki na wszystkie zamówienia",
+      "Dodatkowe -5% na subskrypcję",
+      "Darmowa dostawa od 100 zł",
+      "Priorytetowe palenie"
+    ],
+    "loyalty_priv_platinum": [
+      "15% zniżki na wszystkie zamówienia",
+      "Dodatkowe -5% na subskrypcję",
+      "Zawsze darmowa dostawa",
+      "Osobisty menedżer",
+      "Ekskluzywne partie"
+    ]
   },
   "settings": {
     "page_title": "Ustawienia",
