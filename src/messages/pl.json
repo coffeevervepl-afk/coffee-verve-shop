@@ -468,9 +468,21 @@
     "cta": "Załóż konto"
   },
   "categories": {
-    "espresso":    { "label": "Do espresso", "title": "Espresso", "count": "43 rodzaje" },
-    "filter":      { "label": "Do filtra", "title": "Filtr", "count": "37 rodzajów" },
-    "decaf": { "label": "Kawa bezkofeinowa", "title": "Decaf", "count": "nowość" }
+    "espresso": {
+      "label": "Do espresso",
+      "title": "Espresso",
+      "count": "43 rodzaje"
+    },
+    "filter": {
+      "label": "Do filtra",
+      "title": "Filtr",
+      "count": "37 rodzajów"
+    },
+    "decaf": {
+      "label": "Kawa bezkofeinowa",
+      "title": "Decaf",
+      "count": "nowość"
+    }
   },
   "hero": {
     "badge": "Palimy co tydzień",
@@ -481,9 +493,13 @@
     "cta_secondary": "O nas"
   },
   "home": {
-    "hero_title": "Świeżo palona kawa", "hero_subtitle": "Dostawa w całej Polsce",
-    "catalog_title": "Nasza kawa", "featured": "Polecamy",
-    "filter_all": "Wszystkie", "filter_espresso": "Espresso", "filter_filter": "Filtr"
+    "hero_title": "Świeżo palona kawa",
+    "hero_subtitle": "Dostawa w całej Polsce",
+    "catalog_title": "Nasza kawa",
+    "featured": "Polecamy",
+    "filter_all": "Wszystkie",
+    "filter_espresso": "Espresso",
+    "filter_filter": "Filtr"
   },
   "lead": {
     "headline": "−10% na pierwsze zamówienie",
@@ -507,40 +523,79 @@
     "tooltip_line2": "✓ Lub zwrócimy 100% pieniędzy — bez pytań"
   },
   "product": {
-    "add_to_cart": "Do koszyka", "added": "Dodano", "save": "Oszczędzasz", "save_amount": "taniej o 10 zł", "details_btn": "Szczegóły",
-    "choose_weight": "Waga", "quantity": "Ilość", "body": "Gęstość", "acidity": "Kwasowość",
-    "grind_whole": "W ziarnach", "grind_ground": "Mielona",
+    "add_to_cart": "Do koszyka",
+    "added": "Dodano",
+    "save": "Oszczędzasz",
+    "save_amount": "taniej o 10 zł",
+    "details_btn": "Szczegóły",
+    "choose_weight": "Waga",
+    "quantity": "Ilość",
+    "body": "Gęstość",
+    "acidity": "Kwasowość",
+    "grind_whole": "W ziarnach",
+    "grind_ground": "Mielona",
     "grind_tooltip": "Kawę mieloną sprzedajemy tylko w opakowaniu 250g — dłużej zachowuje aromat",
-    "grind_espresso": "Espresso", "grind_aeropress": "Aeropress", "grind_pourover": "Drip / Chemex",
-    "grind_frenchpress": "French press", "grind_turka": "Tygielek", "grind_moka": "Kawiarka",
+    "grind_espresso": "Espresso",
+    "grind_aeropress": "Aeropress",
+    "grind_pourover": "Drip / Chemex",
+    "grind_frenchpress": "French press",
+    "grind_turka": "Tygielek",
+    "grind_moka": "Kawiarka",
     "grind_surcharge": "+ 3 zł za mielenie",
-    "flavor_notes": "Nuty smakowe", "origin": "Pochodzenie",
-    "process": "Obróbka", "roast": "Palenie", "brew": "Metoda",
-    "roast_light": "Jasne", "roast_medium": "Średnie",
-    "roast_medium_dark": "Średnio-ciemne", "roast_dark": "Ciemne"
+    "flavor_notes": "Nuty smakowe",
+    "origin": "Pochodzenie",
+    "process": "Obróbka",
+    "roast": "Palenie",
+    "brew": "Metoda",
+    "roast_light": "Jasne",
+    "roast_medium": "Średnie",
+    "roast_medium_dark": "Średnio-ciemne",
+    "roast_dark": "Ciemne"
   },
   "cart": {
-    "title": "Koszyk", "empty": "Koszyk jest pusty", "empty_cta": "Przejdź do kawy",
-    "remove": "Usuń", "subtotal": "Suma",
-    "checkout": "Złóż zamówienie", "continue": "Kontynuuj zakupy",
+    "title": "Koszyk",
+    "empty": "Koszyk jest pusty",
+    "empty_cta": "Przejdź do kawy",
+    "remove": "Usuń",
+    "subtotal": "Suma",
+    "checkout": "Złóż zamówienie",
+    "continue": "Kontynuuj zakupy",
     "free_delivery_hint": "Jeszcze {amount} do darmowej dostawy"
   },
   "checkout": {
-    "title": "Składanie zamówienia", "contact": "Dane kontaktowe",
-    "name": "Imię i nazwisko", "email": "Email", "phone": "Telefon", "telegram": "Telegram", "telegram_placeholder": "@username", "telegram_help": "Dla powiadomień o zamówieniu", "telegram_invalid": "Użyj 5–32 znaków: litery łacińskie, cyfry i _",
-    "delivery": "Dostawa", "paczkomat": "InPost Paczkomat",
-    "courier": "Kurier", "pickup": "Odbiór osobisty",
-    "choose_paczkomat": "Wybierz Paczkomat", "paczkomat_chosen": "Wybrany",
-    "street": "Ulica, numer domu", "city": "Miasto", "postal": "Kod pocztowy",
+    "title": "Składanie zamówienia",
+    "contact": "Dane kontaktowe",
+    "name": "Imię i nazwisko",
+    "email": "Email",
+    "phone": "Telefon",
+    "telegram": "Telegram",
+    "telegram_placeholder": "@username",
+    "telegram_help": "Dla powiadomień o zamówieniu",
+    "telegram_invalid": "Użyj 5–32 znaków: litery łacińskie, cyfry i _",
+    "delivery": "Dostawa",
+    "paczkomat": "InPost Paczkomat",
+    "courier": "Kurier",
+    "pickup": "Odbiór osobisty",
+    "choose_paczkomat": "Wybierz Paczkomat",
+    "paczkomat_chosen": "Wybrany",
+    "street": "Ulica, numer domu",
+    "city": "Miasto",
+    "postal": "Kod pocztowy",
     "notes": "Uwagi do zamówienia (opcjonalnie)",
-    "summary": "Podsumowanie", "subtotal": "Suma produktów",
-    "discount": "Rabat", "delivery_cost": "Dostawa",
-    "free": "Bezpłatna", "total": "Razem", "pay": "Zapłać",
+    "summary": "Podsumowanie",
+    "subtotal": "Suma produktów",
+    "discount": "Rabat",
+    "delivery_cost": "Dostawa",
+    "free": "Bezpłatna",
+    "total": "Razem",
+    "pay": "Zapłać",
     "register_cta": "Zarejestruj się i uzyskaj rabat",
     "register_desc": "−{pct}% teraz i na wszystkie przyszłe zamówienia",
-    "guest_price": "Cena dla gości", "member_price": "Twoja cena",
+    "guest_price": "Cena dla gości",
+    "member_price": "Twoja cena",
     "register_checkbox": "Utwórz konto z rabatem {pct}%",
-    "password": "Hasło", "order_placed": "Zamówienie złożone!",
+    "password": "Hasło",
+    "order_placed": "Zamówienie złożone!",
     "guest_hint": "Możesz zamówić bez rejestracji",
     "promo_have": "Masz kod promocyjny?",
     "promo_placeholder": "WELCOME-XXXXXX",
@@ -680,7 +735,19 @@
     "address_type": "Typ dostawy",
     "paczkomat_name": "Nazwa Paczkomat",
     "paczkomat_address": "Adres Paczkomat",
-    "set_default": "Ustaw jako domyślny adres"
+    "set_default": "Ustaw jako domyślny adres",
+    "subs_edit": "Zmień",
+    "subs_save": "Zapisz",
+    "subs_cancel_edit": "Anuluj",
+    "archive_title": "Archiwum ({n})",
+    "archive_cancelled_subs": "Anulowane subskrypcje",
+    "archive_cancelled_on": "Anulowana {date}",
+    "archive_resume": "Wznów subskrypcję",
+    "archive_resume_confirm": "Wznowić subskrypcję? Pierwsza wysyłka: {date}",
+    "archive_resumed_title": "Subskrypcja wznowiona!",
+    "archive_resumed_body": "Pierwsza wysyłka: {date}",
+    "archive_all_orders": "Wszystkie zamówienia ({n})",
+    "archive_my_reviews": "Moje opinie: {n}"
   },
   "dashboard": {
     "welcome": "Witaj",
@@ -742,7 +809,34 @@
     "street_label": "Ulica i numer domu",
     "postal_label": "Kod pocztowy",
     "city_label": "Miasto",
-    "save_address": "Zapisz adres"
+    "save_address": "Zapisz adres",
+    "greet_morning": "Dzień dobry",
+    "greet_day": "Cześć",
+    "greet_evening": "Dobry wieczór",
+    "hero_sub_coming": "Twoja kawa wyruszy {date} ☕",
+    "hero_sub_transit": "Twoje zamówienie #{n} jest w drodze",
+    "hero_sub_default": "Miłego dnia z kawą specialty ☕",
+    "loyalty_title": "Karta lojalnościowa",
+    "see_all_orders": "Zobacz wszystkie zamówienia ({n})",
+    "reviews_title": "Twoja opinia to najlepsze podziękowanie za naszą pracę",
+    "reviews_subtitle": "Twoja recenzja pomaga innym miłośnikom kawy wybrać swój ulubiony smak",
+    "reviews_write": "Napisz opinię",
+    "reviews_my": "Moje opinie ({n})",
+    "reviews_modal_title": "Napisz opinię",
+    "reviews_rating_label": "Ocena",
+    "reviews_text_label": "Opinia",
+    "reviews_text_placeholder": "Opowiedz o smaku, aromacie, wrażeniach…",
+    "reviews_submit": "Wyślij opinię",
+    "reviews_submitting": "Wysyłanie…",
+    "reviews_err_rating": "Wybierz ocenę (gwiazdki)",
+    "reviews_err_text": "Napisz przynajmniej 10 znaków",
+    "reviews_thanks_title": "Dziękujemy! ☕",
+    "reviews_thanks_body": "Twoja opinia znaczy dla nas więcej, niż myślisz.",
+    "reviews_close": "Zamknij",
+    "reviews_status_pending": "Oczekuje na moderację",
+    "reviews_status_approved": "Opublikowana",
+    "reviews_status_rejected": "Odrzucona",
+    "logout": "Wyloguj"
   },
   "settings": {
     "page_title": "Ustawienia",
@@ -774,7 +868,8 @@
     "consent_note": "Możesz wycofać zgodę w dowolnym momencie"
   },
   "success": {
-    "title": "Zamówienie przyjęte! ☕", "subtitle": "Numer zamówienia #{number}",
+    "title": "Zamówienie przyjęte! ☕",
+    "subtitle": "Numer zamówienia #{number}",
     "email_sent": "Potwierdzenie wysłane na {email}",
     "tracking": "Numer śledzenia pojawi się po wysyłce",
     "register_cta": "Utwórz konto",
@@ -783,7 +878,12 @@
     "thanks_subtitle": "Twoja kawa już się szykuje do wysyłki",
     "continue": "Kontynuuj zakupy"
   },
-  "common": { "loading": "Ładowanie...", "error": "Błąd", "retry": "Spróbuj ponownie", "pln": "zł" },
+  "common": {
+    "loading": "Ładowanie...",
+    "error": "Błąd",
+    "retry": "Spróbuj ponownie",
+    "pln": "zł"
+  },
   "subscription": {
     "seo_title": "Subskrypcja kawy specialty | Coffee Verve",
     "seo_description": "Subskrypcja świeżo palonej kawy specialty od Coffee Verve — regularna dostawa prosto pod Twoje drzwi, dodatkowe -5% i pełna elastyczność. Anuluj w dowolnym momencie.",
@@ -859,5 +959,17 @@
         "a": "Płatność pobierana jest automatycznie dzień przed każdą wysyłką przez Przelewy24. Obsługujemy karty płatnicze i BLIK. Dzień wcześniej otrzymasz powiadomienie z przypomnieniem i kwotą."
       }
     ]
+  },
+  "referral": {
+    "card_title": "Poleć znajomym — kawa w prezencie",
+    "card_subtitle": "Za każdego znajomego, który zrobi zakupy, dostajesz paczkę kawy 250g gratis.",
+    "your_code": "Twój kod",
+    "copy_code": "Kopiuj kod",
+    "copied": "Skopiowano!",
+    "share_whatsapp": "Udostępnij w WhatsApp",
+    "share_message": "Cześć! Polecam kawę specialty Coffee Verve. Użyj mojego kodu i odbierz paczkę w prezencie:",
+    "stat_invited": "Zaproszeni znajomi",
+    "stat_available": "Dostępne bonusy",
+    "how_it_works": "Jak to działa?"
   }
 }

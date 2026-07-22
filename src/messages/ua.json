@@ -468,9 +468,21 @@
     "cta": "Створити акаунт"
   },
   "categories": {
-    "espresso":    { "label": "Для еспресо", "title": "Еспресо", "count": "43 сорти" },
-    "filter":      { "label": "Для фільтра", "title": "Фільтр", "count": "37 сортів" },
-    "decaf": { "label": "Кава без кофеїну", "title": "Decaf", "count": "новинка" }
+    "espresso": {
+      "label": "Для еспресо",
+      "title": "Еспресо",
+      "count": "43 сорти"
+    },
+    "filter": {
+      "label": "Для фільтра",
+      "title": "Фільтр",
+      "count": "37 сортів"
+    },
+    "decaf": {
+      "label": "Кава без кофеїну",
+      "title": "Decaf",
+      "count": "новинка"
+    }
   },
   "hero": {
     "badge": "Обсмажуємо щотижня",
@@ -481,9 +493,13 @@
     "cta_secondary": "Про нас"
   },
   "home": {
-    "hero_title": "Свіжообсмажена кава", "hero_subtitle": "Доставка по всій Польщі",
-    "catalog_title": "Наша кава", "featured": "Рекомендуємо",
-    "filter_all": "Всі", "filter_espresso": "Еспресо", "filter_filter": "Фільтр"
+    "hero_title": "Свіжообсмажена кава",
+    "hero_subtitle": "Доставка по всій Польщі",
+    "catalog_title": "Наша кава",
+    "featured": "Рекомендуємо",
+    "filter_all": "Всі",
+    "filter_espresso": "Еспресо",
+    "filter_filter": "Фільтр"
   },
   "lead": {
     "headline": "−10% на перше замовлення",
@@ -507,40 +523,79 @@
     "tooltip_line2": "✓ Або повернемо 100% грошей — без питань"
   },
   "product": {
-    "add_to_cart": "До кошика", "added": "Додано", "save": "Вигідно", "save_amount": "вигідніше на 10 zł", "details_btn": "Детальніше",
-    "choose_weight": "Вага", "quantity": "Кількість", "body": "Щільність", "acidity": "Кислотність",
-    "grind_whole": "В зернах", "grind_ground": "Мелена",
+    "add_to_cart": "До кошика",
+    "added": "Додано",
+    "save": "Вигідно",
+    "save_amount": "вигідніше на 10 zł",
+    "details_btn": "Детальніше",
+    "choose_weight": "Вага",
+    "quantity": "Кількість",
+    "body": "Щільність",
+    "acidity": "Кислотність",
+    "grind_whole": "В зернах",
+    "grind_ground": "Мелена",
     "grind_tooltip": "Мелену каву продаємо тільки в упаковці 250г — так вона довше зберігає аромат",
-    "grind_espresso": "Еспресо", "grind_aeropress": "Аеропрес", "grind_pourover": "Пуровер / Кемекс",
-    "grind_frenchpress": "Френч-прес", "grind_turka": "Турка", "grind_moka": "Мока",
+    "grind_espresso": "Еспресо",
+    "grind_aeropress": "Аеропрес",
+    "grind_pourover": "Пуровер / Кемекс",
+    "grind_frenchpress": "Френч-прес",
+    "grind_turka": "Турка",
+    "grind_moka": "Мока",
     "grind_surcharge": "+ 3 zł за помел",
-    "flavor_notes": "Смакові ноти", "origin": "Походження",
-    "process": "Обробка", "roast": "Обсмажування", "brew": "Метод",
-    "roast_light": "Світле", "roast_medium": "Середнє",
-    "roast_medium_dark": "Середньо-темне", "roast_dark": "Темне"
+    "flavor_notes": "Смакові ноти",
+    "origin": "Походження",
+    "process": "Обробка",
+    "roast": "Обсмажування",
+    "brew": "Метод",
+    "roast_light": "Світле",
+    "roast_medium": "Середнє",
+    "roast_medium_dark": "Середньо-темне",
+    "roast_dark": "Темне"
   },
   "cart": {
-    "title": "Кошик", "empty": "Кошик порожній", "empty_cta": "Перейти до кави",
-    "remove": "Видалити", "subtotal": "Сума",
-    "checkout": "Оформити замовлення", "continue": "Продовжити покупки",
+    "title": "Кошик",
+    "empty": "Кошик порожній",
+    "empty_cta": "Перейти до кави",
+    "remove": "Видалити",
+    "subtotal": "Сума",
+    "checkout": "Оформити замовлення",
+    "continue": "Продовжити покупки",
     "free_delivery_hint": "Ще {amount} до безкоштовної доставки"
   },
   "checkout": {
-    "title": "Оформлення замовлення", "contact": "Контакти",
-    "name": "Ім'я та прізвище", "email": "Email", "phone": "Телефон", "telegram": "Telegram", "telegram_placeholder": "@username", "telegram_help": "Для сповіщень про замовлення", "telegram_invalid": "Використовуйте 5–32 символи: латиниця, цифри та _",
-    "delivery": "Доставка", "paczkomat": "InPost Paczkomat",
-    "courier": "Кур'єр", "pickup": "Самовивіз",
-    "choose_paczkomat": "Вибрати Paczkomat", "paczkomat_chosen": "Вибрано",
-    "street": "Вулиця, номер будинку", "city": "Місто", "postal": "Поштовий індекс",
+    "title": "Оформлення замовлення",
+    "contact": "Контакти",
+    "name": "Ім'я та прізвище",
+    "email": "Email",
+    "phone": "Телефон",
+    "telegram": "Telegram",
+    "telegram_placeholder": "@username",
+    "telegram_help": "Для сповіщень про замовлення",
+    "telegram_invalid": "Використовуйте 5–32 символи: латиниця, цифри та _",
+    "delivery": "Доставка",
+    "paczkomat": "InPost Paczkomat",
+    "courier": "Кур'єр",
+    "pickup": "Самовивіз",
+    "choose_paczkomat": "Вибрати Paczkomat",
+    "paczkomat_chosen": "Вибрано",
+    "street": "Вулиця, номер будинку",
+    "city": "Місто",
+    "postal": "Поштовий індекс",
     "notes": "Коментар до замовлення (необов'язково)",
-    "summary": "Підсумок", "subtotal": "Сума товарів",
-    "discount": "Знижка", "delivery_cost": "Доставка",
-    "free": "Безкоштовно", "total": "Разом", "pay": "Сплатити",
+    "summary": "Підсумок",
+    "subtotal": "Сума товарів",
+    "discount": "Знижка",
+    "delivery_cost": "Доставка",
+    "free": "Безкоштовно",
+    "total": "Разом",
+    "pay": "Сплатити",
     "register_cta": "Зареєструйся і отримай знижку",
     "register_desc": "−{pct}% зараз і на всі майбутні замовлення",
-    "guest_price": "Ціна для гостей", "member_price": "Ваша ціна",
+    "guest_price": "Ціна для гостей",
+    "member_price": "Ваша ціна",
     "register_checkbox": "Створити акаунт зі знижкою {pct}%",
-    "password": "Пароль", "order_placed": "Замовлення оформлено!",
+    "password": "Пароль",
+    "order_placed": "Замовлення оформлено!",
     "guest_hint": "Можна оформити без реєстрації",
     "promo_have": "Є промокод?",
     "promo_placeholder": "WELCOME-XXXXXX",
@@ -680,7 +735,19 @@
     "address_type": "Тип доставки",
     "paczkomat_name": "Назва Paczkomat",
     "paczkomat_address": "Адреса Paczkomat",
-    "set_default": "Зробити адресою за замовчуванням"
+    "set_default": "Зробити адресою за замовчуванням",
+    "subs_edit": "Змінити",
+    "subs_save": "Зберегти",
+    "subs_cancel_edit": "Скасувати",
+    "archive_title": "Архів ({n})",
+    "archive_cancelled_subs": "Скасовані підписки",
+    "archive_cancelled_on": "Скасована {date}",
+    "archive_resume": "Відновити підписку",
+    "archive_resume_confirm": "Відновити підписку? Перша відправка: {date}",
+    "archive_resumed_title": "Підписку відновлено!",
+    "archive_resumed_body": "Перша відправка: {date}",
+    "archive_all_orders": "Всі замовлення ({n})",
+    "archive_my_reviews": "Мої відгуки: {n}"
   },
   "dashboard": {
     "welcome": "Ласкаво просимо",
@@ -742,7 +809,34 @@
     "street_label": "Вулиця та номер будинку",
     "postal_label": "Поштовий індекс",
     "city_label": "Місто",
-    "save_address": "Зберегти адресу"
+    "save_address": "Зберегти адресу",
+    "greet_morning": "Доброго ранку",
+    "greet_day": "Доброго дня",
+    "greet_evening": "Добрий вечір",
+    "hero_sub_coming": "Ваша кава вирушить {date} ☕",
+    "hero_sub_transit": "Ваше замовлення #{n} вже в дорозі",
+    "hero_sub_default": "Гарного дня з кавою specialty ☕",
+    "loyalty_title": "Картка лояльності",
+    "see_all_orders": "Показати всі замовлення ({n})",
+    "reviews_title": "Ваш відгук — найкраща подяка за нашу роботу",
+    "reviews_subtitle": "Ваш відгук допомагає іншим любителям кави обрати свій улюблений смак",
+    "reviews_write": "Написати відгук",
+    "reviews_my": "Мої відгуки ({n})",
+    "reviews_modal_title": "Залишити відгук",
+    "reviews_rating_label": "Оцінка",
+    "reviews_text_label": "Відгук",
+    "reviews_text_placeholder": "Розкажіть про смак, аромат, враження…",
+    "reviews_submit": "Надіслати відгук",
+    "reviews_submitting": "Надсилаю…",
+    "reviews_err_rating": "Оберіть оцінку (зірки)",
+    "reviews_err_text": "Напишіть хоча б 10 символів",
+    "reviews_thanks_title": "Дякуємо! ☕",
+    "reviews_thanks_body": "Ваш відгук означає для нас більше, ніж ви думаєте.",
+    "reviews_close": "Закрити",
+    "reviews_status_pending": "На модерації",
+    "reviews_status_approved": "Опубліковано",
+    "reviews_status_rejected": "Відхилено",
+    "logout": "Вийти"
   },
   "settings": {
     "page_title": "Налаштування",
@@ -774,7 +868,8 @@
     "consent_note": "Ви можете відкликати згоду в будь-який момент"
   },
   "success": {
-    "title": "Замовлення прийнято! ☕", "subtitle": "Номер замовлення #{number}",
+    "title": "Замовлення прийнято! ☕",
+    "subtitle": "Номер замовлення #{number}",
     "email_sent": "Підтвердження надіслано на {email}",
     "tracking": "Трек-номер з'явиться після відправки",
     "register_cta": "Створити акаунт",
@@ -783,7 +878,12 @@
     "thanks_subtitle": "Ваша кава вже готується до відправки",
     "continue": "Продовжити покупки"
   },
-  "common": { "loading": "Завантаження...", "error": "Помилка", "retry": "Спробувати знову", "pln": "zł" },
+  "common": {
+    "loading": "Завантаження...",
+    "error": "Помилка",
+    "retry": "Спробувати знову",
+    "pln": "zł"
+  },
   "subscription": {
     "seo_title": "Підписка на каву specialty | Coffee Verve",
     "seo_description": "Підписка на свіжообсмажену каву specialty від Coffee Verve — регулярна доставка просто до ваших дверей, додаткові -5% та повна гнучкість. Скасування у будь-який момент.",
@@ -859,5 +959,17 @@
         "a": "Оплата списується автоматично за день до кожної відправки через Przelewy24. Приймаємо банківські картки та BLIK. За день ви отримаєте сповіщення з нагадуванням та сумою."
       }
     ]
+  },
+  "referral": {
+    "card_title": "Приведи друга — кава в подарунок",
+    "card_subtitle": "За кожного друга, який зробить замовлення, ви отримуєте пачку кави 250г у подарунок.",
+    "your_code": "Ваш код",
+    "copy_code": "Копіювати код",
+    "copied": "Скопійовано!",
+    "share_whatsapp": "Поділитися у WhatsApp",
+    "share_message": "Привіт! Рекомендую каву specialty Coffee Verve. Використай мій код і отримай пачку в подарунок:",
+    "stat_invited": "Запрошені друзі",
+    "stat_available": "Доступні бонуси",
+    "how_it_works": "Як це працює?"
   }
 }
