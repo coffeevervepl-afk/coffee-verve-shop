@@ -55,8 +55,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const products = await getActiveProducts()
 
   return [
-    ...entriesFor('',      { lastModified: now, changeFrequency: 'weekly', priority: 1.0 }),
-    ...entriesFor('/shop', { lastModified: now, changeFrequency: 'weekly', priority: 0.9 }),
+    ...entriesFor('',          { lastModified: now, changeFrequency: 'weekly', priority: 1.0 }),
+    ...entriesFor('/shop',     { lastModified: now, changeFrequency: 'weekly', priority: 0.9 }),
+    ...entriesFor('/referral', { lastModified: now, changeFrequency: 'monthly', priority: 0.6 }),
     ...SHOP_SLUGS.flatMap(s =>
       entriesFor(`/shop/${s.slug}`, { lastModified: now, changeFrequency: 'weekly', priority: 0.8 }),
     ),

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceSupabase } from '@/lib/supabase/service'
 import { getPaymentProvider } from '@/lib/payment'
 import { normalizeTelegramUsername } from '@/lib/telegram'
+import { validateReferral } from '@/lib/referral'
 import type { CartItem, DeliveryType, PricingSummary } from '@/types/shop'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
@@ -15,7 +16,10 @@ export async function POST(req: NextRequest) {
     pricing,
     promo,
     locale,
-    referralCode,     // from localStorage cv_ref
+    referralCode,          // from ?ref capture / manual entry
+    bonusPackProductId,    // new customer's free 250g pack for using a code
+    useBonus,              // referrer redeeming an accumulated bonus
+    bonusRedeemProductId,  // sort chosen for the redeemed bonus
   }: {
     items:        CartItem[]
     customer:     { name: string; email: string; phone?: string; telegram?: string; password?: string; [k: string]: any }
@@ -25,6 +29,9 @@ export async function POST(req: NextRequest) {
     promo?:       { id: string; code: string } | null
     locale:       string
     referralCode?: string | null
+    bonusPackProductId?:   string | null
+    useBonus?:             boolean
+    bonusRedeemProductId?: string | null
   } = await req.json()
 
   // Validate
@@ -179,6 +186,68 @@ export async function POST(req: NextRequest) {
   })
 
   await sb.from('shop_order_items').insert(orderItems)
+
+  // 4b. Referral bonuses — add free 250g pack(s) and record the referral.
+  try {
+    const bonusItems: OrderItemRow[] = []
+    const orderUpdate: Record<string, unknown> = {}
+
+    const freePack = (productId: string, name: string, slug: string | null): OrderItemRow => ({
+      order_id:            order.id,
+      shop_product_id:     productId,
+      product_name:        `🎁 ${name}`,
+      product_slug:        slug,
+      weight:              250,
+      unit_price:          0,
+      quantity:            1,
+      line_total:          0,
+      grind:               'whole',
+      grind_option:        null,
+      custom_bundle_group: null,
+    })
+
+    // New customer using a friend's code → free pack + record referral_code_used
+    // (the delivered-order trigger later awards the referrer their bonus).
+    if (referralCode && bonusPackProductId) {
+      const check = await validateReferral(sb, referralCode, customer.email, pricing.subtotal, order.id)
+      if (check.valid) {
+        const { data: prod } = await sb.from('shop_products').select('name_ru, slug').eq('id', bonusPackProductId).maybeSingle()
+        if (prod) {
+          orderUpdate.referral_code_used = referralCode
+          orderUpdate.referral_bonus_pack_product_id = bonusPackProductId
+          bonusItems.push(freePack(bonusPackProductId, prod.name_ru, prod.slug ?? null))
+        }
+      }
+    }
+
+    // Referrer redeeming an accumulated bonus → free pack + mark bonus used.
+    if (useBonus && bonusRedeemProductId && shopUserId) {
+      const { data: su } = await sb.from('shop_users').select('auth_user_id').eq('id', shopUserId).maybeSingle()
+      const uid = su?.auth_user_id
+      if (uid) {
+        const { data: avail } = await sb.from('referral_bonuses')
+          .select('id')
+          .eq('user_id', uid)
+          .eq('status', 'available')
+          .order('expires_at', { ascending: true })
+          .limit(1)
+          .maybeSingle()
+        if (avail) {
+          const { data: prod } = await sb.from('shop_products').select('name_ru, slug').eq('id', bonusRedeemProductId).maybeSingle()
+          if (prod) {
+            bonusItems.push(freePack(bonusRedeemProductId, prod.name_ru, prod.slug ?? null))
+            await sb.from('referral_bonuses').update({ status: 'used', used_in_order_id: order.id, used_at: new Date().toISOString() }).eq('id', avail.id)
+            orderUpdate.is_referrer_bonus_applied = true
+          }
+        }
+      }
+    }
+
+    if (bonusItems.length) await sb.from('shop_order_items').insert(bonusItems)
+    if (Object.keys(orderUpdate).length) await sb.from('shop_orders').update(orderUpdate).eq('id', order.id)
+  } catch (e) {
+    console.warn('Referral bonus handling failed:', e)
+  }
 
   // 5. Create payment session via abstract payment provider
   const successUrl = `${SITE_URL}/${locale}/success?order=${order.id}`

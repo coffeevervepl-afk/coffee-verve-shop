@@ -605,7 +605,16 @@
     "known_user_banner": "Już u nas kupowałeś! Zaloguj się i odbierz zniżkę {pct}%",
     "login": "Zaloguj się",
     "close": "Zamknij",
-    "password_min_6": "Hasło musi mieć co najmniej 6 znaków"
+    "password_min_6": "Hasło musi mieć co najmniej 6 znaków",
+    "ref_title": "Kod polecający (opcjonalne)",
+    "ref_placeholder": "Wpisz kod",
+    "ref_apply": "Zastosuj",
+    "ref_valid": "Kod zaakceptowany — wybierz paczkę-prezent 250g",
+    "ref_invalid_not_found": "Nie znaleziono kodu",
+    "ref_invalid_self": "Nie możesz użyć własnego kodu",
+    "ref_invalid_min_order": "Minimalna kwota zamówienia to 60 zł",
+    "ref_invalid_not_new": "Kod działa tylko przy pierwszym zamówieniu",
+    "ref_bonus_available": "Masz {n} bonusowe paczki. Dodaj do zamówienia (250g za darmo)"
   },
   "account": {
     "subs_title": "Moje subskrypcje",

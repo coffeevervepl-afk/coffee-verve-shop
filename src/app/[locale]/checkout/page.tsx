@@ -11,6 +11,7 @@ import ContactForm from '@/components/shop/checkout/ContactForm'
 import DeliveryForm from '@/components/shop/checkout/DeliveryForm'
 import RegisterOffer from '@/components/shop/checkout/RegisterOffer'
 import PromoCodeField from '@/components/shop/checkout/PromoCodeField'
+import ReferralCheckout, { type ReferralSelection } from '@/components/shop/checkout/ReferralCheckout'
 import { useAuth } from '@/hooks/useAuth'
 import { getLoyaltyDiscount } from '@/lib/supabase/auth'
 import { createClient } from '@/lib/supabase/client'
@@ -31,6 +32,7 @@ export default function CheckoutPage() {
   const [form,      setForm]      = useState<Partial<CheckoutFormData>>({})
   const [promo,     setPromo]     = useState<PromoDiscount | null>(null)
   const [knownUser, setKnownUser] = useState<{ exists: boolean; discount_pct: number }>({ exists: false, discount_pct: 0 })
+  const [referral,  setReferral]  = useState<ReferralSelection>({ code: null, bonusPackProductId: null, useBonus: false, bonusRedeemProductId: null })
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [loginPassword, setLoginPassword] = useState('')
   const [loggingIn, setLoggingIn] = useState(false)
@@ -76,7 +78,7 @@ export default function CheckoutPage() {
     }
 
     setLoading(true)
-    const referralCode = typeof window !== 'undefined' ? localStorage.getItem('cv_ref') : null
+    const referralCode = referral.code ?? (typeof window !== 'undefined' ? localStorage.getItem('cv_ref') : null)
     try {
       const res = await fetch('/api/checkout', {
         method:  'POST',
@@ -90,6 +92,9 @@ export default function CheckoutPage() {
           promo,
           locale,
           referralCode,
+          bonusPackProductId:   referral.bonusPackProductId,
+          useBonus:             referral.useBonus,
+          bonusRedeemProductId: referral.bonusRedeemProductId,
         }),
       })
       if (!res.ok) throw new Error('Checkout failed')
@@ -195,6 +200,14 @@ export default function CheckoutPage() {
               </p>
             )}
           </section>
+
+          {/* Referral code + bonus pack */}
+          <ReferralCheckout
+            locale={locale}
+            email={(form as any).email ?? ''}
+            subtotal={subtotal}
+            onChange={setReferral}
+          />
 
           {!isAuthenticated && (
             <RegisterOffer
