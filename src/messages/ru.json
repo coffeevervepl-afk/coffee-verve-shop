@@ -851,7 +851,17 @@
     "hero_sub_today": "Следующая отправка кофе — сегодня",
     "hero_sub_tomorrow": "Следующая отправка кофе — завтра",
     "hero_sub_review": "Как вам последняя доставка? Оставьте отзыв",
-    "hero_sub_status": "Ваш статус: {tier} — {pct}% скидки на каждый заказ"
+    "hero_sub_status": "Ваш статус: {tier} — {pct}% скидки на каждый заказ",
+    "orders_composition": "Состав",
+    "orders_delivery": "Доставка",
+    "orders_tracking": "Трек-номер",
+    "orders_track_link": "Отследить →",
+    "orders_write_review": "Написать отзыв: {name}",
+    "orders_repeat": "Повторить заказ",
+    "orders_some_unavailable": "Некоторые товары недоступны",
+    "orders_show_less": "Свернуть",
+    "orders_sub_badge": "Подписка",
+    "orders_pickup": "Самовывоз"
   },
   "settings": {
     "page_title": "Настройки",

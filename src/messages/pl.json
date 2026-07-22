@@ -851,7 +851,17 @@
     "hero_sub_today": "Następna wysyłka kawy — dziś",
     "hero_sub_tomorrow": "Następna wysyłka kawy — jutro",
     "hero_sub_review": "Jak Ci smakowała ostatnia dostawa? Zostaw opinię",
-    "hero_sub_status": "Twój status: {tier} — {pct}% zniżki na każde zamówienie"
+    "hero_sub_status": "Twój status: {tier} — {pct}% zniżki na każde zamówienie",
+    "orders_composition": "Skład",
+    "orders_delivery": "Dostawa",
+    "orders_tracking": "Nr śledzenia",
+    "orders_track_link": "Śledź →",
+    "orders_write_review": "Napisz opinię: {name}",
+    "orders_repeat": "Powtórz zamówienie",
+    "orders_some_unavailable": "Niektóre produkty są niedostępne",
+    "orders_show_less": "Zwiń",
+    "orders_sub_badge": "Subskrypcja",
+    "orders_pickup": "Odbiór osobisty"
   },
   "settings": {
     "page_title": "Ustawienia",

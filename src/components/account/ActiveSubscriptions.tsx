@@ -66,7 +66,7 @@ export default function ActiveSubscriptions({ locale, initialSubs }: { locale: L
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {subs.map(s => (
-            <div key={s.id} className="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow duration-200 hover:shadow-md">
+            <div key={s.id} className="flex flex-col rounded-2xl border border-gray-200 border-t-2 border-t-[#412618] bg-white p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md">
               <div className="flex items-start justify-between gap-3">
                 {s.status === 'active' ? (
                   <span className="rounded-full border border-[#412618] px-3 py-1 text-xs font-semibold text-[#412618]">{t('subs_status_active')}</span>

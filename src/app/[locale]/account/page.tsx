@@ -1,10 +1,9 @@
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { getReviewData, getReferralStats } from '@/lib/account/dashboard'
 import ProfileCard from '@/components/account/ProfileCard'
-import RecentOrders, { type OrderView } from '@/components/account/RecentOrders'
+import OrdersAccordion, { type OrderRow as AccOrder } from '@/components/account/OrdersAccordion'
 import ActiveSubscriptions, { type DashSub } from '@/components/account/ActiveSubscriptions'
 import ReviewsSection from '@/components/account/ReviewsSection'
 import ReferralCard from '@/components/account/ReferralCard'
@@ -30,7 +29,7 @@ interface ShopUserRow {
 
 interface AddressRow { id: string; street: string | null; postal_code: string | null; city: string | null }
 
-interface OrderItemRow {
+interface DbOrderItem {
   product_name:    string
   product_slug:    string | null
   shop_product_id: string | null
@@ -39,22 +38,19 @@ interface OrderItemRow {
   line_total:      number
   grind:           string | null
   grind_option:    string | null
-  shop_products:   { crm_product_id: string | null } | { crm_product_id: string | null }[] | null
 }
-
-function crmProductId(sp: OrderItemRow['shop_products']): string | null {
-  if (!sp) return null
-  return Array.isArray(sp) ? sp[0]?.crm_product_id ?? null : sp.crm_product_id
-}
-
-interface OrderRow {
-  id:                string
-  order_number:      number
-  total:             number
-  status:            string
-  created_at:        string
-  updated_at:        string
-  shop_order_items:  OrderItemRow[] | null
+interface DbOrderRow {
+  id:               string
+  order_number:     number
+  total:            number
+  status:           string
+  created_at:       string
+  updated_at:       string
+  source:           string | null
+  delivery_type:    string | null
+  delivery_address: Record<string, string> | null
+  tracking_number:  string | null
+  shop_order_items: DbOrderItem[] | null
 }
 
 interface SubRow {
@@ -84,11 +80,10 @@ export default async function AccountPage({ params }: Props) {
   const email = user.email
 
   let shopUser: ShopUserRow | null = null
-  let recentOrders: OrderRow[] = []
+  let recentOrders: DbOrderRow[] = []
   let subs: SubRow[] = []
   let address: AddressRow | null = null
   let ordersCount = 0
-  const qrByKey = new Map<string, string[]>()
 
   try {
     const [shopUserRes, ordersRes, ordersCountRes, subsRes] = await Promise.all([
@@ -97,10 +92,10 @@ export default async function AccountPage({ params }: Props) {
         .eq('email', email)
         .single(),
       supabase.from('shop_orders')
-        .select('id, order_number, total, status, created_at, updated_at, shop_order_items(product_name, product_slug, shop_product_id, weight, quantity, line_total, grind, grind_option, shop_products(crm_product_id))')
+        .select('id, order_number, total, status, created_at, updated_at, source, delivery_type, delivery_address, tracking_number, shop_order_items(product_name, product_slug, shop_product_id, weight, quantity, line_total, grind, grind_option)')
         .eq('customer_email', email)
         .order('created_at', { ascending: false })
-        .limit(5),
+        .limit(50),
       supabase.from('shop_orders').select('id', { count: 'exact', head: true }).eq('customer_email', email),
       supabase.from('subscriptions')
         .select('id, status, items, interval_weeks, next_delivery_date, cancelled_at')
@@ -108,24 +103,9 @@ export default async function AccountPage({ params }: Props) {
     ])
 
     if (!shopUserRes.error) shopUser = shopUserRes.data
-    if (!ordersRes.error) recentOrders = ordersRes.data ?? []
+    if (!ordersRes.error) recentOrders = (ordersRes.data as DbOrderRow[]) ?? []
     ordersCount = ordersCountRes.count ?? 0
     if (!subsRes.error) subs = (subsRes.data as SubRow[]) ?? []
-
-    if (recentOrders.length > 0) {
-      const orderIds = recentOrders.map(o => o.id)
-      const crmRes = await supabase.rpc('get_qr_tokens_for_orders', { p_shop_order_ids: orderIds })
-      const rows = (crmRes.data ?? []) as { shop_order_id: string; product_id: string; weight: number; qr_token: string }[]
-      if (!crmRes.error) {
-        for (const r of rows) {
-          if (!r.qr_token) continue
-          const key = `${r.shop_order_id}|${r.product_id}|${r.weight}`
-          const tokens = qrByKey.get(key)
-          if (tokens) tokens.push(r.qr_token)
-          else qrByKey.set(key, [r.qr_token])
-        }
-      }
-    }
 
     if (shopUser) {
       const addrRes = await supabase.from('shop_addresses')
@@ -198,12 +178,16 @@ export default async function AccountPage({ params }: Props) {
     heroSub = t('hero_sub_default')
   }
 
-  const orderViews: OrderView[] = recentOrders.map(order => ({
-    id:           order.id,
-    order_number: order.order_number,
-    total:        order.total,
-    status:       order.status,
-    created_at:   order.created_at,
+  const orderRows: AccOrder[] = recentOrders.map(order => ({
+    id:               order.id,
+    order_number:     order.order_number,
+    total:            order.total,
+    status:           order.status,
+    created_at:       order.created_at,
+    source:           order.source ?? null,
+    delivery_type:    order.delivery_type ?? null,
+    delivery_address: order.delivery_address ?? null,
+    tracking_number:  order.tracking_number ?? null,
     items: (order.shop_order_items ?? []).map(item => ({
       product_name:    item.product_name,
       product_slug:    item.product_slug,
@@ -213,9 +197,12 @@ export default async function AccountPage({ params }: Props) {
       line_total:      item.line_total,
       grind:           item.grind,
       grind_option:    item.grind_option,
-      tokens:          qrByKey.get(`${order.id}|${crmProductId(item.shop_products)}|${item.weight}`) ?? [],
     })),
   }))
+
+  const reviewedProductIds = reviewData.myReviews.map(r => r.product_id)
+
+  const CARD = 'rounded-2xl border border-gray-200 border-t-2 border-t-[#412618] bg-white p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md'
 
   return (
     <div className="mx-auto max-w-4xl space-y-8 md:space-y-10">
@@ -233,40 +220,8 @@ export default async function AccountPage({ params }: Props) {
         <ActiveSubscriptions locale={locale} initialSubs={activeSubs} />
       </div>
 
-      {/* 3. Reviews (hidden when nothing to review and no history) */}
-      <div className="animate-fade-up" style={{ animationDelay: '120ms' }}>
-        <ReviewsSection
-          toReview={reviewData.toReview}
-          myReviews={reviewData.myReviews}
-          authorName={shopUser?.name ?? ''}
-          email={email}
-        />
-      </div>
-
-      {/* 4. Referral program */}
-      {shopUser?.referral_code && (
-        <div className="animate-fade-up" style={{ animationDelay: '180ms' }}>
-          <ReferralCard
-            locale={locale}
-            code={shopUser.referral_code}
-            invited={referralStats.invited}
-            available={referralStats.available}
-          />
-        </div>
-      )}
-
-      {/* 5. Recent orders */}
-      <div className="animate-fade-up" style={{ animationDelay: '240ms' }}>
-        <RecentOrders locale={locale} shopUserId={shopUser?.id ?? null} initialOrders={orderViews} />
-        {ordersCount > orderViews.length && (
-          <Link href={`/${locale}/account/orders`} className="mt-3 block text-center text-sm font-medium text-[#412618] underline-offset-2 hover:underline">
-            {t('see_all_orders', { n: ordersCount })}
-          </Link>
-        )}
-      </div>
-
-      {/* 6. Loyalty card */}
-      <section className="animate-fade-up rounded-2xl border border-gray-200 bg-white p-6 shadow-sm" style={{ animationDelay: '300ms' }}>
+      {/* 3. Loyalty card */}
+      <section className={`animate-fade-up ${CARD}`} style={{ animationDelay: '120ms' }}>
         <div className="flex items-center justify-between gap-4">
           <p className="text-[15px] font-semibold text-[#3A2115]">{t('loyalty_title')}</p>
           <span className="shrink-0 rounded-full border border-[#412618]/30 bg-white px-3 py-1 text-xs font-semibold text-[#412618]">
@@ -294,6 +249,40 @@ export default async function AccountPage({ params }: Props) {
           </div>
         )}
       </section>
+
+      {/* 4. Reviews (hidden when nothing to review and no history) */}
+      <div className="animate-fade-up" style={{ animationDelay: '180ms' }}>
+        <ReviewsSection
+          toReview={reviewData.toReview}
+          myReviews={reviewData.myReviews}
+          authorName={shopUser?.name ?? ''}
+          email={email}
+        />
+      </div>
+
+      {/* 5. Referral program */}
+      {shopUser?.referral_code && (
+        <div className="animate-fade-up" style={{ animationDelay: '240ms' }}>
+          <ReferralCard
+            locale={locale}
+            code={shopUser.referral_code}
+            invited={referralStats.invited}
+            available={referralStats.available}
+          />
+        </div>
+      )}
+
+      {/* 6. Orders — compact accordion */}
+      <div className="animate-fade-up" style={{ animationDelay: '300ms' }}>
+        <OrdersAccordion
+          locale={locale}
+          orders={orderRows}
+          totalCount={ordersCount}
+          reviewedProductIds={reviewedProductIds}
+          authorName={shopUser?.name ?? ''}
+          email={email}
+        />
+      </div>
 
       {/* 7. Profile */}
       <div className="animate-fade-up" style={{ animationDelay: '360ms' }}>

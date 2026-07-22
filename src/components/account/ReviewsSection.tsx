@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
-import StarPicker from '@/components/shop/reviews/StarPicker'
+import ReviewModal from '@/components/account/ReviewModal'
 import type { ReviewableProduct, MyReview } from '@/lib/account/dashboard'
 
 interface Props {
@@ -23,18 +23,21 @@ export default function ReviewsSection({ toReview, myReviews, authorName, email 
   // Section is hidden entirely when there is nothing to review and no history.
   if (pending.length === 0 && mine.length === 0) return null
 
-  function onSubmitted(p: ReviewableProduct, rating: number, text: string) {
-    setPending(prev => prev.filter(x => x.productId !== p.productId))
-    setMine(prev => [{
-      id: `tmp-${p.productId}`, product_id: p.productId, rating, review_text: text,
-      status: 'pending', created_at: new Date().toISOString(), product_name: p.name, image: p.image,
-    }, ...prev])
+  function onSubmitted(productId: string, rating: number, text: string) {
+    const p = pending.find(x => x.productId === productId)
+    setPending(prev => prev.filter(x => x.productId !== productId))
+    if (p) {
+      setMine(prev => [{
+        id: `tmp-${productId}`, product_id: productId, rating, review_text: text,
+        status: 'pending', created_at: new Date().toISOString(), product_name: p.name, image: p.image,
+      }, ...prev])
+    }
     setActive(null)
     setThanks(true)
   }
 
   return (
-    <section>
+    <section className="rounded-2xl border border-gray-200 border-t-2 border-t-[#412618] bg-white p-6 shadow-sm">
       {pending.length > 0 && (
         <>
           <h2 className="text-[18px] font-bold text-[#3A2115]">{t('reviews_title')}</h2>
@@ -42,17 +45,16 @@ export default function ReviewsSection({ toReview, myReviews, authorName, email 
 
           <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
             {pending.map(p => (
-              <div key={p.productId} className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white p-3 shadow-sm transition-shadow duration-200 hover:shadow-md">
-                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-50">
+              <button key={p.productId} type="button" onClick={() => setActive(p)}
+                className="flex items-center gap-2.5 rounded-xl bg-gray-50 p-3 text-left transition-colors duration-200 hover:bg-gray-100">
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-white">
                   {p.image && <Image src={p.image} alt={p.name} fill sizes="48px" className="object-cover" />}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-[13px] font-medium text-[#3A2115]">{p.name}</p>
-                  <button type="button" onClick={() => setActive(p)} className="mt-0.5 text-xs font-semibold text-[#412618] hover:underline">
-                    {t('reviews_write')}
-                  </button>
+                  <span className="mt-0.5 block text-xs font-semibold text-[#412618]">{t('reviews_write')}</span>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </>
@@ -60,7 +62,7 @@ export default function ReviewsSection({ toReview, myReviews, authorName, email 
 
       {mine.length > 0 && (
         <div className={pending.length > 0 ? 'mt-4' : ''}>
-          <button type="button" onClick={() => setShowMine(v => !v)} className="text-sm font-medium text-[#412618] underline underline-offset-2">
+          <button type="button" onClick={() => setShowMine(v => !v)} className="text-sm font-medium text-[#412618] hover:underline">
             {t('reviews_my', { n: mine.length })} {showMine ? '▴' : '▾'}
           </button>
           {showMine && (
@@ -82,7 +84,7 @@ export default function ReviewsSection({ toReview, myReviews, authorName, email 
 
       {active && (
         <ReviewModal
-          product={active}
+          target={{ productId: active.productId, orderId: active.orderId, name: active.name }}
           authorName={authorName}
           email={email}
           onClose={() => setActive(null)}
@@ -102,80 +104,5 @@ export default function ReviewsSection({ toReview, myReviews, authorName, email 
         </div>
       )}
     </section>
-  )
-}
-
-function ReviewModal({
-  product, authorName, email, onClose, onSubmitted,
-}: {
-  product: ReviewableProduct
-  authorName: string
-  email: string
-  onClose: () => void
-  onSubmitted: (p: ReviewableProduct, rating: number, text: string) => void
-}) {
-  const t = useTranslations('dashboard')
-  const [rating, setRating] = useState(0)
-  const [text, setText]     = useState('')
-  const [busy, setBusy]     = useState(false)
-  const [err, setErr]       = useState('')
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!rating)               { setErr(t('reviews_err_rating')); return }
-    if (text.trim().length < 10) { setErr(t('reviews_err_text'));  return }
-    setErr('')
-    setBusy(true)
-    try {
-      const res = await fetch('/api/reviews', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          productId: product.productId,
-          orderId:   product.orderId,
-          authorName: authorName || email.split('@')[0],
-          email,
-          rating,
-          reviewText: text,
-        }),
-      })
-      if (!res.ok) {
-        const j = await res.json().catch(() => ({}))
-        throw new Error(j.error || 'error')
-      }
-      onSubmitted(product, rating, text.trim())
-    } catch (e) {
-      setErr(e instanceof Error ? e.message : 'error')
-      setBusy(false)
-    }
-  }
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
-      <form onSubmit={submit} className="w-full max-w-md space-y-4 rounded-3xl bg-white p-6" onClick={e => e.stopPropagation()}>
-        <h3 className="text-lg font-semibold text-[#3A2115]">{t('reviews_modal_title')}</h3>
-        <p className="text-sm text-brand-muted">{product.name}</p>
-
-        <div>
-          <label className="mb-2 block text-xs font-medium text-brand-muted">{t('reviews_rating_label')}</label>
-          <StarPicker value={rating} onChange={setRating} />
-        </div>
-
-        <div>
-          <label className="mb-1 block text-xs font-medium text-brand-muted">{t('reviews_text_label')}</label>
-          <textarea rows={4} value={text} onChange={e => setText(e.target.value)}
-            placeholder={t('reviews_text_placeholder')} className="input resize-none text-sm" />
-        </div>
-
-        {err && <p className="text-sm text-[#7A5A3A]">{err}</p>}
-
-        <div className="flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="btn btn-outline text-sm">{t('reviews_close')}</button>
-          <button type="submit" disabled={busy} className="btn btn-primary text-sm disabled:opacity-60">
-            {busy ? t('reviews_submitting') : t('reviews_submit')}
-          </button>
-        </div>
-      </form>
-    </div>
   )
 }
