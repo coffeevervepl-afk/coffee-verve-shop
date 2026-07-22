@@ -233,6 +233,20 @@ p  { line-height: 1.7; }
   .quiz-shimmer { animation: none; }
 }
 
+/* ── Referral card — soft, slow warm shimmer (larger + gentler than the chip) ── */
+.referral-shimmer {
+  background: linear-gradient(135deg, rgba(245,230,211,0.55) 0%, rgba(232,196,216,0.35) 45%, rgba(255,255,255,0.92) 100%);
+  background-size: 200% 200%;
+  animation: warmShimmer 7s ease-in-out infinite;
+}
+@keyframes warmShimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .referral-shimmer { animation: none; }
+}
+
 /* ── Coffee quiz — step slide-in ─────────────────────────────────────────── */
 @keyframes quiz-slide-in {
   from { opacity: 0; transform: translateX(24px); }

@@ -220,26 +220,26 @@ export default async function AccountPage({ params }: Props) {
           <ActiveSubscriptions locale={locale} initialSubs={activeSubs} cancelledSubs={cancelledSubs} />
         </div>
         <div className="lg:col-span-1">
-          {/* Loyalty — level 2 (info), fills the column height with benefits */}
-          <div className="flex h-full flex-col rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md">
+          {/* Loyalty — level 2 (info), compact to match the subscriptions height */}
+          <div className="flex h-full flex-col rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-5 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md">
             <p className="text-xs uppercase tracking-wide text-gray-500">{t('loyalty_title')}</p>
             <p className="mt-1 text-2xl font-bold text-[#412618]">{t(`tier_${tier}`)}</p>
             <p className="text-xl font-semibold text-[#412618]">{tierPct}%</p>
 
             {nextThreshold && nextTierKey ? (
-              <div className="mt-4">
+              <div className="mt-3">
                 <div className="h-1.5 overflow-hidden rounded-full bg-[#E5E7EB]">
                   <div className="h-full rounded-full transition-all duration-700" style={{ width: `${progressPct}%`, backgroundColor: '#412618' }} />
                 </div>
                 <p className="mt-2 text-sm text-gray-500">{t('loyalty_remaining', { amount: remainingFormatted, next: t(`tier_${nextTierKey}`) })}</p>
               </div>
             ) : (
-              <p className="mt-4 text-sm font-semibold text-[#412618]">{t('max_level_title')}</p>
+              <p className="mt-3 text-sm font-semibold text-[#412618]">{t('max_level_title')}</p>
             )}
 
-            <div className="mt-auto border-t border-gray-200 pt-4">
+            <div className="mt-4 border-t border-gray-200 pt-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{t('loyalty_privileges_title')}</p>
-              <ul className="mt-2 space-y-1.5">
+              <ul className="mt-2 space-y-1">
                 {privileges.map((p, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-[#5A4A3A]">
                     <Check size={16} strokeWidth={2.4} className="mt-0.5 shrink-0 text-[#412618]" />

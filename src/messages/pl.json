@@ -869,21 +869,15 @@
     "edit_profile": "Edytuj profil",
     "loyalty_priv_classic": [
       "5% zniżki na wszystkie zamówienia",
-      "Dodatkowe -5% na subskrypcję",
-      "Wczesny dostęp do nowych kaw"
+      "Dodatkowe -5% na subskrypcję"
     ],
     "loyalty_priv_gold": [
       "10% zniżki na wszystkie zamówienia",
-      "Dodatkowe -5% na subskrypcję",
-      "Darmowa dostawa od 100 zł",
-      "Priorytetowe palenie"
+      "Darmowa dostawa od 100 zł"
     ],
     "loyalty_priv_platinum": [
       "15% zniżki na wszystkie zamówienia",
-      "Dodatkowe -5% na subskrypcję",
-      "Zawsze darmowa dostawa",
-      "Osobisty menedżer",
-      "Ekskluzywne partie"
+      "Zawsze darmowa dostawa"
     ]
   },
   "settings": {
