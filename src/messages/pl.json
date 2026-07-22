@@ -910,10 +910,10 @@
     "pln": "zł"
   },
   "subscription": {
-    "seo_title": "Subskrypcja kawy specialty | Coffee Verve",
-    "seo_description": "Subskrypcja świeżo palonej kawy specialty od Coffee Verve — regularna dostawa prosto pod Twoje drzwi, dodatkowe -5% i pełna elastyczność. Anuluj w dowolnym momencie.",
+    "seo_title": "Subskrypcja kawy — świeżo palona, regularnie | Coffee Verve",
+    "seo_description": "Zamów subskrypcję świeżo palonej kawy z dostawą do paczkomatu, kurierem lub odbiorem osobistym. Anuluj kiedy chcesz. Dodatkowe -5% do karty lojalnościowej.",
     "hero_title": "Subskrypcja kawy",
-    "hero_subtitle": "Świeżo palona kawa specialty prosto do Twoich drzwi — regularnie, bez wysiłku",
+    "hero_subtitle": "Świeżo palona kawa regularnie — dostarczamy w wybrany przez Ciebie sposób",
     "b1_title": "Przypomnimy dzień wcześniej",
     "b1_text": "Dostaniesz powiadomienie przed każdą wysyłką",
     "b2_title": "Anulujesz kiedy chcesz",
@@ -965,7 +965,7 @@
     "faq": [
       {
         "q": "Jak działa subskrypcja kawy?",
-        "a": "Wybierasz kawy, które lubisz, ustawiasz częstotliwość wysyłki — a my regularnie dostarczamy świeżo paloną kawę prosto pod Twoje drzwi. Kawę palimy po otrzymaniu zamówienia, więc zawsze jest świeża. Płatność pobierana jest automatycznie dzień przed wysyłką."
+        "a": "Wybierasz kawy, które lubisz, ustawiasz częstotliwość wysyłki — a my regularnie dostarczamy świeżo paloną kawę w wybrany przez Ciebie sposób (paczkomat InPost, kurier, odbiór osobisty). Kawę palimy po otrzymaniu zamówienia, więc zawsze jest świeża. Płatność pobierana jest automatycznie dzień przed wysyłką."
       },
       {
         "q": "Czy mogę zmienić skład subskrypcji?",

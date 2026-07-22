@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic'
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const t = await getTranslations({ locale: params.locale, namespace: 'subscription' })
   return {
-    title:       t('seo_title'),
+    title:       { absolute: t('seo_title') },
     description: t('seo_description'),
     alternates:  { canonical: `/${params.locale}/shop/subskrypcja` },
   }
