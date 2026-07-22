@@ -290,8 +290,8 @@ export default function SubscriptionPage({ products, locale }: Props) {
           <Reveal key={b.tk} delay={i * 100}>
             <div className="flex h-full flex-col rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md">
               <span className="text-[#412618]">{b.icon}</span>
-              <h3 className="mt-3 font-semibold text-[#3A2115]">{t(`${b.tk}_title`)}</h3>
-              <p className="mt-1 text-sm text-gray-600">{t(`${b.tk}_text`)}</p>
+              <h3 className="mt-3 text-base font-semibold leading-snug text-[#3A2115] md:text-lg lg:text-base">{t(`${b.tk}_title`)}</h3>
+              <p className="mt-1 text-sm leading-relaxed text-gray-600">{t(`${b.tk}_text`)}</p>
             </div>
           </Reveal>
         ))}
