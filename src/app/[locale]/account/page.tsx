@@ -69,6 +69,7 @@ const NEXT_TIER      = { classic: 'gold', gold: 'platinum', platinum: null } as 
 export default async function AccountPage({ params }: Props) {
   const { locale } = params
   const t = await getTranslations({ locale, namespace: 'dashboard' })
+  const ta = await getTranslations({ locale, namespace: 'account' })
 
   const supabase = await createServerSupabase()
   const { data: { user } } = await supabase.auth.getUser()
@@ -215,8 +216,9 @@ export default async function AccountPage({ params }: Props) {
       </section>
 
       {/* 2. Subscriptions (2/3) + loyalty (1/3) — same top (heading above card) + same bottom (stretch) */}
-      <div className="animate-fade-up grid grid-cols-1 gap-6 lg:grid-cols-3" style={{ animationDelay: '60ms' }}>
-        <div className="lg:col-span-2">
+      <div className="animate-fade-up grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3" style={{ animationDelay: '60ms' }}>
+        <div className="flex flex-col lg:col-span-2">
+          <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{ta('subs_title')}</h2>
           <ActiveSubscriptions locale={locale} initialSubs={activeSubs} cancelledSubs={cancelledSubs} />
         </div>
         <div className="flex flex-col lg:col-span-1">

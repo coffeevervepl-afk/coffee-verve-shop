@@ -91,9 +91,7 @@ export default function ActiveSubscriptions({
   }
 
   return (
-    <section className="flex h-full flex-col">
-      <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{t('subs_title')}</h2>
-
+    <section className="flex flex-1 flex-col">
       {subs.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center shadow-md">
           <p className="text-gray-500">{t('subs_empty')}</p>
