@@ -861,7 +861,9 @@
     "orders_some_unavailable": "Некоторые товары недоступны",
     "orders_show_less": "Свернуть",
     "orders_sub_badge": "Подписка",
-    "orders_pickup": "Самовывоз"
+    "orders_pickup": "Самовывоз",
+    "loyalty_remaining": "Ещё {amount} zł до {next}",
+    "loyalty_auto_note": "Скидка применяется автоматически при каждом заказе"
   },
   "settings": {
     "page_title": "Настройки",

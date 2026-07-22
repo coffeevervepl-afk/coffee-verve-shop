@@ -28,12 +28,11 @@ export default function ReferralCard({ locale, code, invited, available }: Props
 
   return (
     <section
-      className="rounded-2xl p-6 md:p-8"
+      className="rounded-2xl p-6 shadow-[0_4px_20px_rgba(65,38,24,0.08)] transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(65,38,24,0.14)] md:p-8"
       style={{
         background: 'linear-gradient(135deg, rgba(65,38,24,0.06) 0%, rgba(255,255,255,1) 60%)',
         border: '1px solid rgba(65,38,24,0.15)',
         borderTop: '3px solid #412618',
-        boxShadow: '0 4px 20px rgba(65,38,24,0.08), 0 1px 3px rgba(0,0,0,0.04)',
       }}
     >
       <h2 className="text-xl font-semibold text-[#412618]">{t('card_title')}</h2>

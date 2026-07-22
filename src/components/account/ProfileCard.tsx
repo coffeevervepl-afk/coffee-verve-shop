@@ -117,7 +117,7 @@ export default function ProfileCard({
   const ghostBtn = 'rounded-full border border-gray-300 px-4 py-1.5 text-sm font-semibold text-[#3A2115]'
 
   return (
-    <div className="rounded-2xl border border-gray-200 border-t-2 border-t-[#412618] bg-white p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md">
+    <div className="rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md">
       <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{t('profile_title')}</h2>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

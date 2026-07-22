@@ -133,7 +133,7 @@ export default function OrdersAccordion({ locale, orders, totalCount, reviewedPr
   // Empty state.
   if (orders.length === 0) {
     return (
-      <section className="rounded-2xl border border-gray-200 border-t-2 border-t-[#412618] bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-gray-200 border-t-2 border-t-[#412618] bg-white p-6 shadow-md">
         <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{t('recent_orders_title')}</h2>
         <div className="py-8 text-center">
           <p className="mb-4 text-gray-500">{t('no_orders')}</p>
@@ -146,7 +146,7 @@ export default function OrdersAccordion({ locale, orders, totalCount, reviewedPr
   const visible = showAll ? orders : orders.slice(0, 5)
 
   return (
-    <section className="rounded-2xl border border-gray-200 border-t-2 border-t-[#412618] bg-white p-4 shadow-sm md:p-6">
+    <section className="rounded-2xl border border-gray-200 border-t-2 border-t-[#412618] bg-white p-4 shadow-md transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg md:p-6">
       <h2 className="mb-2 text-[18px] font-bold uppercase text-[#3A2115]">{t('recent_orders_title')}</h2>
 
       <div>

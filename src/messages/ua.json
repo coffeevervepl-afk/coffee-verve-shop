@@ -861,7 +861,9 @@
     "orders_some_unavailable": "Деякі товари недоступні",
     "orders_show_less": "Згорнути",
     "orders_sub_badge": "Підписка",
-    "orders_pickup": "Самовивіз"
+    "orders_pickup": "Самовивіз",
+    "loyalty_remaining": "Ще {amount} zł до {next}",
+    "loyalty_auto_note": "Знижка застосовується автоматично при кожному замовленні"
   },
   "settings": {
     "page_title": "Налаштування",

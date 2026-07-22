@@ -57,7 +57,7 @@ export default function AccountArchive({ locale, cancelledSubs, ordersCount, rev
   }
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+    <section className={`rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md ${open ? '' : 'opacity-90'}`}>
       <button type="button" onClick={() => setOpen(v => !v)} className="flex w-full items-center justify-between text-left">
         <span className="text-[15px] font-semibold text-[#3A2115]">{t('archive_title', { n: total })}</span>
         <span aria-hidden className="text-gray-400">{open ? '▴' : '▾'}</span>

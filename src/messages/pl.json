@@ -861,7 +861,9 @@
     "orders_some_unavailable": "Niektóre produkty są niedostępne",
     "orders_show_less": "Zwiń",
     "orders_sub_badge": "Subskrypcja",
-    "orders_pickup": "Odbiór osobisty"
+    "orders_pickup": "Odbiór osobisty",
+    "loyalty_remaining": "Jeszcze {amount} zł do {next}",
+    "loyalty_auto_note": "Zniżka naliczana automatycznie przy każdym zamówieniu"
   },
   "settings": {
     "page_title": "Ustawienia",

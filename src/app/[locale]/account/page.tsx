@@ -202,10 +202,8 @@ export default async function AccountPage({ params }: Props) {
 
   const reviewedProductIds = reviewData.myReviews.map(r => r.product_id)
 
-  const CARD = 'rounded-2xl border border-gray-200 border-t-2 border-t-[#412618] bg-white p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md'
-
   return (
-    <div className="mx-auto max-w-4xl space-y-8 md:space-y-10">
+    <div className="mx-auto max-w-5xl space-y-8">
 
       {/* 1. Hero greeting — plain text, no plate */}
       <section className="animate-fade-up px-1 pt-1" style={{ animationDelay: '0ms' }}>
@@ -215,54 +213,37 @@ export default async function AccountPage({ params }: Props) {
         <p className="mt-2 text-base text-gray-500">{heroSub}</p>
       </section>
 
-      {/* 2. Active subscriptions */}
-      <div className="animate-fade-up" style={{ animationDelay: '60ms' }}>
-        <ActiveSubscriptions locale={locale} initialSubs={activeSubs} />
-      </div>
-
-      {/* 3. Loyalty card */}
-      <section className={`animate-fade-up ${CARD}`} style={{ animationDelay: '120ms' }}>
-        <div className="flex items-center justify-between gap-4">
-          <p className="text-[15px] font-semibold text-[#3A2115]">{t('loyalty_title')}</p>
-          <span className="shrink-0 rounded-full border border-[#412618]/30 bg-white px-3 py-1 text-xs font-semibold text-[#412618]">
-            {t(`tier_${tier}`)} · {tierPct}%
-          </span>
+      {/* 2. Subscriptions (2/3) + loyalty (1/3) */}
+      <div className="animate-fade-up grid grid-cols-1 gap-6 lg:grid-cols-3" style={{ animationDelay: '60ms' }}>
+        <div className="lg:col-span-2">
+          <ActiveSubscriptions locale={locale} initialSubs={activeSubs} />
         </div>
-        {nextThreshold && nextTierKey ? (
-          <div className="mt-2.5">
-            <p className="text-[15px] leading-tight text-[#3A2115]">
-              {t.rich('progress_line', {
-                amount: remainingFormatted,
-                next: t(`tier_${nextTierKey}`),
-                big: chunks => <span className="text-[22px] font-bold text-[#412618]">{chunks}</span>,
-              })}
-            </p>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-gray-200">
-              <div className="h-full rounded-full transition-all duration-700" style={{ width: `${progressPct}%`, backgroundColor: '#412618' }} />
-            </div>
-            <p className="mt-1.5 text-sm text-gray-500">🎁 {t('reward_line', { pct: DISCOUNT_PCT[nextTierKey] })}</p>
-          </div>
-        ) : (
-          <div className="mt-2.5">
-            <p className="text-[17px] font-bold text-[#412618]">{t('max_level_title')}</p>
-            <p className="mt-0.5 text-sm text-gray-500">{t('max_level_desc', { pct: tierPct })}</p>
-          </div>
-        )}
-      </section>
+        <div className="lg:col-span-1">
+          {/* Loyalty — level 2 (info), compact, fills the column height */}
+          <div className="flex h-full flex-col rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md">
+            <p className="text-sm uppercase tracking-wide text-gray-500">{t('loyalty_title')}</p>
+            <p className="mt-1 text-2xl font-bold text-[#412618]">{t(`tier_${tier}`)}</p>
+            <p className="text-xl font-semibold text-[#412618]">{tierPct}%</p>
 
-      {/* 4. Reviews (hidden when nothing to review and no history) */}
-      <div className="animate-fade-up" style={{ animationDelay: '180ms' }}>
-        <ReviewsSection
-          toReview={reviewData.toReview}
-          myReviews={reviewData.myReviews}
-          authorName={shopUser?.name ?? ''}
-          email={email}
-        />
+            {nextThreshold && nextTierKey ? (
+              <div className="mt-4">
+                <div className="h-1.5 overflow-hidden rounded-full bg-[#E5E7EB]">
+                  <div className="h-full rounded-full transition-all duration-700" style={{ width: `${progressPct}%`, backgroundColor: '#412618' }} />
+                </div>
+                <p className="mt-2 text-sm text-gray-500">{t('loyalty_remaining', { amount: remainingFormatted, next: t(`tier_${nextTierKey}`) })}</p>
+              </div>
+            ) : (
+              <p className="mt-4 text-sm font-semibold text-[#412618]">{t('max_level_title')}</p>
+            )}
+
+            <p className="mt-auto pt-6 text-xs text-gray-400">{t('loyalty_auto_note')}</p>
+          </div>
+        </div>
       </div>
 
-      {/* 5. Referral program */}
+      {/* 3. Referral program — accent, full width */}
       {shopUser?.referral_code && (
-        <div className="animate-fade-up" style={{ animationDelay: '240ms' }}>
+        <div className="animate-fade-up" style={{ animationDelay: '120ms' }}>
           <ReferralCard
             locale={locale}
             code={shopUser.referral_code}
@@ -272,8 +253,18 @@ export default async function AccountPage({ params }: Props) {
         </div>
       )}
 
-      {/* 6. Orders — compact accordion */}
-      <div className="animate-fade-up" style={{ animationDelay: '300ms' }}>
+      {/* 4. Reviews — full width (hidden when nothing to review and no history) */}
+      <div className="animate-fade-up" style={{ animationDelay: '180ms' }}>
+        <ReviewsSection
+          toReview={reviewData.toReview}
+          myReviews={reviewData.myReviews}
+          authorName={shopUser?.name ?? ''}
+          email={email}
+        />
+      </div>
+
+      {/* 5. Orders — compact accordion, full width */}
+      <div className="animate-fade-up" style={{ animationDelay: '240ms' }}>
         <OrdersAccordion
           locale={locale}
           orders={orderRows}
@@ -284,8 +275,8 @@ export default async function AccountPage({ params }: Props) {
         />
       </div>
 
-      {/* 7. Profile */}
-      <div className="animate-fade-up" style={{ animationDelay: '360ms' }}>
+      {/* 6. Profile + archive (2 columns) */}
+      <div className="animate-fade-up grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start" style={{ animationDelay: '300ms' }}>
         <ProfileCard
           initialName={shopUser?.name ?? ''}
           email={email}
@@ -295,10 +286,6 @@ export default async function AccountPage({ params }: Props) {
           consentSms={!!shopUser?.consent_sms_marketing}
           initialAddress={address}
         />
-      </div>
-
-      {/* 8. Archive */}
-      <div className="animate-fade-up" style={{ animationDelay: '420ms' }}>
         <AccountArchive
           locale={locale}
           cancelledSubs={cancelledSubs}
@@ -307,7 +294,7 @@ export default async function AccountPage({ params }: Props) {
         />
       </div>
 
-      {/* 9. Logout */}
+      {/* 7. Logout */}
       <LogoutFooter locale={locale} />
     </div>
   )

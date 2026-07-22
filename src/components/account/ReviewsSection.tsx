@@ -37,7 +37,7 @@ export default function ReviewsSection({ toReview, myReviews, authorName, email 
   }
 
   return (
-    <section className="rounded-2xl border border-gray-200 border-t-2 border-t-[#412618] bg-white p-6 shadow-sm">
+    <section className="rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md">
       {pending.length > 0 && (
         <>
           <h2 className="text-[18px] font-bold text-[#3A2115]">{t('reviews_title')}</h2>
@@ -46,8 +46,8 @@ export default function ReviewsSection({ toReview, myReviews, authorName, email 
           <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
             {pending.map(p => (
               <button key={p.productId} type="button" onClick={() => setActive(p)}
-                className="flex items-center gap-2.5 rounded-xl bg-gray-50 p-3 text-left transition-colors duration-200 hover:bg-gray-100">
-                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-white">
+                className="flex items-center gap-2.5 rounded-xl border border-[#E8E7E3] bg-white p-3 text-left transition-colors duration-200 hover:bg-gray-50">
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-100">
                   {p.image && <Image src={p.image} alt={p.name} fill sizes="48px" className="object-cover" />}
                 </div>
                 <div className="min-w-0 flex-1">
