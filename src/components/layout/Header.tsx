@@ -225,6 +225,7 @@ export default function Header({ locale }: { locale: Locale }) {
                 }`}>
                   <Link href={`/${locale}/account`} onClick={() => setAccountOpen(false)} className="block rounded-lg px-3 py-2 text-[13px] hover:bg-black/5">{t('my_account')}</Link>
                   <Link href={`/${locale}/account/orders`} onClick={() => setAccountOpen(false)} className="block rounded-lg px-3 py-2 text-[13px] hover:bg-black/5">{t('my_orders')}</Link>
+                  <Link href={`/${locale}/account/subscriptions`} onClick={() => setAccountOpen(false)} className="block rounded-lg px-3 py-2 text-[13px] hover:bg-black/5">{t('my_subscriptions')}</Link>
                   <Link href={`/${locale}/account/profile`} onClick={() => setAccountOpen(false)} className="block rounded-lg px-3 py-2 text-[13px] hover:bg-black/5">{t('profile')}</Link>
                   <div className="my-1 border-t border-black/10" />
                   <button type="button" onClick={handleSignOut} className="block w-full rounded-lg px-3 py-2 text-left text-[13px] text-red-600 hover:bg-red-50">{t('logout')}</button>
