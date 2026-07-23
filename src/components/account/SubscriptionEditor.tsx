@@ -76,20 +76,23 @@ export default function SubscriptionEditor({
   const delivRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    createClient().from('shop_products')
-      .select('id, product_type, name_ru, name_pl, name_ua, flavor_notes_ru, flavor_notes_pl, flavor_notes_ua, price_250, price_500, price_1000, images, sort_order')
-      .eq('is_active', true).order('sort_order', { ascending: true })
-      .then(res => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const data = (res.data ?? []) as any[]
-        const nc = locale === 'pl' ? 'name_pl' : locale === 'ua' ? 'name_ua' : 'name_ru'
-        const fc = locale === 'pl' ? 'flavor_notes_pl' : locale === 'ua' ? 'flavor_notes_ua' : 'flavor_notes_ru'
-        setCatalog(data.filter(p => p.product_type !== 'bundle').map(p => ({
-          id: p.id, name: p[nc] || p.name_ru, flavor: p[fc] || p.flavor_notes_ru || '',
-          image: Array.isArray(p.images) ? (p.images[0] ?? null) : null,
-          price_250: Number(p.price_250), price_500: p.price_500 != null ? Number(p.price_500) : null, price_1000: p.price_1000 != null ? Number(p.price_1000) : null,
-        })))
-      })
+    let active = true
+    ;(async () => {
+      const { data } = await createClient().from('shop_products')
+        .select('id, product_type, name_ru, name_pl, name_ua, flavor_notes_ru, flavor_notes_pl, flavor_notes_ua, price_250, price_500, price_1000, images, sort_order')
+        .eq('is_active', true).order('sort_order', { ascending: true })
+      if (!active) return
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rows = (data ?? []) as any[]
+      const nc = locale === 'pl' ? 'name_pl' : locale === 'ua' ? 'name_ua' : 'name_ru'
+      const fc = locale === 'pl' ? 'flavor_notes_pl' : locale === 'ua' ? 'flavor_notes_ua' : 'flavor_notes_ru'
+      setCatalog(rows.filter(p => p.product_type !== 'bundle').map(p => ({
+        id: p.id, name: p[nc] || p.name_ru, flavor: p[fc] || p.flavor_notes_ru || '',
+        image: Array.isArray(p.images) ? (p.images[0] ?? null) : null,
+        price_250: Number(p.price_250), price_500: p.price_500 != null ? Number(p.price_500) : null, price_1000: p.price_1000 != null ? Number(p.price_1000) : null,
+      })))
+    })()
+    return () => { active = false }
   }, [locale])
 
   // Scroll to the requested section once mounted.
