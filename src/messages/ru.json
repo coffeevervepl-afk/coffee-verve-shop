@@ -747,17 +747,7 @@
     "set_default": "Сделать адрес по умолчанию",
     "subs_edit": "Изменить",
     "subs_save": "Сохранить",
-    "subs_cancel_edit": "Отмена",
-    "archive_title": "Архив ({n})",
-    "archive_cancelled_subs": "Отменённые подписки",
-    "archive_cancelled_on": "Отменена {date}",
-    "archive_resume": "Возобновить подписку",
-    "archive_resume_confirm": "Возобновить подписку? Первая отправка: {date}",
-    "archive_resumed_title": "Подписка возобновлена!",
-    "archive_resumed_body": "Первая отправка: {date}",
-    "archive_all_orders": "Все заказы ({n})",
-    "archive_my_reviews": "Мои отзывы: {n}",
-    "subs_show_cancelled": "Показать отменённые ({n})"
+    "subs_cancel_edit": "Отмена"
   },
   "dashboard": {
     "welcome": "Добро пожаловать",

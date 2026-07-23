@@ -747,17 +747,7 @@
     "set_default": "Зробити адресою за замовчуванням",
     "subs_edit": "Змінити",
     "subs_save": "Зберегти",
-    "subs_cancel_edit": "Скасувати",
-    "archive_title": "Архів ({n})",
-    "archive_cancelled_subs": "Скасовані підписки",
-    "archive_cancelled_on": "Скасована {date}",
-    "archive_resume": "Відновити підписку",
-    "archive_resume_confirm": "Відновити підписку? Перша відправка: {date}",
-    "archive_resumed_title": "Підписку відновлено!",
-    "archive_resumed_body": "Перша відправка: {date}",
-    "archive_all_orders": "Всі замовлення ({n})",
-    "archive_my_reviews": "Мої відгуки: {n}",
-    "subs_show_cancelled": "Показати скасовані ({n})"
+    "subs_cancel_edit": "Скасувати"
   },
   "dashboard": {
     "welcome": "Ласкаво просимо",
