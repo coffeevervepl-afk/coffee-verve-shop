@@ -210,8 +210,8 @@ function EmptyState({
     <div className="relative flex flex-1 flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-md">
       <span aria-hidden className="brand-shimmer absolute inset-x-0 top-0 h-0.5" />
 
-      <div className="text-4xl">📦</div>
-      <h3 className="mt-2 text-xl font-semibold text-[#412618]">{hasCancelled ? t('empty_title_cancelled') : t('empty_title_new')}</h3>
+      {!hasCancelled && <div className="text-4xl">📦</div>}
+      <h3 className={`text-xl font-semibold text-[#412618] ${hasCancelled ? '' : 'mt-2'}`}>{hasCancelled ? t('empty_title_cancelled') : t('empty_title_new')}</h3>
       <p className="mx-auto mt-1 max-w-sm text-sm text-gray-600">{hasCancelled ? t('empty_sub_cancelled') : t('empty_sub_new')}</p>
 
       <ul className="mx-auto mt-4 space-y-1.5 text-left text-sm text-[#5A4A3A]">
@@ -227,7 +227,7 @@ function EmptyState({
         {hasCancelled ? (
           <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
             <button type="button" disabled={restoring} onClick={onRestore}
-              className="w-full rounded-full bg-[#412618] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] disabled:opacity-50 sm:w-auto">
+              className="brand-shimmer w-full rounded-full px-6 py-3 text-sm font-medium text-[#3a1f16] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.5)] transition-transform hover:scale-[1.02] disabled:opacity-50 sm:w-auto">
               {restoring ? '…' : t('empty_restore')}
             </button>
             <Link href={`/${locale}/shop/subskrypcja`}
