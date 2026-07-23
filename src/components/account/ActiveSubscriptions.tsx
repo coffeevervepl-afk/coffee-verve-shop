@@ -75,37 +75,40 @@ export default function ActiveSubscriptions({ locale, initialSubs }: { locale: L
                 <span className="text-xs text-gray-400">{t('subs_every', { n: s.interval_weeks })}</span>
               </div>
 
-              <ul className="mt-3 space-y-1 text-sm text-[#3A2115]">
+              <ul className="mt-3 space-y-2">
                 {(s.items ?? []).map((it, i) => (
-                  <li key={i} className="truncate">
-                    {it.name} · {wLabel(it.weight)} · {grindLabel(it.grind)}{(it.quantity || 1) > 1 ? ` × ${it.quantity}` : ''}
+                  <li key={i} className="truncate leading-tight">
+                    <span className="text-xl font-semibold text-[#412618]">{it.name}</span>
+                    <span className="text-base text-gray-500">
+                      <span className="text-gray-400"> · </span>{wLabel(it.weight)}<span className="text-gray-400"> · </span>{grindLabel(it.grind)}{(it.quantity || 1) > 1 ? ` × ${it.quantity}` : ''}
+                    </span>
                   </li>
                 ))}
               </ul>
 
               <div className="mt-4 border-t border-gray-200 pt-3">
                 <p className="text-xs text-gray-500">{t('subs_next')}</p>
-                <p className="text-xl font-bold text-[#412618]">{fmtDate(s.next_delivery_date)}</p>
+                <p className="text-lg font-semibold text-[#412618]">{fmtDate(s.next_delivery_date)}</p>
               </div>
 
-              <div className="mt-auto flex flex-wrap items-center gap-4 pt-4">
+              <div className="mt-auto flex flex-wrap items-center gap-4 pt-6">
                 <button type="button" disabled={busy === s.id} onClick={() => setEditing(s)}
-                  className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 hover:underline disabled:opacity-50">
+                  className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">
                   {t('subs_edit')}
                 </button>
                 {s.status === 'active' ? (
                   <button type="button" disabled={busy === s.id} onClick={() => setStatus(s.id, 'paused')}
-                    className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 hover:underline disabled:opacity-50">
+                    className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">
                     {t('subs_pause')}
                   </button>
                 ) : (
                   <button type="button" disabled={busy === s.id} onClick={() => setStatus(s.id, 'active')}
-                    className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 hover:underline disabled:opacity-50">
+                    className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">
                     {t('subs_resume')}
                   </button>
                 )}
                 <button type="button" disabled={busy === s.id} onClick={() => setStatus(s.id, 'cancelled')}
-                  className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 hover:underline disabled:opacity-50">
+                  className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">
                   {t('subs_cancel')}
                 </button>
               </div>

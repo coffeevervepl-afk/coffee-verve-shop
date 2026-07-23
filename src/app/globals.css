@@ -269,7 +269,7 @@ p  { line-height: 1.7; }
 /* ── Shared warm shimmer chip (quiz-button palette) — one animation so every
       shimmering pill on the page breathes in sync. Set text colour on the el. ── */
 .warm-shimmer-chip {
-  background: linear-gradient(90deg, #F5E6D3, #E8C4D8, #D4C8E8, #C6DBE8, #F5E6D3);
+  background: linear-gradient(90deg, #F5CBA7, #F8D7DA, #FFE8D7, #F8D7DA, #F5CBA7);
   background-size: 200% 100%;
   animation: warmChip 4s ease-in-out infinite;
 }
