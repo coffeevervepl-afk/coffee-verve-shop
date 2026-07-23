@@ -56,7 +56,7 @@ interface DbOrderRow {
 interface SubRow {
   id:                 string
   status:             'active' | 'paused' | 'cancelled'
-  items:              { name: string; weight: number; grind: string; quantity: number }[]
+  items:              { name: string; weight: number; grind: string; quantity: number; product_id?: string | null; price?: number }[]
   interval_weeks:     number
   next_delivery_date: string
   paused_at:          string | null
@@ -149,7 +149,7 @@ export default async function AccountPage({ params }: Props) {
   // Split subscriptions.
   const activeSubs: DashSub[] = subs
     .filter(s => s.status === 'active' || s.status === 'paused')
-    .map(s => ({ id: s.id, status: s.status, items: s.items ?? [], interval_weeks: s.interval_weeks, next_delivery_date: s.next_delivery_date, paused_at: s.paused_at, paused_until: s.paused_until }))
+    .map(s => ({ id: s.id, status: s.status, items: s.items ?? [], interval_weeks: s.interval_weeks, next_delivery_date: s.next_delivery_date, paused_at: s.paused_at, paused_until: s.paused_until, delivery_method: s.delivery_method, delivery_address: s.delivery_address }))
 
   // Most recent cancelled subscription's config — offered as a one-click restore
   // in the empty state (cancelled subs are never listed to the client otherwise).

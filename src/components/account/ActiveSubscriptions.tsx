@@ -3,9 +3,10 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
+import SubscriptionEditor, { type EditorSub, type EditorSection, type EditorItem } from '@/components/account/SubscriptionEditor'
 import type { Locale } from '@/types/shop'
 
-interface SubItem { name: string; weight: number; grind: string; quantity: number }
+interface SubItem { name: string; weight: number; grind: string; quantity: number; product_id?: string | null; price?: number }
 export interface DashSub {
   id:                 string
   status:             'active' | 'paused' | 'cancelled'
@@ -14,6 +15,8 @@ export interface DashSub {
   next_delivery_date: string
   paused_at:          string | null
   paused_until:       string | null
+  delivery_method:    string | null
+  delivery_address:   Record<string, unknown> | null
 }
 export interface LastCancelled {
   id:               string
@@ -64,7 +67,7 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
   const tp = useTranslations('product')
   const [subs, setSubs]         = useState<DashSub[]>(initialSubs)
   const [busy, setBusy]         = useState<string | null>(null)
-  const [editing, setEditing]   = useState<DashSub | null>(null)
+  const [editing, setEditing]   = useState<{ sub: DashSub; section: EditorSection } | null>(null)
   const [pausing, setPausing]   = useState<DashSub | null>(null)
   const [canceling, setCanceling] = useState<DashSub | null>(null)
   const [restoring, setRestoring] = useState(false)
@@ -89,12 +92,28 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
     setSubs(prev => prev.map(s => (s.id === sub.id ? { ...s, status: 'active', paused_at: null, paused_until: null, next_delivery_date: nextDate } : s)))
   }
 
-  async function saveEdit(id: string, intervalWeeks: number, nextDate: string) {
-    setBusy(id)
-    await createClient().from('subscriptions').update({ interval_weeks: intervalWeeks, next_delivery_date: nextDate }).eq('id', id)
-    setBusy(null)
-    setSubs(prev => prev.map(s => (s.id === id ? { ...s, interval_weeks: intervalWeeks, next_delivery_date: nextDate } : s)))
+  function toEditorSub(s: DashSub): EditorSub {
+    return {
+      id: s.id,
+      items: (s.items ?? []).map(it => ({
+        product_id: it.product_id ?? null,
+        name:       it.name,
+        weight:     (it.weight === 500 ? 500 : it.weight === 1000 ? 1000 : 250),
+        grind:      (it.grind === 'ground' ? 'ground' : 'beans'),
+        quantity:   it.quantity || 1,
+        price:      it.price ?? 0,
+      })),
+      interval_weeks:     s.interval_weeks,
+      next_delivery_date: s.next_delivery_date,
+      delivery_method:    s.delivery_method,
+      delivery_address:   (s.delivery_address as Record<string, unknown> | null),
+    }
+  }
+
+  function onEditorSaved(patch: { items: EditorItem[]; interval_weeks: number; next_delivery_date: string; delivery_method: string; delivery_address: Record<string, unknown> }) {
+    const id = editing?.sub.id
     setEditing(null)
+    if (id) setSubs(prev => prev.map(s => (s.id === id ? { ...s, ...patch } : s)))
   }
 
   async function restore() {
@@ -154,7 +173,7 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
                     <p className="text-lg font-semibold text-[#412618]">{fmtDate(s.next_delivery_date)}</p>
                   </div>
                   <div className="mt-auto flex flex-wrap items-center gap-4 pt-6">
-                    <button type="button" disabled={busy === s.id} onClick={() => setEditing(s)} className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">{t('subs_edit')}</button>
+                    <button type="button" disabled={busy === s.id} onClick={() => setEditing({ sub: s, section: 'schedule' })} className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">{t('subs_edit')}</button>
                     <button type="button" disabled={busy === s.id} onClick={() => setPausing(s)} className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">{t('subs_pause')}</button>
                     <button type="button" disabled={busy === s.id} onClick={() => setCanceling(s)} className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">{t('subs_cancel')}</button>
                   </div>
@@ -176,7 +195,10 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
         </div>
       )}
 
-      {editing && <EditModal sub={editing} busy={busy === editing.id} onClose={() => setEditing(null)} onSave={saveEdit} />}
+      {editing && (
+        <SubscriptionEditor sub={toEditorSub(editing.sub)} locale={locale} loyaltyPct={loyaltyPct} initialSection={editing.section}
+          onClose={() => setEditing(null)} onSaved={onEditorSaved} />
+      )}
 
       {pausing && (
         <PauseModal locale={locale} busy={busy === pausing.id} onClose={() => setPausing(null)}
@@ -192,7 +214,7 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
             if (r.type === 'paused') setSubs(prev => prev.map(s => (s.id === canceling.id ? { ...s, status: 'paused', paused_at: now, paused_until: r.pausedUntil } : s)))
             else if (r.type === 'cancelled') setSubs(prev => prev.filter(s => s.id !== canceling.id))
             else if (r.type === 'stayed' && r.patch) setSubs(prev => prev.map(s => (s.id === canceling.id ? { ...s, ...r.patch } : s)))
-            const openEdit = r.type === 'edit' ? canceling : null
+            const openEdit = r.type === 'edit' ? { sub: canceling, section: r.section } : null
             setCanceling(null)
             if (openEdit) setEditing(openEdit)
           }} />
@@ -242,7 +264,7 @@ function PauseModal({ locale, busy, onClose, onPick }: { locale: Locale; busy: b
 }
 
 // ── Exit survey ──────────────────────────────────────────────────────────────
-type ExitResult = { type: 'paused'; pausedUntil: string } | { type: 'cancelled' } | { type: 'stayed'; patch?: Partial<DashSub> } | { type: 'edit' }
+type ExitResult = { type: 'paused'; pausedUntil: string } | { type: 'cancelled' } | { type: 'stayed'; patch?: Partial<DashSub> } | { type: 'edit'; section: EditorSection }
 
 function ExitSurvey({ sub, loyaltyPct, loyaltyTier, onClose, onDone }: {
   sub: DashSub; loyaltyPct: number; loyaltyTier: string; onClose: () => void; onDone: (r: ExitResult) => void
@@ -266,9 +288,9 @@ function ExitSurvey({ sub, loyaltyPct, loyaltyTier, onClose, onDone }: {
     return !error
   }
 
-  async function acceptEdit(offeredSolution: string) {
+  async function acceptEdit(offeredSolution: string, section: EditorSection) {
     setBusy(true); const ok = await callLog('stayed', offeredSolution, true, null); setBusy(false)
-    if (ok) onDone({ type: 'edit' })
+    if (ok) onDone({ type: 'edit', section })
   }
   async function acceptInterval(weeks: number) {
     setBusy(true)
@@ -325,7 +347,7 @@ function ExitSurvey({ sub, loyaltyPct, loyaltyTier, onClose, onDone }: {
     if (reason === 'bad_taste') return (
       <Modal title={t('offer_taste_title')} subtitle={t('offer_taste_sub')} onClose={onClose}>
         <div className="flex flex-col gap-3">
-          <Tile disabled={busy} title={t('offer_change_composition')} onClick={() => acceptEdit('change_composition')} />
+          <Tile disabled={busy} title={t('offer_change_composition')} onClick={() => acceptEdit('change_composition', 'composition')} />
         </div>{stillCancel}
       </Modal>
     )
@@ -353,7 +375,7 @@ function ExitSurvey({ sub, loyaltyPct, loyaltyTier, onClose, onDone }: {
     if (reason === 'delivery_issue') return (
       <Modal title={t('offer_delivery_title')} subtitle={t('offer_delivery_sub')} onClose={onClose}>
         <div className="flex flex-col gap-3">
-          <Tile disabled={busy} title={t('offer_change_delivery')} onClick={() => acceptEdit('change_delivery')} />
+          <Tile disabled={busy} title={t('offer_change_delivery')} onClick={() => acceptEdit('change_delivery', 'delivery')} />
         </div>{stillCancel}
       </Modal>
     )
@@ -406,30 +428,6 @@ function EmptyState({ locale, hasCancelled, restoring, onRestore }: { locale: Lo
         ) : (
           <Link href={`/${locale}/shop/subskrypcja`} className="inline-block w-full rounded-full bg-[#412618] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] sm:w-auto">{t('subs_empty_cta')}</Link>
         )}
-      </div>
-    </div>
-  )
-}
-
-// ── Edit interval / next date ────────────────────────────────────────────────
-function EditModal({ sub, busy, onClose, onSave }: { sub: DashSub; busy: boolean; onClose: () => void; onSave: (id: string, intervalWeeks: number, nextDate: string) => void }) {
-  const t = useTranslations('account')
-  const [weeks, setWeeks] = useState(sub.interval_weeks)
-  const [date, setDate]   = useState(sub.next_delivery_date.slice(0, 10))
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
-      <div className="w-full max-w-sm rounded-3xl bg-white p-6" onClick={e => e.stopPropagation()}>
-        <h3 className="text-lg font-semibold text-[#3A2115]">{t('subs_edit')}</h3>
-        <label className="mt-4 block text-sm text-brand-muted">{t('subs_interval')}</label>
-        <select value={weeks} onChange={e => setWeeks(Number(e.target.value))} className="input mt-1 text-sm">
-          {[1, 2, 3, 4, 6, 8].map(w => <option key={w} value={w}>{t('subs_every', { n: w })}</option>)}
-        </select>
-        <label className="mt-4 block text-sm text-brand-muted">{t('subs_next')}</label>
-        <input type="date" value={date} onChange={e => setDate(e.target.value)} className="input mt-1 text-sm" />
-        <div className="mt-6 flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="btn btn-outline text-sm">{t('subs_cancel_edit')}</button>
-          <button type="button" disabled={busy} onClick={() => onSave(sub.id, weeks, date)} className="btn btn-primary text-sm disabled:opacity-60">{t('subs_save')}</button>
-        </div>
       </div>
     </div>
   )
