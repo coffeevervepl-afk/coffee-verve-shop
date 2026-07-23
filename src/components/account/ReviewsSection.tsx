@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import ReviewModal from '@/components/account/ReviewModal'
+import Modal from '@/components/account/Modal'
 import type { ReviewableProduct, MyReview } from '@/lib/account/dashboard'
 
 interface Props {
@@ -93,15 +94,14 @@ export default function ReviewsSection({ toReview, myReviews, authorName, email 
       )}
 
       {thanks && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setThanks(false)}>
-          <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-lg" onClick={e => e.stopPropagation()}>
-            <p className="text-lg font-bold text-[#412618]">{t('reviews_thanks_title')}</p>
-            <p className="mt-2 text-sm text-gray-500">{t('reviews_thanks_body')}</p>
-            <button type="button" onClick={() => setThanks(false)} className="mt-6 rounded-full bg-[#412618] px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810]">
+        <Modal title={t('reviews_thanks_title')} onClose={() => setThanks(false)} closeLabel={t('reviews_close')}
+          footer={
+            <button type="button" onClick={() => setThanks(false)} className="w-full rounded-full bg-[#412618] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] sm:w-auto sm:min-w-[8rem]">
               {t('reviews_close')}
             </button>
-          </div>
-        </div>
+          }>
+          <p className="text-sm text-gray-600">{t('reviews_thanks_body')}</p>
+        </Modal>
       )}
     </section>
   )

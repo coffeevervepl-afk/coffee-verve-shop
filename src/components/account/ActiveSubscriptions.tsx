@@ -1,9 +1,9 @@
 'use client'
 import { useState } from 'react'
-import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
+import Modal from '@/components/account/Modal'
 import SubscriptionEditor, { type EditorSub, type EditorSection, type EditorItem } from '@/components/account/SubscriptionEditor'
 import type { Locale } from '@/types/shop'
 
@@ -222,40 +222,14 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
       )}
 
       {restoredDate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setRestoredDate(null)}>
-          <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-lg" onClick={e => e.stopPropagation()}>
-            <p className="text-lg font-bold text-[#412618]">{t('restore_title')}</p>
-            <p className="mt-2 text-sm text-gray-500">{t('restore_body', { date: restoredDate })}</p>
-            <button type="button" onClick={() => setRestoredDate(null)} className="mt-6 rounded-full bg-[#412618] px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810]">OK</button>
-          </div>
-        </div>
+        <Modal title={t('restore_title')} onClose={() => setRestoredDate(null)}
+          footer={
+            <button type="button" onClick={() => setRestoredDate(null)} className="w-full rounded-full bg-[#412618] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] sm:w-auto sm:min-w-[8rem]">OK</button>
+          }>
+          <p className="text-sm text-gray-600">{t('restore_body', { date: restoredDate })}</p>
+        </Modal>
       )}
     </section>
-  )
-}
-
-// ── Modal shell ──────────────────────────────────────────────────────────────
-// Portaled to <body> so the fixed overlay is always viewport-relative and above
-// all page content (page cards sit in an `animate-fade-up` transformed ancestor
-// that would otherwise clip a nested fixed element). Fixed header + footer, the
-// middle section scrolls when the content is taller than the viewport.
-function Modal({ title, subtitle, onClose, children }: { title: string; subtitle?: string; onClose: () => void; children: React.ReactNode }) {
-  const t = useTranslations('account')
-  if (typeof document === 'undefined') return null
-  return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
-      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white" onClick={e => e.stopPropagation()}>
-        <div className="shrink-0 border-b border-gray-100 px-6 pt-6 pb-4">
-          <h3 className="text-xl font-semibold text-[#412618]">{title}</h3>
-          {subtitle && <p className="mt-1 text-sm text-gray-600">{subtitle}</p>}
-        </div>
-        <div className="flex-1 overflow-y-auto px-6 py-5">{children}</div>
-        <div className="shrink-0 border-t border-gray-100 px-6 py-3">
-          <button type="button" onClick={onClose} className="w-full text-center text-sm font-normal text-gray-500 hover:text-gray-700">{t('subs_cancel_edit')}</button>
-        </div>
-      </div>
-    </div>,
-    document.body,
   )
 }
 
@@ -404,11 +378,14 @@ function ExitSurvey({ sub, loyaltyPct, loyaltyTier, onClose, onDone }: {
 
   // Step 3 — final confirmation
   return (
-    <Modal title={t('exit_confirm_title')} subtitle={t('exit_confirm_sub')} onClose={onClose}>
-      <div className="flex flex-col gap-2">
-        <button type="button" disabled={busy} onClick={confirmCancel} className="w-full rounded-full bg-[#412618] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] disabled:opacity-50">{t('exit_confirm_btn')}</button>
-        <button type="button" disabled={busy} onClick={stay} className="w-full rounded-full border border-[#412618] px-4 py-2.5 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5 disabled:opacity-50">{t('exit_stay_btn')}</button>
-      </div>
+    <Modal title={t('exit_confirm_title')} onClose={onClose}
+      footer={
+        <div className="flex flex-col gap-2 sm:flex-row sm:justify-end sm:gap-3">
+          <button type="button" disabled={busy} onClick={stay} className="order-2 w-full rounded-full border border-[#412618] px-5 py-2.5 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5 disabled:opacity-50 sm:order-1 sm:w-auto">{t('exit_stay_btn')}</button>
+          <button type="button" disabled={busy} onClick={confirmCancel} className="order-1 w-full rounded-full bg-[#412618] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] disabled:opacity-50 sm:order-2 sm:w-auto">{t('exit_confirm_btn')}</button>
+        </div>
+      }>
+      <p className="text-sm text-gray-600">{t('exit_confirm_sub')}</p>
     </Modal>
   )
 }

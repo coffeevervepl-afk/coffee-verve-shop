@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { toast } from 'react-hot-toast'
 import { createClient } from '@/lib/supabase/client'
 import { fmtPrice } from '@/lib/pricing'
+import Modal from '@/components/account/Modal'
 import type { Locale } from '@/types/shop'
 
 type Weight = 250 | 500 | 1000
@@ -72,8 +73,8 @@ export default function SubscriptionEditor({
   const [picking, setPicking]   = useState(false)
   const [saving, setSaving]     = useState(false)
 
-  const compRef = useRef<HTMLDivElement>(null)
-  const delivRef = useRef<HTMLDivElement>(null)
+  const compRef = useRef<HTMLElement>(null)
+  const delivRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     let active = true
@@ -155,9 +156,9 @@ export default function SubscriptionEditor({
 
   const methodTile = (m: Method, title: string, subtitle: string) => (
     <button type="button" onClick={() => setMethod(m)}
-      className={`flex flex-col rounded-xl border-2 p-4 text-left transition-all ${method === m ? 'border-[#412618] bg-[#412618]/5' : 'border-gray-200 bg-white hover:border-[#412618] hover:shadow-sm'}`}>
-      <span className="text-base font-semibold text-[#3A2115]">{title}</span>
-      <span className="mt-0.5 text-sm text-gray-600">{subtitle}</span>
+      className={`flex min-h-[64px] flex-col justify-center rounded-lg border-2 p-3 text-left transition-all ${method === m ? 'border-[#412618] bg-[#412618]/5' : 'border-gray-200 bg-white hover:border-[#412618] hover:shadow-sm'}`}>
+      <span className="text-sm font-medium text-[#3A2115]">{title}</span>
+      <span className="mt-0.5 text-xs text-gray-600">{subtitle}</span>
     </button>
   )
   const gt = (g: Grind, idx: number, cur: Grind) => (
@@ -167,121 +168,126 @@ export default function SubscriptionEditor({
     </button>
   )
 
+  const sectionH = 'text-sm font-semibold uppercase tracking-wide text-[#412618]'
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
-      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-6" onClick={e => e.stopPropagation()}>
-
-        {/* ── Composition ── */}
-        <div ref={compRef}>
-          <h3 className="text-xl font-semibold text-[#412618]">{t('editor_composition_title')}</h3>
-          <div className="mt-4 space-y-2">
-            {items.map((it, idx) => (
-              <div key={idx} className="rounded-xl border border-gray-200 p-3">
-                <div className="flex items-start justify-between gap-2">
-                  <span className="text-sm font-semibold text-[#3A2115]">{it.name}</span>
-                  <button type="button" onClick={() => remove(idx)} disabled={items.length <= 1}
-                    className="text-sm font-medium text-[#412618] hover:underline disabled:opacity-30">✕</button>
-                </div>
-                <div className="mt-2 flex flex-wrap items-center gap-2">
-                  <select value={it.weight} onChange={e => setWeight(idx, Number(e.target.value) as Weight)} className="input !w-auto py-1 text-xs">
-                    {WEIGHTS.map(w => <option key={w} value={w}>{wLabel(w)}</option>)}
-                  </select>
-                  <span className="flex gap-1 rounded-full bg-gray-100 p-0.5">{(['beans', 'ground'] as Grind[]).map(g => gt(g, idx, it.grind))}</span>
-                  <span className="flex items-center gap-1.5">
-                    <button type="button" onClick={() => setQty(idx, it.quantity - 1)} className="h-6 w-6 rounded-full border border-gray-300 text-sm text-[#412618]">−</button>
-                    <span className="w-5 text-center text-sm">{it.quantity}</span>
-                    <button type="button" onClick={() => setQty(idx, it.quantity + 1)} className="h-6 w-6 rounded-full border border-gray-300 text-sm text-[#412618]">+</button>
-                  </span>
-                  <span className="ml-auto text-sm font-semibold text-[#3A2115]">{fmtPrice((it.price / 100) * it.quantity)}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {items.length === 0 && <p className="mt-2 text-sm text-[#7A5A3A]">{t('editor_min_warning')}</p>}
-
-          {items.length < 10 ? (
-            <button type="button" onClick={() => setPicking(v => !v)} className="mt-3 rounded-full border border-[#412618] px-4 py-2 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5">
-              {t('editor_add_coffee')}
-            </button>
-          ) : <p className="mt-3 text-sm text-gray-500">{t('editor_max_items')}</p>}
-
-          {picking && (
-            <div className="mt-3 rounded-xl border border-gray-200 p-2">
-              <p className="px-1 pb-2 text-xs font-semibold uppercase text-gray-500">{t('editor_pick_title')}</p>
-              <div className="max-h-56 space-y-1 overflow-y-auto">
-                {catalog.map(p => (
-                  <button key={p.id} type="button" onClick={() => add(p)} className="flex w-full items-center gap-3 rounded-lg p-2 text-left transition-colors hover:bg-gray-50">
-                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                      {p.image && <Image src={p.image} alt={p.name} fill sizes="48px" className="object-cover" />}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-[#3A2115]">{p.name}</p>
-                      {p.flavor && <p className="truncate text-xs text-gray-500">{p.flavor}</p>}
-                    </div>
-                    <span className="shrink-0 text-sm text-gray-600">{fmtPrice(p.price_250)}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Totals */}
-          <div className="mt-4 space-y-1 border-t border-gray-200 pt-3 text-sm">
-            <div className="flex justify-between text-gray-500"><span>{t('sum_base')}</span><span>{fmtPrice(subtotal)}</span></div>
-            <div className="flex justify-between text-[#3A2115]"><span>{t('sum_sub', { pct: SUB_PCT })}</span><span>−{fmtPrice(subDisc)}</span></div>
-            {loyaltyPct > 0 && <div className="flex justify-between text-[#3A2115]"><span>{t('sum_card', { pct: loyaltyPct })}</span><span>−{fmtPrice(cardDisc)}</span></div>}
-            <div className="flex justify-between text-[#3A2115]"><span>{t('sum_delivery')}</span><span>{freeShip ? t('sum_free') : fmtPrice(deliveryCost)}</span></div>
-            <div className="flex justify-between border-t border-gray-200 pt-1 text-base font-bold text-[#412618]"><span>{t('sum_total')}</span><span>{fmtPrice(total)}</span></div>
-          </div>
-        </div>
-
-        {/* ── Delivery ── */}
-        <div ref={delivRef} className="mt-6 border-t border-gray-200 pt-5">
-          <h3 className="text-xl font-semibold text-[#412618]">{t('editor_delivery_title')}</h3>
-          <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            {methodTile('paczkomat', t('delivery_paczkomat_t'), t('delivery_paczkomat_s'))}
-            {methodTile('courier', t('delivery_courier_t'), t('delivery_courier_s'))}
-            {methodTile('pickup', t('delivery_pickup_t'), t('delivery_pickup_s'))}
-          </div>
-          {method === 'paczkomat' && (
-            <div className="mt-3 space-y-2">
-              <input className="input w-full" placeholder={t('editor_paczkomat_code')} value={paczCode} onChange={e => setPaczCode(e.target.value)} />
-              <input className="input w-full" placeholder={t('editor_paczkomat_name')} value={paczName} onChange={e => setPaczName(e.target.value)} />
-            </div>
-          )}
-          {method === 'courier' && (
-            <div className="mt-3 space-y-2">
-              <input className="input w-full" placeholder={t('street')} value={street} onChange={e => setStreet(e.target.value)} />
-              <div className="grid grid-cols-2 gap-2">
-                <input className="input w-full" placeholder={t('postal')} value={postal} onChange={e => setPostal(e.target.value)} />
-                <input className="input w-full" placeholder={t('city')} value={city} onChange={e => setCity(e.target.value)} />
-              </div>
-            </div>
-          )}
-          {method === 'pickup' && <p className="mt-3 text-sm text-gray-600">Coffee Verve, Warszawa</p>}
-        </div>
-
-        {/* ── Schedule ── */}
-        <div className="mt-6 border-t border-gray-200 pt-5">
-          <h3 className="text-xl font-semibold text-[#412618]">{t('editor_schedule_title')}</h3>
-          <label className="mt-4 block text-sm text-brand-muted">{t('subs_interval')}</label>
-          <select value={weeks} onChange={e => setWeeks(Number(e.target.value))} className="input mt-1 text-sm">
-            {[1, 2, 3, 4, 6, 8].map(w => <option key={w} value={w}>{t('subs_every', { n: w })}</option>)}
-          </select>
-          <label className="mt-4 block text-sm text-brand-muted">{t('subs_next')}</label>
-          <input type="date" value={date} onChange={e => setDate(e.target.value)} className="input mt-1 text-sm" />
-        </div>
-
-        {/* Footer */}
-        <div className="mt-6 flex items-center justify-between gap-3">
-          <button type="button" onClick={onClose} className="text-sm font-normal text-gray-500 hover:text-gray-700">{t('subs_cancel_edit')}</button>
+    <Modal
+      title={t('subs_edit')}
+      onClose={onClose}
+      closeLabel={t('subs_cancel_edit')}
+      footer={
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-3">
+          <button type="button" onClick={onClose} className="order-2 w-full rounded-full px-5 py-2.5 text-sm font-normal text-gray-500 hover:text-gray-700 sm:order-1 sm:w-auto">{t('subs_cancel_edit')}</button>
           <button type="button" disabled={!canSave || saving} onClick={save}
-            className="rounded-full bg-[#412618] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] disabled:opacity-50">
+            className="order-1 w-full rounded-full bg-[#412618] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] disabled:opacity-50 sm:order-2 sm:w-auto">
             {saving ? '…' : t('editor_save_btn')}
           </button>
         </div>
-      </div>
-    </div>
+      }
+    >
+      {/* ── Composition ── */}
+      <section ref={compRef}>
+        <h4 className={sectionH}>{t('editor_composition_title')}</h4>
+        <div className="mt-3 space-y-2">
+          {items.map((it, idx) => (
+            <div key={idx} className="flex flex-wrap items-center gap-x-2 gap-y-2 rounded-lg border border-gray-200 p-3">
+              <span className="min-w-0 basis-full truncate text-sm font-medium text-[#3A2115] sm:flex-1 sm:basis-0">{it.name}</span>
+              <select value={it.weight} onChange={e => setWeight(idx, Number(e.target.value) as Weight)} className="input !w-24 !py-1 text-sm">
+                {WEIGHTS.map(w => <option key={w} value={w}>{wLabel(w)}</option>)}
+              </select>
+              <span className="flex gap-1 rounded-full bg-gray-100 p-0.5">{(['beans', 'ground'] as Grind[]).map(g => gt(g, idx, it.grind))}</span>
+              <span className="flex items-center gap-1.5">
+                <button type="button" onClick={() => setQty(idx, it.quantity - 1)} className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-300 text-sm text-[#412618]">−</button>
+                <span className="w-5 text-center text-sm">{it.quantity}</span>
+                <button type="button" onClick={() => setQty(idx, it.quantity + 1)} className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-300 text-sm text-[#412618]">+</button>
+              </span>
+              <span className="ml-auto whitespace-nowrap text-sm font-semibold text-[#3A2115]">{fmtPrice((it.price / 100) * it.quantity)}</span>
+              <button type="button" onClick={() => remove(idx)} disabled={items.length <= 1} aria-label="✕"
+                className="shrink-0 text-sm font-medium text-[#412618] hover:opacity-70 disabled:opacity-30">✕</button>
+            </div>
+          ))}
+        </div>
+
+        {items.length === 0 && <p className="mt-2 text-sm text-[#7A5A3A]">{t('editor_min_warning')}</p>}
+
+        {items.length < 10 ? (
+          <button type="button" onClick={() => setPicking(v => !v)} className="mt-3 rounded-full border border-[#412618] px-4 py-1.5 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5">
+            {t('editor_add_coffee')}
+          </button>
+        ) : <p className="mt-3 text-sm text-gray-500">{t('editor_max_items')}</p>}
+
+        {picking && (
+          <div className="mt-3 rounded-lg border border-gray-200 p-2">
+            <p className="px-1 pb-2 text-xs font-semibold uppercase text-gray-500">{t('editor_pick_title')}</p>
+            <div className="max-h-56 space-y-1 overflow-y-auto">
+              {catalog.map(p => (
+                <button key={p.id} type="button" onClick={() => add(p)} className="flex w-full items-center gap-3 rounded-lg p-2 text-left transition-colors hover:bg-gray-50">
+                  <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                    {p.image && <Image src={p.image} alt={p.name} fill sizes="44px" className="object-cover" />}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-[#3A2115]">{p.name}</p>
+                    {p.flavor && <p className="truncate text-xs text-gray-500">{p.flavor}</p>}
+                  </div>
+                  <span className="shrink-0 text-sm text-gray-600">{fmtPrice(p.price_250)}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Totals */}
+        <div className="mt-4 border-t border-gray-100 text-sm">
+          <div className="flex justify-between py-2 text-gray-500"><span>{t('sum_base')}</span><span>{fmtPrice(subtotal)}</span></div>
+          <div className="flex justify-between py-2 text-[#3A2115]"><span>{t('sum_sub', { pct: SUB_PCT })}</span><span>−{fmtPrice(subDisc)}</span></div>
+          {loyaltyPct > 0 && <div className="flex justify-between py-2 text-[#3A2115]"><span>{t('sum_card', { pct: loyaltyPct })}</span><span>−{fmtPrice(cardDisc)}</span></div>}
+          <div className="flex justify-between py-2 text-[#3A2115]"><span>{t('sum_delivery')}</span><span>{freeShip ? t('sum_free') : fmtPrice(deliveryCost)}</span></div>
+          <div className="flex justify-between border-t border-gray-100 py-2 text-base font-semibold text-[#412618]"><span>{t('sum_total')}</span><span>{fmtPrice(total)}</span></div>
+        </div>
+      </section>
+
+      {/* ── Delivery ── */}
+      <section ref={delivRef} className="mt-6">
+        <h4 className={sectionH}>{t('editor_delivery_title')}</h4>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {methodTile('paczkomat', t('delivery_paczkomat_t'), t('delivery_paczkomat_s'))}
+          {methodTile('courier', t('delivery_courier_t'), t('delivery_courier_s'))}
+          {methodTile('pickup', t('delivery_pickup_t'), t('delivery_pickup_s'))}
+        </div>
+        {method === 'paczkomat' && (
+          <div className="mt-3 space-y-2">
+            <input className="input w-full text-sm" placeholder={t('editor_paczkomat_code')} value={paczCode} onChange={e => setPaczCode(e.target.value)} />
+            <input className="input w-full text-sm" placeholder={t('editor_paczkomat_name')} value={paczName} onChange={e => setPaczName(e.target.value)} />
+          </div>
+        )}
+        {method === 'courier' && (
+          <div className="mt-3 space-y-2">
+            <input className="input w-full text-sm" placeholder={t('street')} value={street} onChange={e => setStreet(e.target.value)} />
+            <div className="grid grid-cols-2 gap-2">
+              <input className="input w-full text-sm" placeholder={t('postal')} value={postal} onChange={e => setPostal(e.target.value)} />
+              <input className="input w-full text-sm" placeholder={t('city')} value={city} onChange={e => setCity(e.target.value)} />
+            </div>
+          </div>
+        )}
+        {method === 'pickup' && <p className="mt-3 text-sm text-gray-600">Coffee Verve, Warszawa</p>}
+      </section>
+
+      {/* ── Schedule ── */}
+      <section className="mt-6">
+        <h4 className={sectionH}>{t('editor_schedule_title')}</h4>
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          <div>
+            <label className="mb-1 block text-xs text-brand-muted">{t('subs_interval')}</label>
+            <select value={weeks} onChange={e => setWeeks(Number(e.target.value))} className="input w-full text-sm">
+              {[1, 2, 3, 4, 6, 8].map(w => <option key={w} value={w}>{t('subs_every', { n: w })}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="mb-1 block text-xs text-brand-muted">{t('subs_next')}</label>
+            <input type="date" value={date} onChange={e => setDate(e.target.value)} className="input w-full text-sm" />
+          </div>
+        </div>
+      </section>
+    </Modal>
   )
 }

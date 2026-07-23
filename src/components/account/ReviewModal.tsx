@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import StarPicker from '@/components/shop/reviews/StarPicker'
+import Modal from '@/components/account/Modal'
 
 export interface ReviewTarget {
   productId: string
@@ -56,31 +57,32 @@ export default function ReviewModal({ target, authorName, email, onClose, onSubm
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
-      <form onSubmit={submit} className="w-full max-w-md space-y-4 rounded-2xl bg-white p-6 shadow-lg" onClick={e => e.stopPropagation()}>
-        <h3 className="text-lg font-semibold text-[#3A2115]">{t('reviews_modal_title')}</h3>
-        <p className="text-sm text-brand-muted">{target.name}</p>
-
+    <Modal
+      title={t('reviews_modal_title')}
+      subtitle={target.name}
+      onClose={onClose}
+      closeLabel={t('reviews_close')}
+      footer={
+        <div className="flex flex-col gap-2 sm:flex-row sm:justify-end sm:gap-3">
+          <button type="button" onClick={onClose} className="order-2 w-full rounded-full px-5 py-2.5 text-sm font-normal text-gray-500 hover:text-gray-700 sm:order-1 sm:w-auto">{t('reviews_close')}</button>
+          <button type="submit" form="review-form" disabled={busy} className="order-1 w-full rounded-full bg-[#412618] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] disabled:opacity-60 sm:order-2 sm:w-auto">
+            {busy ? t('reviews_submitting') : t('reviews_submit')}
+          </button>
+        </div>
+      }
+    >
+      <form id="review-form" onSubmit={submit} className="space-y-4">
         <div>
           <label className="mb-2 block text-xs font-medium text-brand-muted">{t('reviews_rating_label')}</label>
           <StarPicker value={rating} onChange={setRating} />
         </div>
-
         <div>
           <label className="mb-1 block text-xs font-medium text-brand-muted">{t('reviews_text_label')}</label>
           <textarea rows={4} value={text} onChange={e => setText(e.target.value)}
             placeholder={t('reviews_text_placeholder')} className="input resize-none text-sm" />
         </div>
-
         {err && <p className="text-sm text-[#7A5A3A]">{err}</p>}
-
-        <div className="flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="btn btn-outline text-sm">{t('reviews_close')}</button>
-          <button type="submit" disabled={busy} className="btn btn-primary text-sm disabled:opacity-60">
-            {busy ? t('reviews_submitting') : t('reviews_submit')}
-          </button>
-        </div>
       </form>
-    </div>
+    </Modal>
   )
 }
