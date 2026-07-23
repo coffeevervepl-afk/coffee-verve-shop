@@ -76,9 +76,9 @@ export default function ReferralCard({ locale, code, invited, available }: Props
 
       <Link
         href={`/${locale}/referral`}
-        className="mt-4 inline-block text-sm font-medium text-[#412618] underline-offset-2 hover:underline"
+        className="warm-shimmer-chip mt-4 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium text-[#3A2115] shadow-sm transition-transform hover:scale-[1.03]"
       >
-        {t('how_it_works')} →
+        ✨ {t('how_it_works')}
       </Link>
     </section>
   )

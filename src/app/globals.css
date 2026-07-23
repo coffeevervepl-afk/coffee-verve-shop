@@ -266,6 +266,21 @@ p  { line-height: 1.7; }
   .ref-pulse-btn { animation: none; }
 }
 
+/* ── Shared warm shimmer chip (quiz-button palette) — one animation so every
+      shimmering pill on the page breathes in sync. Set text colour on the el. ── */
+.warm-shimmer-chip {
+  background: linear-gradient(90deg, #F5E6D3, #E8C4D8, #D4C8E8, #C6DBE8, #F5E6D3);
+  background-size: 200% 100%;
+  animation: warmChip 4s ease-in-out infinite;
+}
+@keyframes warmChip {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .warm-shimmer-chip { animation: none; }
+}
+
 /* ── Coffee quiz — step slide-in ─────────────────────────────────────────── */
 @keyframes quiz-slide-in {
   from { opacity: 0; transform: translateX(24px); }

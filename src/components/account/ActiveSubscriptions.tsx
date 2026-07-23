@@ -68,7 +68,7 @@ export default function ActiveSubscriptions({ locale, initialSubs }: { locale: L
             <div key={s.id} className="flex flex-1 flex-col rounded-2xl border border-gray-200 border-t-2 border-t-[#412618] bg-white p-6 shadow-md transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg">
               <div className="flex items-start justify-between gap-3">
                 {s.status === 'active' ? (
-                  <span className="rounded-full border border-[#412618] px-3 py-1 text-xs font-semibold text-[#412618]">{t('subs_status_active')}</span>
+                  <span className="warm-shimmer-chip rounded-full px-3 py-1 text-xs font-semibold text-[#3A2115] shadow-sm">{t('subs_status_active')}</span>
                 ) : (
                   <span className="rounded-full border border-gray-300 px-3 py-1 text-xs font-semibold text-gray-500">{t('subs_status_paused')}</span>
                 )}
