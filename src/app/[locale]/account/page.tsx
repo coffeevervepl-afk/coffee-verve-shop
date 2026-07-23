@@ -227,7 +227,7 @@ export default async function AccountPage({ params }: Props) {
       <div className="animate-fade-up grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3" style={{ animationDelay: '60ms' }}>
         <div className="flex flex-col lg:col-span-2">
           <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{ta('subs_title')}</h2>
-          <ActiveSubscriptions locale={locale} initialSubs={activeSubs} lastCancelled={lastCancelled} authUserId={user.id} />
+          <ActiveSubscriptions locale={locale} initialSubs={activeSubs} lastCancelled={lastCancelled} authUserId={user.id} loyaltyPct={tierPct} loyaltyTier={t(`tier_${tier}`)} />
         </div>
         <div className="flex flex-col lg:col-span-1">
           <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{t('loyalty_title')}</h2>

@@ -23,18 +23,31 @@ export interface LastCancelled {
   delivery_address: Record<string, unknown> | null
 }
 
-type ReasonCode = 'too_much_coffee' | 'try_others' | 'too_expensive' | 'delivery_issue' | 'forgot_pickup' | 'quality_issue' | 'no_time' | 'other'
-const REASONS: ReasonCode[] = ['too_much_coffee', 'try_others', 'too_expensive', 'delivery_issue', 'forgot_pickup', 'quality_issue', 'no_time', 'other']
+type ReasonCode = 'bad_taste' | 'too_often' | 'too_expensive' | 'delivery_issue' | 'found_another' | 'other'
+const REASONS: ReasonCode[] = ['bad_taste', 'too_often', 'too_expensive', 'delivery_issue', 'found_another', 'other']
+// Which retention offer is shown for each reason (recorded as offered_solution).
+const REASON_OFFER: Record<ReasonCode, string> = {
+  bad_taste: 'change_composition', too_often: 'change_interval', too_expensive: 'show_discount',
+  delivery_issue: 'change_delivery', found_another: 'pause_1m', other: 'pause_1m',
+}
 
 const wLabel = (w: number) => (w >= 1000 ? `${w / 1000} кг` : `${w} г`)
 const DATE_LOCALE: Record<Locale, string> = { ru: 'ru-RU', pl: 'pl-PL', ua: 'uk-UA' }
+const fmtDateL = (d: string, locale: Locale) => new Date(d).toLocaleDateString(DATE_LOCALE[locale])
 const SHIMMER_BTN = 'brand-shimmer self-start rounded-full px-6 py-3 text-sm font-medium text-[#3a1f16] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.5)] transition-transform hover:scale-[1.02] disabled:opacity-50'
 
-function ymdPlusWeeks(weeks: number): string {
-  const d = new Date(); d.setDate(d.getDate() + weeks * 7); return d.toISOString().slice(0, 10)
-}
-function ymdPlusMonths(n: number): string {
-  const d = new Date(); d.setMonth(d.getMonth() + n); return d.toISOString().slice(0, 10)
+function ymdPlusWeeks(weeks: number): string { const d = new Date(); d.setDate(d.getDate() + weeks * 7); return d.toISOString().slice(0, 10) }
+function ymdPlusMonths(n: number): string { const d = new Date(); d.setMonth(d.getMonth() + n); return d.toISOString().slice(0, 10) }
+
+// Shared clickable tile (title + optional subtitle) used across every modal.
+function Tile({ title, subtitle, onClick, disabled }: { title: string; subtitle?: string; onClick: () => void; disabled?: boolean }) {
+  return (
+    <button type="button" disabled={disabled} onClick={onClick}
+      className="flex flex-col rounded-xl border-2 border-gray-200 bg-white p-4 text-left transition-all hover:border-[#412618] hover:shadow-sm disabled:opacity-50">
+      <span className="text-base font-semibold text-[#3A2115]">{title}</span>
+      {subtitle && <span className="mt-0.5 text-sm text-gray-600">{subtitle}</span>}
+    </button>
+  )
 }
 
 interface Props {
@@ -42,9 +55,11 @@ interface Props {
   initialSubs:   DashSub[]
   lastCancelled: LastCancelled | null
   authUserId:    string
+  loyaltyPct:    number
+  loyaltyTier:   string
 }
 
-export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled, authUserId }: Props) {
+export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled, authUserId, loyaltyPct, loyaltyTier }: Props) {
   const t  = useTranslations('account')
   const tp = useTranslations('product')
   const [subs, setSubs]         = useState<DashSub[]>(initialSubs)
@@ -56,23 +71,20 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
   const [restoredDate, setRestoredDate] = useState<string | null>(null)
 
   const grindLabel = (g: string) => (g === 'ground' ? tp('grind_ground') : tp('grind_whole'))
-  const fmtDate = (d: string) => new Date(d).toLocaleDateString(DATE_LOCALE[locale])
+  const fmtDate = (d: string) => fmtDateL(d, locale)
 
   async function doPause(sub: DashSub, pausedUntil: string | null) {
     setBusy(sub.id)
-    await createClient().from('subscriptions')
-      .update({ status: 'paused', paused_at: new Date().toISOString(), paused_until: pausedUntil })
-      .eq('id', sub.id)
+    const nowIso = new Date().toISOString()
+    await createClient().from('subscriptions').update({ status: 'paused', paused_at: nowIso, paused_until: pausedUntil }).eq('id', sub.id)
     setBusy(null); setPausing(null)
-    setSubs(prev => prev.map(s => (s.id === sub.id ? { ...s, status: 'paused', paused_at: new Date().toISOString(), paused_until: pausedUntil } : s)))
+    setSubs(prev => prev.map(s => (s.id === sub.id ? { ...s, status: 'paused', paused_at: nowIso, paused_until: pausedUntil } : s)))
   }
 
   async function resume(sub: DashSub) {
     setBusy(sub.id)
     const nextDate = ymdPlusWeeks(sub.interval_weeks)
-    await createClient().from('subscriptions')
-      .update({ status: 'active', paused_at: null, paused_until: null, next_delivery_date: nextDate })
-      .eq('id', sub.id)
+    await createClient().from('subscriptions').update({ status: 'active', paused_at: null, paused_until: null, next_delivery_date: nextDate }).eq('id', sub.id)
     setBusy(null)
     setSubs(prev => prev.map(s => (s.id === sub.id ? { ...s, status: 'active', paused_at: null, paused_until: null, next_delivery_date: nextDate } : s)))
   }
@@ -96,10 +108,7 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
       next_delivery_date: nextDate, discount_percent: 5, payment_method: 'manual',
       delivery_method: lastCancelled.delivery_method, delivery_address: lastCancelled.delivery_address,
     }).select('id').single()
-    if (!error && data) {
-      // Mark the source cancellation as "returned" for CRM analytics.
-      await sb.rpc('mark_cancellation_returned', { p_subscription_id: lastCancelled.id })
-    }
+    if (!error && data) await sb.rpc('mark_cancellation_returned', { p_subscription_id: lastCancelled.id })
     setRestoring(false)
     if (error || !data) return
     setSubs(prev => [...prev, { id: data.id, status: 'active', items: lastCancelled.items, interval_weeks: weeks, next_delivery_date: nextDate, paused_at: null, paused_until: null }])
@@ -153,9 +162,7 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
               ) : (
                 <>
                   <p className="mt-4 border-t border-gray-200 pt-3 text-sm text-gray-500">
-                    {s.paused_until
-                      ? t('subs_resume_auto', { date: fmtDate(s.paused_until) })
-                      : (s.paused_at ? t('subs_paused_since', { date: fmtDate(s.paused_at) }) : '')}
+                    {s.paused_until ? t('subs_resume_auto', { date: fmtDate(s.paused_until) }) : (s.paused_at ? t('subs_paused_since', { date: fmtDate(s.paused_at) }) : '')}
                   </p>
                   <div className="mt-auto flex flex-col pt-6">
                     <button type="button" disabled={busy === s.id} onClick={() => resume(s)} className={SHIMMER_BTN}>
@@ -172,26 +179,23 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
       {editing && <EditModal sub={editing} busy={busy === editing.id} onClose={() => setEditing(null)} onSave={saveEdit} />}
 
       {pausing && (
-        <PauseModal
-          busy={busy === pausing.id}
-          onClose={() => setPausing(null)}
-          onPick={(months) => doPause(pausing, months == null ? null : ymdPlusMonths(months))}
-        />
+        <PauseModal locale={locale} busy={busy === pausing.id} onClose={() => setPausing(null)}
+          onPick={(months) => doPause(pausing, months == null ? null : ymdPlusMonths(months))} />
       )}
 
       {canceling && (
         <ExitSurvey
-          sub={canceling}
+          sub={canceling} loyaltyPct={loyaltyPct} loyaltyTier={loyaltyTier}
           onClose={() => setCanceling(null)}
-          onPaused={(pausedUntil) => {
-            setSubs(prev => prev.map(s => (s.id === canceling.id ? { ...s, status: 'paused', paused_at: new Date().toISOString(), paused_until: pausedUntil } : s)))
+          onDone={(r) => {
+            const now = new Date().toISOString()
+            if (r.type === 'paused') setSubs(prev => prev.map(s => (s.id === canceling.id ? { ...s, status: 'paused', paused_at: now, paused_until: r.pausedUntil } : s)))
+            else if (r.type === 'cancelled') setSubs(prev => prev.filter(s => s.id !== canceling.id))
+            else if (r.type === 'stayed' && r.patch) setSubs(prev => prev.map(s => (s.id === canceling.id ? { ...s, ...r.patch } : s)))
+            const openEdit = r.type === 'edit' ? canceling : null
             setCanceling(null)
-          }}
-          onCancelled={() => {
-            setSubs(prev => prev.filter(s => s.id !== canceling.id))
-            setCanceling(null)
-          }}
-        />
+            if (openEdit) setEditing(openEdit)
+          }} />
       )}
 
       {restoredDate && (
@@ -207,33 +211,41 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
   )
 }
 
-// ── Pause duration modal ─────────────────────────────────────────────────────
-function PauseModal({ busy, onClose, onPick }: { busy: boolean; onClose: () => void; onPick: (months: number | null) => void }) {
+// ── Modal shell ──────────────────────────────────────────────────────────────
+function Modal({ title, subtitle, onClose, children, wide }: { title: string; subtitle?: string; onClose: () => void; children: React.ReactNode; wide?: boolean }) {
   const t = useTranslations('account')
-  const opt = 'w-full rounded-full border border-[#412618] px-4 py-2.5 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5 disabled:opacity-50'
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
-      <div className="w-full max-w-sm rounded-2xl bg-white p-6" onClick={e => e.stopPropagation()}>
-        <h3 className="text-lg font-semibold text-[#3A2115]">{t('pause_title')}</h3>
-        <p className="mt-1 text-sm text-gray-600">{t('pause_sub')}</p>
-        <div className="mt-5 space-y-2">
-          <button type="button" disabled={busy} onClick={() => onPick(1)} className={opt}>{t('pause_1m')}</button>
-          <button type="button" disabled={busy} onClick={() => onPick(2)} className={opt}>{t('pause_2m')}</button>
-          <button type="button" disabled={busy} onClick={() => onPick(3)} className={opt}>{t('pause_3m')}</button>
-          <button type="button" disabled={busy} onClick={() => onPick(null)} className={opt}>{t('pause_manual')}</button>
-        </div>
+      <div className={`max-h-[90vh] w-full ${wide ? 'max-w-lg' : 'max-w-md'} overflow-y-auto rounded-2xl bg-white p-6`} onClick={e => e.stopPropagation()}>
+        <h3 className="text-xl font-semibold text-[#412618]">{title}</h3>
+        {subtitle && <p className="mt-1 text-sm text-gray-600">{subtitle}</p>}
+        <div className="mt-5">{children}</div>
         <button type="button" onClick={onClose} className="mt-4 w-full text-center text-sm font-normal text-gray-500 hover:text-gray-700">{t('subs_cancel_edit')}</button>
       </div>
     </div>
   )
 }
 
-// ── Exit survey (reason → pause offer → confirm) ─────────────────────────────
-function ExitSurvey({ sub, onClose, onPaused, onCancelled }: {
-  sub: DashSub
-  onClose: () => void
-  onPaused: (pausedUntil: string) => void
-  onCancelled: () => void
+// ── Pause duration modal ─────────────────────────────────────────────────────
+function PauseModal({ locale, busy, onClose, onPick }: { locale: Locale; busy: boolean; onClose: () => void; onPick: (months: number | null) => void }) {
+  const t = useTranslations('account')
+  return (
+    <Modal title={t('pause_title')} subtitle={t('pause_sub')} onClose={onClose}>
+      <div className="flex flex-col gap-3">
+        <Tile disabled={busy} title={t('pause_1m')} subtitle={t('pause_resumes_on', { date: fmtDateL(ymdPlusMonths(1), locale) })} onClick={() => onPick(1)} />
+        <Tile disabled={busy} title={t('pause_2m')} subtitle={t('pause_resumes_on', { date: fmtDateL(ymdPlusMonths(2), locale) })} onClick={() => onPick(2)} />
+        <Tile disabled={busy} title={t('pause_3m')} subtitle={t('pause_resumes_on', { date: fmtDateL(ymdPlusMonths(3), locale) })} onClick={() => onPick(3)} />
+        <Tile disabled={busy} title={t('pause_manual')} subtitle={t('pause_manual_s')} onClick={() => onPick(null)} />
+      </div>
+    </Modal>
+  )
+}
+
+// ── Exit survey ──────────────────────────────────────────────────────────────
+type ExitResult = { type: 'paused'; pausedUntil: string } | { type: 'cancelled' } | { type: 'stayed'; patch?: Partial<DashSub> } | { type: 'edit' }
+
+function ExitSurvey({ sub, loyaltyPct, loyaltyTier, onClose, onDone }: {
+  sub: DashSub; loyaltyPct: number; loyaltyTier: string; onClose: () => void; onDone: (r: ExitResult) => void
 }) {
   const t = useTranslations('account')
   const [step, setStep] = useState<'reason' | 'offer' | 'confirm'>('reason')
@@ -241,115 +253,147 @@ function ExitSurvey({ sub, onClose, onPaused, onCancelled }: {
   const [reasonText, setReasonText] = useState('')
   const [busy, setBusy] = useState(false)
 
-  const offeredPause = reason !== 'no_time'
-
-  async function log(finalAction: 'paused' | 'cancelled' | 'stayed', acceptedPause: boolean, pausedUntil: string | null) {
-    setBusy(true)
+  async function callLog(finalAction: string, offeredSolution: string, acceptedSolution: boolean, pausedUntil: string | null) {
     const { error } = await createClient().rpc('log_subscription_cancellation', {
-      p_subscription_id: sub.id,
-      p_reason_code:     reason,
-      p_reason_text:     reason === 'other' ? (reasonText.trim() || null) : null,
-      p_offered_pause:   offeredPause,
-      p_accepted_pause:  acceptedPause,
-      p_final_action:    finalAction,
-      p_paused_until:    pausedUntil,
+      p_subscription_id:   sub.id,
+      p_reason_code:       reason,
+      p_reason_text:       reason === 'other' ? (reasonText.trim() || null) : null,
+      p_final_action:      finalAction,
+      p_offered_solution:  offeredSolution,
+      p_accepted_solution: acceptedSolution,
+      p_paused_until:      pausedUntil,
     })
-    setBusy(false)
     return !error
   }
 
+  async function acceptEdit(offeredSolution: string) {
+    setBusy(true); const ok = await callLog('stayed', offeredSolution, true, null); setBusy(false)
+    if (ok) onDone({ type: 'edit' })
+  }
+  async function acceptInterval(weeks: number) {
+    setBusy(true)
+    const nextDate = ymdPlusWeeks(weeks)
+    await createClient().from('subscriptions').update({ interval_weeks: weeks, next_delivery_date: nextDate }).eq('id', sub.id)
+    const ok = await callLog('stayed', 'change_interval', true, null)
+    setBusy(false)
+    if (ok) onDone({ type: 'stayed', patch: { interval_weeks: weeks, next_delivery_date: nextDate } })
+  }
+  async function acceptDiscount() {
+    setBusy(true); const ok = await callLog('stayed', 'show_discount', true, null); setBusy(false)
+    if (ok) onDone({ type: 'stayed' })
+  }
   async function acceptPause(months: number) {
+    setBusy(true)
     const pausedUntil = ymdPlusMonths(months)
-    if (await log('paused', true, pausedUntil)) onPaused(pausedUntil)
+    const ok = await callLog('paused', `pause_${months}m`, true, pausedUntil)
+    setBusy(false)
+    if (ok) onDone({ type: 'paused', pausedUntil })
   }
   async function confirmCancel() {
-    if (await log('cancelled', false, null)) onCancelled()
+    setBusy(true); const ok = await callLog('cancelled', REASON_OFFER[reason as ReasonCode], false, null); setBusy(false)
+    if (ok) onDone({ type: 'cancelled' })
   }
   async function stay() {
-    await log('stayed', false, null)
-    onClose()
+    setBusy(true); await callLog('stayed', REASON_OFFER[reason as ReasonCode], false, null); setBusy(false)
+    onDone({ type: 'stayed' })
   }
 
-  const outlineBtn = 'w-full rounded-full border border-[#412618] px-4 py-2.5 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5 disabled:opacity-50'
+  const stillCancel = <button type="button" disabled={busy} onClick={() => setStep('confirm')} className="mt-2 w-full text-center text-sm font-normal text-gray-500 hover:text-gray-700 disabled:opacity-50">{t('exit_still_cancel')}</button>
 
+  // Step 1 — reasons
+  if (step === 'reason') {
+    return (
+      <Modal title={t('exit_title')} subtitle={t('exit_sub')} onClose={onClose}>
+        <div className="flex flex-col gap-3">
+          {REASONS.map(code => (
+            <Tile key={code} title={t(`reason_${code}_t`)} subtitle={t(`reason_${code}_s`)}
+              onClick={() => { setReason(code); if (code !== 'other') setStep('offer') }} />
+          ))}
+        </div>
+        {reason === 'other' && (
+          <>
+            <textarea value={reasonText} maxLength={500} onChange={e => setReasonText(e.target.value)} rows={3} placeholder={t('exit_other_ph')} className="input mt-3 w-full resize-none text-sm" />
+            <button type="button" onClick={() => setStep('offer')} className="btn btn-primary mt-3 w-full text-sm">{t('exit_continue')}</button>
+          </>
+        )}
+      </Modal>
+    )
+  }
+
+  // Step 2 — per-reason retention offer
+  if (step === 'offer') {
+    if (reason === 'bad_taste') return (
+      <Modal title={t('offer_taste_title')} subtitle={t('offer_taste_sub')} onClose={onClose}>
+        <div className="flex flex-col gap-3">
+          <Tile disabled={busy} title={t('offer_change_composition')} onClick={() => acceptEdit('change_composition')} />
+        </div>{stillCancel}
+      </Modal>
+    )
+    if (reason === 'too_often') return (
+      <Modal title={t('offer_often_title')} subtitle={t('offer_often_sub')} onClose={onClose}>
+        <div className="flex flex-col gap-3">
+          <Tile disabled={busy} title={t('offer_interval_6')} onClick={() => acceptInterval(6)} />
+          <Tile disabled={busy} title={t('offer_interval_8')} onClick={() => acceptInterval(8)} />
+        </div>{stillCancel}
+      </Modal>
+    )
+    if (reason === 'too_expensive') return (
+      <Modal title={t('offer_price_title')} subtitle={t('offer_price_sub')} onClose={onClose} wide>
+        <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-[#3A2115]">
+          <p>{t('offer_price_level', { tier: loyaltyTier, pct: loyaltyPct })}</p>
+          <p className="mt-1">{t('offer_price_subscription')}</p>
+          <p className="mt-1 font-semibold text-[#412618]">{t('offer_price_total', { total: loyaltyPct + 5 })}</p>
+          <p className="mt-1 text-gray-600">{t('offer_price_shipping')}</p>
+        </div>
+        <div className="mt-4 flex flex-col gap-3">
+          <Tile disabled={busy} title={t('offer_price_stay')} onClick={acceptDiscount} />
+        </div>{stillCancel}
+      </Modal>
+    )
+    if (reason === 'delivery_issue') return (
+      <Modal title={t('offer_delivery_title')} subtitle={t('offer_delivery_sub')} onClose={onClose}>
+        <div className="flex flex-col gap-3">
+          <Tile disabled={busy} title={t('offer_change_delivery')} onClick={() => acceptEdit('change_delivery')} />
+        </div>{stillCancel}
+      </Modal>
+    )
+    // found_another / other → pause offer
+    return (
+      <Modal title={t('offer_pause_title')} subtitle={t('offer_pause_sub')} onClose={onClose}>
+        <div className="flex flex-col gap-3">
+          <Tile disabled={busy} title={t('pause_offer_1m')} onClick={() => acceptPause(1)} />
+          <Tile disabled={busy} title={t('pause_offer_2m')} onClick={() => acceptPause(2)} />
+          <Tile disabled={busy} title={t('pause_offer_3m')} onClick={() => acceptPause(3)} />
+        </div>{stillCancel}
+      </Modal>
+    )
+  }
+
+  // Step 3 — final confirmation
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
-      <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl bg-white p-6" onClick={e => e.stopPropagation()}>
-        {step === 'reason' && (
-          <>
-            <h3 className="text-lg font-semibold text-[#3A2115]">{t('exit_title')}</h3>
-            <p className="mt-1 text-sm text-gray-600">{t('exit_sub')}</p>
-            <div className="mt-4 space-y-1.5">
-              {REASONS.map(code => (
-                <label key={code} className={`flex cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 text-sm transition-colors ${reason === code ? 'border-[#412618] bg-[#412618]/5 text-[#3A2115]' : 'border-gray-200 text-[#3A2115] hover:bg-gray-50'}`}>
-                  <input type="radio" name="reason" checked={reason === code} onChange={() => setReason(code)} className="accent-[#412618]" />
-                  <span>{t(`reason_${code}`)}</span>
-                </label>
-              ))}
-            </div>
-            {reason === 'other' && (
-              <textarea value={reasonText} onChange={e => setReasonText(e.target.value)} rows={3} placeholder={t('exit_other_ph')} className="input mt-3 w-full resize-none text-sm" />
-            )}
-            <div className="mt-5 flex justify-end gap-2">
-              <button type="button" onClick={onClose} className="btn btn-outline text-sm">{t('subs_cancel_edit')}</button>
-              <button type="button" disabled={!reason} onClick={() => setStep(reason === 'no_time' ? 'confirm' : 'offer')} className="btn btn-primary text-sm disabled:opacity-50">{t('exit_continue')}</button>
-            </div>
-          </>
-        )}
-
-        {step === 'offer' && (
-          <>
-            <h3 className="text-lg font-semibold text-[#412618]">{t('pause_offer_title')}</h3>
-            <p className="mt-1 text-sm text-gray-600">{t('pause_offer_sub')}</p>
-            <div className="mt-5 space-y-2">
-              <button type="button" disabled={busy} onClick={() => acceptPause(1)} className={outlineBtn}>{t('pause_offer_1m')}</button>
-              <button type="button" disabled={busy} onClick={() => acceptPause(2)} className={outlineBtn}>{t('pause_offer_2m')}</button>
-              <button type="button" disabled={busy} onClick={() => acceptPause(3)} className={outlineBtn}>{t('pause_offer_3m')}</button>
-            </div>
-            <button type="button" disabled={busy} onClick={() => setStep('confirm')} className="mt-4 w-full text-center text-sm font-normal text-gray-500 hover:text-gray-700 disabled:opacity-50">{t('exit_still_cancel')}</button>
-          </>
-        )}
-
-        {step === 'confirm' && (
-          <>
-            <h3 className="text-lg font-semibold text-[#3A2115]">{t('exit_confirm_title')}</h3>
-            <p className="mt-1 text-sm text-gray-600">{t('exit_confirm_sub')}</p>
-            <div className="mt-5 space-y-2">
-              <button type="button" disabled={busy} onClick={confirmCancel} className="w-full rounded-full bg-[#412618] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] disabled:opacity-50">{t('exit_confirm_btn')}</button>
-              <button type="button" disabled={busy} onClick={stay} className={outlineBtn}>{t('exit_stay_btn')}</button>
-            </div>
-          </>
-        )}
+    <Modal title={t('exit_confirm_title')} subtitle={t('exit_confirm_sub')} onClose={onClose}>
+      <div className="flex flex-col gap-2">
+        <button type="button" disabled={busy} onClick={confirmCancel} className="w-full rounded-full bg-[#412618] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] disabled:opacity-50">{t('exit_confirm_btn')}</button>
+        <button type="button" disabled={busy} onClick={stay} className="w-full rounded-full border border-[#412618] px-4 py-2.5 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5 disabled:opacity-50">{t('exit_stay_btn')}</button>
       </div>
-    </div>
+    </Modal>
   )
 }
 
-// ── Empty state (never subscribed / all cancelled) ───────────────────────────
-function EmptyState({ locale, hasCancelled, restoring, onRestore }: {
-  locale: Locale
-  hasCancelled: boolean
-  restoring: boolean
-  onRestore: () => void
-}) {
+// ── Empty state ──────────────────────────────────────────────────────────────
+function EmptyState({ locale, hasCancelled, restoring, onRestore }: { locale: Locale; hasCancelled: boolean; restoring: boolean; onRestore: () => void }) {
   const t = useTranslations('account')
   return (
     <div className="relative flex flex-1 flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-md">
       <span aria-hidden className="brand-shimmer absolute inset-x-0 top-0 h-0.5" />
-
       {!hasCancelled && <div className="text-4xl">📦</div>}
       <h3 className={`text-xl font-semibold text-[#412618] ${hasCancelled ? '' : 'mt-2'}`}>{hasCancelled ? t('empty_title_cancelled') : t('empty_title_new')}</h3>
       <p className="mx-auto mt-1 max-w-sm text-sm text-gray-600">{hasCancelled ? t('empty_sub_cancelled') : t('empty_sub_new')}</p>
-
       <ul className="mx-auto mt-4 space-y-1.5 text-left text-sm text-[#5A4A3A]">
         {[t('empty_benefit_1'), t('empty_benefit_2'), t('empty_benefit_3')].map((b, i) => (
-          <li key={i} className="flex items-start gap-2">
-            <span aria-hidden className="font-semibold text-[#412618]">✓</span>
-            <span>{b}</span>
-          </li>
+          <li key={i} className="flex items-start gap-2"><span aria-hidden className="font-semibold text-[#412618]">✓</span><span>{b}</span></li>
         ))}
       </ul>
-
       <div className="mt-auto pt-6">
         {hasCancelled ? (
           <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
@@ -357,16 +401,10 @@ function EmptyState({ locale, hasCancelled, restoring, onRestore }: {
               className="brand-shimmer w-full rounded-full px-6 py-3 text-sm font-medium text-[#3a1f16] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.5)] transition-transform hover:scale-[1.02] disabled:opacity-50 sm:w-auto">
               {restoring ? '…' : t('empty_restore')}
             </button>
-            <Link href={`/${locale}/shop/subskrypcja`}
-              className="w-full rounded-full border border-[#412618] px-5 py-2.5 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5 sm:w-auto">
-              {t('empty_new_sub')}
-            </Link>
+            <Link href={`/${locale}/shop/subskrypcja`} className="w-full rounded-full border border-[#412618] px-5 py-2.5 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5 sm:w-auto">{t('empty_new_sub')}</Link>
           </div>
         ) : (
-          <Link href={`/${locale}/shop/subskrypcja`}
-            className="inline-block w-full rounded-full bg-[#412618] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] sm:w-auto">
-            {t('subs_empty_cta')}
-          </Link>
+          <Link href={`/${locale}/shop/subskrypcja`} className="inline-block w-full rounded-full bg-[#412618] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] sm:w-auto">{t('subs_empty_cta')}</Link>
         )}
       </div>
     </div>
@@ -374,29 +412,20 @@ function EmptyState({ locale, hasCancelled, restoring, onRestore }: {
 }
 
 // ── Edit interval / next date ────────────────────────────────────────────────
-function EditModal({ sub, busy, onClose, onSave }: {
-  sub: DashSub
-  busy: boolean
-  onClose: () => void
-  onSave: (id: string, intervalWeeks: number, nextDate: string) => void
-}) {
+function EditModal({ sub, busy, onClose, onSave }: { sub: DashSub; busy: boolean; onClose: () => void; onSave: (id: string, intervalWeeks: number, nextDate: string) => void }) {
   const t = useTranslations('account')
   const [weeks, setWeeks] = useState(sub.interval_weeks)
   const [date, setDate]   = useState(sub.next_delivery_date.slice(0, 10))
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
       <div className="w-full max-w-sm rounded-3xl bg-white p-6" onClick={e => e.stopPropagation()}>
         <h3 className="text-lg font-semibold text-[#3A2115]">{t('subs_edit')}</h3>
-
         <label className="mt-4 block text-sm text-brand-muted">{t('subs_interval')}</label>
         <select value={weeks} onChange={e => setWeeks(Number(e.target.value))} className="input mt-1 text-sm">
           {[1, 2, 3, 4, 6, 8].map(w => <option key={w} value={w}>{t('subs_every', { n: w })}</option>)}
         </select>
-
         <label className="mt-4 block text-sm text-brand-muted">{t('subs_next')}</label>
         <input type="date" value={date} onChange={e => setDate(e.target.value)} className="input mt-1 text-sm" />
-
         <div className="mt-6 flex justify-end gap-2">
           <button type="button" onClick={onClose} className="btn btn-outline text-sm">{t('subs_cancel_edit')}</button>
           <button type="button" disabled={busy} onClick={() => onSave(sub.id, weeks, date)} className="btn btn-primary text-sm disabled:opacity-60">{t('subs_save')}</button>
