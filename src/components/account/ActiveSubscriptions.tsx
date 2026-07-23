@@ -77,9 +77,9 @@ export default function ActiveSubscriptions({ locale, initialSubs }: { locale: L
 
               <ul className="mt-3 space-y-2">
                 {(s.items ?? []).map((it, i) => (
-                  <li key={i} className="truncate leading-tight">
-                    <span className="text-xl font-semibold text-[#412618]">{it.name}</span>
-                    <span className="text-base text-gray-500">
+                  <li key={i} className="truncate">
+                    <span className="text-base font-medium text-[#412618]">{it.name}</span>
+                    <span className="text-sm font-normal text-gray-500">
                       <span className="text-gray-400"> · </span>{wLabel(it.weight)}<span className="text-gray-400"> · </span>{grindLabel(it.grind)}{(it.quantity || 1) > 1 ? ` × ${it.quantity}` : ''}
                     </span>
                   </li>
