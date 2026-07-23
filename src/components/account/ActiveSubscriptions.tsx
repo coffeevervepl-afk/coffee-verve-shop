@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
@@ -46,9 +47,9 @@ function ymdPlusMonths(n: number): string { const d = new Date(); d.setMonth(d.g
 function Tile({ title, subtitle, onClick, disabled }: { title: string; subtitle?: string; onClick: () => void; disabled?: boolean }) {
   return (
     <button type="button" disabled={disabled} onClick={onClick}
-      className="flex flex-col rounded-xl border-2 border-gray-200 bg-white p-4 text-left transition-all hover:border-[#412618] hover:shadow-sm disabled:opacity-50">
-      <span className="text-base font-semibold text-[#3A2115]">{title}</span>
-      {subtitle && <span className="mt-0.5 text-sm text-gray-600">{subtitle}</span>}
+      className="flex min-h-[64px] flex-col justify-center rounded-lg border-2 border-gray-200 bg-white p-3 text-left transition-all hover:border-[#412618] hover:shadow-sm disabled:opacity-50">
+      <span className="text-sm font-medium text-[#3A2115]">{title}</span>
+      {subtitle && <span className="mt-0.5 text-xs text-gray-600">{subtitle}</span>}
     </button>
   )
 }
@@ -234,17 +235,27 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
 }
 
 // ── Modal shell ──────────────────────────────────────────────────────────────
-function Modal({ title, subtitle, onClose, children, wide }: { title: string; subtitle?: string; onClose: () => void; children: React.ReactNode; wide?: boolean }) {
+// Portaled to <body> so the fixed overlay is always viewport-relative and above
+// all page content (page cards sit in an `animate-fade-up` transformed ancestor
+// that would otherwise clip a nested fixed element). Fixed header + footer, the
+// middle section scrolls when the content is taller than the viewport.
+function Modal({ title, subtitle, onClose, children }: { title: string; subtitle?: string; onClose: () => void; children: React.ReactNode }) {
   const t = useTranslations('account')
-  return (
+  if (typeof document === 'undefined') return null
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
-      <div className={`max-h-[90vh] w-full ${wide ? 'max-w-lg' : 'max-w-md'} overflow-y-auto rounded-2xl bg-white p-6`} onClick={e => e.stopPropagation()}>
-        <h3 className="text-xl font-semibold text-[#412618]">{title}</h3>
-        {subtitle && <p className="mt-1 text-sm text-gray-600">{subtitle}</p>}
-        <div className="mt-5">{children}</div>
-        <button type="button" onClick={onClose} className="mt-4 w-full text-center text-sm font-normal text-gray-500 hover:text-gray-700">{t('subs_cancel_edit')}</button>
+      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white" onClick={e => e.stopPropagation()}>
+        <div className="shrink-0 border-b border-gray-100 px-6 pt-6 pb-4">
+          <h3 className="text-xl font-semibold text-[#412618]">{title}</h3>
+          {subtitle && <p className="mt-1 text-sm text-gray-600">{subtitle}</p>}
+        </div>
+        <div className="flex-1 overflow-y-auto px-6 py-5">{children}</div>
+        <div className="shrink-0 border-t border-gray-100 px-6 py-3">
+          <button type="button" onClick={onClose} className="w-full text-center text-sm font-normal text-gray-500 hover:text-gray-700">{t('subs_cancel_edit')}</button>
+        </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
 
@@ -253,7 +264,7 @@ function PauseModal({ locale, busy, onClose, onPick }: { locale: Locale; busy: b
   const t = useTranslations('account')
   return (
     <Modal title={t('pause_title')} subtitle={t('pause_sub')} onClose={onClose}>
-      <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Tile disabled={busy} title={t('pause_1m')} subtitle={t('pause_resumes_on', { date: fmtDateL(ymdPlusMonths(1), locale) })} onClick={() => onPick(1)} />
         <Tile disabled={busy} title={t('pause_2m')} subtitle={t('pause_resumes_on', { date: fmtDateL(ymdPlusMonths(2), locale) })} onClick={() => onPick(2)} />
         <Tile disabled={busy} title={t('pause_3m')} subtitle={t('pause_resumes_on', { date: fmtDateL(ymdPlusMonths(3), locale) })} onClick={() => onPick(3)} />
@@ -326,7 +337,7 @@ function ExitSurvey({ sub, loyaltyPct, loyaltyTier, onClose, onDone }: {
   if (step === 'reason') {
     return (
       <Modal title={t('exit_title')} subtitle={t('exit_sub')} onClose={onClose}>
-        <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {REASONS.map(code => (
             <Tile key={code} title={t(`reason_${code}_t`)} subtitle={t(`reason_${code}_s`)}
               onClick={() => { setReason(code); if (code !== 'other') setStep('offer') }} />
@@ -353,14 +364,14 @@ function ExitSurvey({ sub, loyaltyPct, loyaltyTier, onClose, onDone }: {
     )
     if (reason === 'too_often') return (
       <Modal title={t('offer_often_title')} subtitle={t('offer_often_sub')} onClose={onClose}>
-        <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Tile disabled={busy} title={t('offer_interval_6')} onClick={() => acceptInterval(6)} />
           <Tile disabled={busy} title={t('offer_interval_8')} onClick={() => acceptInterval(8)} />
         </div>{stillCancel}
       </Modal>
     )
     if (reason === 'too_expensive') return (
-      <Modal title={t('offer_price_title')} subtitle={t('offer_price_sub')} onClose={onClose} wide>
+      <Modal title={t('offer_price_title')} subtitle={t('offer_price_sub')} onClose={onClose}>
         <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-[#3A2115]">
           <p>{t('offer_price_level', { tier: loyaltyTier, pct: loyaltyPct })}</p>
           <p className="mt-1">{t('offer_price_subscription')}</p>
@@ -382,7 +393,7 @@ function ExitSurvey({ sub, loyaltyPct, loyaltyTier, onClose, onDone }: {
     // found_another / other → pause offer
     return (
       <Modal title={t('offer_pause_title')} subtitle={t('offer_pause_sub')} onClose={onClose}>
-        <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Tile disabled={busy} title={t('pause_offer_1m')} onClick={() => acceptPause(1)} />
           <Tile disabled={busy} title={t('pause_offer_2m')} onClick={() => acceptPause(2)} />
           <Tile disabled={busy} title={t('pause_offer_3m')} onClick={() => acceptPause(3)} />
