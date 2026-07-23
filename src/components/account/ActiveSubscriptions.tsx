@@ -130,7 +130,7 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
     if (!error && data) await sb.rpc('mark_cancellation_returned', { p_subscription_id: lastCancelled.id })
     setRestoring(false)
     if (error || !data) return
-    setSubs(prev => [...prev, { id: data.id, status: 'active', items: lastCancelled.items, interval_weeks: weeks, next_delivery_date: nextDate, paused_at: null, paused_until: null }])
+    setSubs(prev => [...prev, { id: data.id, status: 'active', items: lastCancelled.items, interval_weeks: weeks, next_delivery_date: nextDate, paused_at: null, paused_until: null, delivery_method: lastCancelled.delivery_method, delivery_address: lastCancelled.delivery_address }])
     setRestoredDate(fmtDate(nextDate))
   }
 
