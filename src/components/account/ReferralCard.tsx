@@ -74,7 +74,7 @@ export default function ReferralCard({ locale, code, invited, available }: Props
 
       <Link
         href={`/${locale}/referral`}
-        className="brand-shimmer mt-4 inline-flex items-center gap-1.5 rounded-full border border-white/50 px-4 py-2 text-sm font-semibold text-[#3A2115] shadow-sm transition-transform hover:scale-[1.03]"
+        className="brand-shimmer mt-4 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium text-[#3a1f16] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.5)] transition-transform hover:scale-[1.03]"
       >
         ✨ {t('how_it_works')}
       </Link>
