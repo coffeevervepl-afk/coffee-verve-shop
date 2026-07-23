@@ -28,8 +28,8 @@ export default function ReferralCard({ locale, code, invited, available }: Props
 
   return (
     <section className="relative overflow-hidden rounded-2xl border border-[#E8E7E3] bg-[#F4F3F0] p-6 shadow-[0_4px_20px_rgba(65,38,24,0.08),0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(65,38,24,0.14),0_2px_6px_rgba(0,0,0,0.06)] md:p-8">
-      {/* Warm shimmering top accent stripe (clipped to the rounded corners). */}
-      <span aria-hidden className="ref-stripe absolute inset-x-0 top-0 h-1" />
+      {/* Shimmering top accent stripe (clipped to the rounded corners). */}
+      <span aria-hidden className="brand-shimmer absolute inset-x-0 top-0 h-1" />
 
       <h2 className="flex items-center text-xl font-semibold text-[#412618]">
         <span aria-hidden className="mr-3 text-2xl leading-none">🎁</span>{t('card_title')}
@@ -74,7 +74,7 @@ export default function ReferralCard({ locale, code, invited, available }: Props
 
       <Link
         href={`/${locale}/referral`}
-        className="warm-shimmer-chip mt-4 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium text-[#3A2115] shadow-sm transition-transform hover:scale-[1.03]"
+        className="brand-shimmer mt-4 inline-flex items-center gap-1.5 rounded-full border border-white/50 px-4 py-2 text-sm font-semibold text-[#3A2115] shadow-sm transition-transform hover:scale-[1.03]"
       >
         ✨ {t('how_it_works')}
       </Link>

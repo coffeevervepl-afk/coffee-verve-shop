@@ -233,18 +233,16 @@ p  { line-height: 1.7; }
   .quiz-shimmer { animation: none; }
 }
 
-/* ── Referral card — soft, slow warm shimmer (larger + gentler than the chip) ── */
-.referral-shimmer {
-  background: linear-gradient(135deg, rgba(245,230,211,0.55) 0%, rgba(232,196,216,0.35) 45%, rgba(255,255,255,0.92) 100%);
-  background-size: 200% 200%;
-  animation: warmShimmer 7s ease-in-out infinite;
-}
-@keyframes warmShimmer {
-  0%, 100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
+/* ── Brand shimmer accent — same palette + animation as the /shop quiz button,
+      so every accent pill/stripe in the account breathes in the same rhythm.
+      Border + text colour are set per element (the thin stripe needs neither). ── */
+.brand-shimmer {
+  background-image: linear-gradient(90deg, #F5E6D3, #E8C4D8, #D4C8E8, #C6DBE8, #F5E6D3);
+  background-size: 200% 100%;
+  animation: quiz-shimmer 2s ease infinite;
 }
 @media (prefers-reduced-motion: reduce) {
-  .referral-shimmer { animation: none; }
+  .brand-shimmer { animation: none; }
 }
 
 /* ── Referral share buttons — identical outline + synchronized soft pulse ──── */
@@ -266,30 +264,6 @@ p  { line-height: 1.7; }
   .ref-pulse-btn { animation: none; }
 }
 
-/* ── Shared warm shimmer chip (quiz-button palette) — one animation so every
-      shimmering pill on the page breathes in sync. Set text colour on the el. ── */
-.warm-shimmer-chip {
-  background: linear-gradient(90deg, #F5CBA7, #F8D7DA, #FFE8D7, #F8D7DA, #F5CBA7);
-  background-size: 200% 100%;
-  animation: warmChip 4s ease-in-out infinite;
-}
-@keyframes warmChip {
-  0%, 100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .warm-shimmer-chip { animation: none; }
-}
-
-/* ── Referral card — warm shimmering top stripe (reuses the warmChip keyframe) ── */
-.ref-stripe {
-  background: linear-gradient(90deg, #F5CBA7 0%, #F8D7DA 50%, #FADCC8 100%);
-  background-size: 200% 100%;
-  animation: warmChip 6s ease-in-out infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .ref-stripe { animation: none; }
-}
 
 /* ── Coffee quiz — step slide-in ─────────────────────────────────────────── */
 @keyframes quiz-slide-in {
