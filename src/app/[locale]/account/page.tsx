@@ -5,7 +5,7 @@ import { getReviewData, getReferralStats } from '@/lib/account/dashboard'
 import { Check } from 'lucide-react'
 import ProfileCard from '@/components/account/ProfileCard'
 import OrdersAccordion, { type OrderRow as AccOrder } from '@/components/account/OrdersAccordion'
-import ActiveSubscriptions, { type DashSub } from '@/components/account/ActiveSubscriptions'
+import ActiveSubscriptions, { type DashSub, type LastCancelled } from '@/components/account/ActiveSubscriptions'
 import ReviewsSection from '@/components/account/ReviewsSection'
 import ReferralCard from '@/components/account/ReferralCard'
 import LogoutFooter from '@/components/account/LogoutFooter'
@@ -59,6 +59,10 @@ interface SubRow {
   items:              { name: string; weight: number; grind: string; quantity: number }[]
   interval_weeks:     number
   next_delivery_date: string
+  paused_at:          string | null
+  cancelled_at:       string | null
+  delivery_method:    string | null
+  delivery_address:   Record<string, unknown> | null
 }
 
 const DISCOUNT_PCT   = { classic: 5, gold: 10, platinum: 15 }
@@ -98,8 +102,7 @@ export default async function AccountPage({ params }: Props) {
         .limit(50),
       supabase.from('shop_orders').select('id', { count: 'exact', head: true }).eq('customer_email', email),
       supabase.from('subscriptions')
-        .select('id, status, items, interval_weeks, next_delivery_date')
-        .in('status', ['active', 'paused'])
+        .select('id, status, items, interval_weeks, next_delivery_date, paused_at, cancelled_at, delivery_method, delivery_address')
         .order('created_at', { ascending: false }),
     ])
 
@@ -145,7 +148,14 @@ export default async function AccountPage({ params }: Props) {
   // Split subscriptions.
   const activeSubs: DashSub[] = subs
     .filter(s => s.status === 'active' || s.status === 'paused')
-    .map(s => ({ id: s.id, status: s.status, items: s.items ?? [], interval_weeks: s.interval_weeks, next_delivery_date: s.next_delivery_date }))
+    .map(s => ({ id: s.id, status: s.status, items: s.items ?? [], interval_weeks: s.interval_weeks, next_delivery_date: s.next_delivery_date, paused_at: s.paused_at }))
+
+  // Most recent cancelled subscription's config — offered as a one-click restore
+  // in the empty state (cancelled subs are never listed to the client otherwise).
+  const lastCancelled: LastCancelled | null = subs
+    .filter(s => s.status === 'cancelled')
+    .sort((a, b) => (b.cancelled_at ?? '').localeCompare(a.cancelled_at ?? ''))
+    .map(s => ({ items: s.items ?? [], interval_weeks: s.interval_weeks, delivery_method: s.delivery_method, delivery_address: s.delivery_address }))[0] ?? null
 
   // Hero subline — smart contextual message by priority.
   const DAY = 86_400_000
@@ -216,7 +226,7 @@ export default async function AccountPage({ params }: Props) {
       <div className="animate-fade-up grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3" style={{ animationDelay: '60ms' }}>
         <div className="flex flex-col lg:col-span-2">
           <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{ta('subs_title')}</h2>
-          <ActiveSubscriptions locale={locale} initialSubs={activeSubs} />
+          <ActiveSubscriptions locale={locale} initialSubs={activeSubs} lastCancelled={lastCancelled} authUserId={user.id} />
         </div>
         <div className="flex flex-col lg:col-span-1">
           <h2 className="mb-4 text-[18px] font-bold uppercase text-[#3A2115]">{t('loyalty_title')}</h2>

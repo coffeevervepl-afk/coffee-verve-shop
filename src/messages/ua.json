@@ -747,7 +747,21 @@
     "set_default": "Зробити адресою за замовчуванням",
     "subs_edit": "Змінити",
     "subs_save": "Зберегти",
-    "subs_cancel_edit": "Скасувати"
+    "subs_cancel_edit": "Скасувати",
+    "empty_title_new": "Свіжа кава автоматично",
+    "empty_sub_new": "Не потрібно замовляти щомісяця. -5% до картки лояльності.",
+    "empty_title_cancelled": "Повертаєшся до підписки?",
+    "empty_sub_cancelled": "Твоя попередня конфігурація збережена — оформимо так само за хвилину.",
+    "empty_benefit_1": "Свіжообсмажена кава щомісяця",
+    "empty_benefit_2": "-5% до картки лояльності",
+    "empty_benefit_3": "Скасування в будь-який момент",
+    "empty_restore": "Відновити попередню",
+    "empty_new_sub": "Нова підписка",
+    "subs_resume_full": "Відновити підписку",
+    "subs_paused_since": "Призупинена {date}",
+    "subs_resume_from": "Відновиться з {date}",
+    "restore_title": "Підписку відновлено!",
+    "restore_body": "Перша відправка {date}"
   },
   "dashboard": {
     "welcome": "Ласкаво просимо",
