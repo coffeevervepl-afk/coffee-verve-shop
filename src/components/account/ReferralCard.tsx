@@ -27,15 +27,13 @@ export default function ReferralCard({ locale, code, invited, available }: Props
   }
 
   return (
-    <section
-      className="referral-shimmer rounded-2xl p-6 shadow-[0_4px_20px_rgba(65,38,24,0.08)] transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(65,38,24,0.14)] md:p-8"
-      style={{
-        // Warm shimmer gradient + animation live in .referral-shimmer (globals.css).
-        border: '1px solid rgba(65,38,24,0.15)',
-        borderTop: '3px solid #412618',
-      }}
-    >
-      <h2 className="text-xl font-semibold text-[#412618]">{t('card_title')}</h2>
+    <section className="relative overflow-hidden rounded-2xl border border-[#E8E7E3] bg-[#F4F3F0] p-6 shadow-[0_4px_20px_rgba(65,38,24,0.08),0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(65,38,24,0.14),0_2px_6px_rgba(0,0,0,0.06)] md:p-8">
+      {/* Warm shimmering top accent stripe (clipped to the rounded corners). */}
+      <span aria-hidden className="ref-stripe absolute inset-x-0 top-0 h-1" />
+
+      <h2 className="flex items-center text-xl font-semibold text-[#412618]">
+        <span aria-hidden className="mr-3 text-2xl leading-none">🎁</span>{t('card_title')}
+      </h2>
       <p className="mt-1 text-sm text-gray-600">{t('card_subtitle')}</p>
 
       <div className="mt-5 rounded-xl border border-[#E8E7E3] bg-white p-4">

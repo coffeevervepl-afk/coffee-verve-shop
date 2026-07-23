@@ -281,6 +281,16 @@ p  { line-height: 1.7; }
   .warm-shimmer-chip { animation: none; }
 }
 
+/* ── Referral card — warm shimmering top stripe (reuses the warmChip keyframe) ── */
+.ref-stripe {
+  background: linear-gradient(90deg, #F5CBA7 0%, #F8D7DA 50%, #FADCC8 100%);
+  background-size: 200% 100%;
+  animation: warmChip 6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ref-stripe { animation: none; }
+}
+
 /* ── Coffee quiz — step slide-in ─────────────────────────────────────────── */
 @keyframes quiz-slide-in {
   from { opacity: 0; transform: translateX(24px); }
