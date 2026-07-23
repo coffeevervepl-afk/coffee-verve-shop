@@ -247,6 +247,25 @@ p  { line-height: 1.7; }
   .referral-shimmer { animation: none; }
 }
 
+/* ── Referral share buttons — identical outline + synchronized soft pulse ──── */
+.ref-pulse-btn {
+  background: transparent;
+  border: 1.5px solid #412618;
+  color: #412618;
+  animation: softPulse 2.5s ease-in-out infinite;
+}
+.ref-pulse-btn:hover {
+  border-color: #2A1810;
+  background: rgba(65, 38, 24, 0.09);
+}
+@keyframes softPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(65, 38, 24, 0); }
+  50%      { box-shadow: 0 0 0 4px rgba(65, 38, 24, 0.08); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ref-pulse-btn { animation: none; }
+}
+
 /* ── Coffee quiz — step slide-in ─────────────────────────────────────────── */
 @keyframes quiz-slide-in {
   from { opacity: 0; transform: translateX(24px); }

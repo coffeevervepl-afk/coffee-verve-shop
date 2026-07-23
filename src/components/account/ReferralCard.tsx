@@ -42,11 +42,11 @@ export default function ReferralCard({ locale, code, invited, available }: Props
         <p className="text-xs font-medium uppercase tracking-wide text-[#412618]">📤 {t('your_code')}</p>
         <p className="mt-1 select-all text-2xl font-bold tracking-wide text-[#412618]">{code}</p>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 flex flex-wrap gap-3">
           <button
             type="button"
             onClick={copy}
-            className="rounded-full bg-[#412618] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810]"
+            className="ref-pulse-btn rounded-full px-5 py-2.5 text-sm font-medium transition-colors"
           >
             {copied ? t('copied') : t('copy_code')}
           </button>
@@ -54,7 +54,7 @@ export default function ReferralCard({ locale, code, invited, available }: Props
             href={`https://wa.me/?text=${encodeURIComponent(waText)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-[#412618] px-4 py-2 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5"
+            className="ref-pulse-btn rounded-full px-5 py-2.5 text-sm font-medium transition-colors"
           >
             {t('share_whatsapp')}
           </a>
@@ -62,7 +62,7 @@ export default function ReferralCard({ locale, code, invited, available }: Props
             href={`https://t.me/share/url?url=${encodeURIComponent(`https://coffeeverve.pl/${locale}/ref/${code}`)}&text=${encodeURIComponent(t('share_message'))}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-[#412618] px-4 py-2 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5"
+            className="ref-pulse-btn rounded-full px-5 py-2.5 text-sm font-medium transition-colors"
           >
             {t('share_telegram')}
           </a>

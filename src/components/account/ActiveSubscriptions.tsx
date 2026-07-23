@@ -88,24 +88,24 @@ export default function ActiveSubscriptions({ locale, initialSubs }: { locale: L
                 <p className="text-xl font-bold text-[#412618]">{fmtDate(s.next_delivery_date)}</p>
               </div>
 
-              <div className="mt-auto flex flex-wrap items-center gap-2 pt-4">
+              <div className="mt-auto flex flex-wrap items-center gap-4 pt-4">
                 <button type="button" disabled={busy === s.id} onClick={() => setEditing(s)}
-                  className="rounded-full bg-[#412618] px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#2A1810] disabled:opacity-50">
+                  className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 hover:underline disabled:opacity-50">
                   {t('subs_edit')}
                 </button>
                 {s.status === 'active' ? (
                   <button type="button" disabled={busy === s.id} onClick={() => setStatus(s.id, 'paused')}
-                    className="rounded-full border border-[#412618] px-4 py-1.5 text-xs font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5 disabled:opacity-50">
+                    className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 hover:underline disabled:opacity-50">
                     {t('subs_pause')}
                   </button>
                 ) : (
                   <button type="button" disabled={busy === s.id} onClick={() => setStatus(s.id, 'active')}
-                    className="rounded-full border border-[#412618] px-4 py-1.5 text-xs font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5 disabled:opacity-50">
+                    className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 hover:underline disabled:opacity-50">
                     {t('subs_resume')}
                   </button>
                 )}
                 <button type="button" disabled={busy === s.id} onClick={() => setStatus(s.id, 'cancelled')}
-                  className="px-2 py-1.5 text-xs font-semibold text-[#412618] transition-colors hover:underline disabled:opacity-50">
+                  className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 hover:underline disabled:opacity-50">
                   {t('subs_cancel')}
                 </button>
               </div>
