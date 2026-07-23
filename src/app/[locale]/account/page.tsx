@@ -60,6 +60,7 @@ interface SubRow {
   interval_weeks:     number
   next_delivery_date: string
   paused_at:          string | null
+  paused_until:       string | null
   cancelled_at:       string | null
   delivery_method:    string | null
   delivery_address:   Record<string, unknown> | null
@@ -102,7 +103,7 @@ export default async function AccountPage({ params }: Props) {
         .limit(50),
       supabase.from('shop_orders').select('id', { count: 'exact', head: true }).eq('customer_email', email),
       supabase.from('subscriptions')
-        .select('id, status, items, interval_weeks, next_delivery_date, paused_at, cancelled_at, delivery_method, delivery_address')
+        .select('id, status, items, interval_weeks, next_delivery_date, paused_at, paused_until, cancelled_at, delivery_method, delivery_address')
         .order('created_at', { ascending: false }),
     ])
 
@@ -148,14 +149,14 @@ export default async function AccountPage({ params }: Props) {
   // Split subscriptions.
   const activeSubs: DashSub[] = subs
     .filter(s => s.status === 'active' || s.status === 'paused')
-    .map(s => ({ id: s.id, status: s.status, items: s.items ?? [], interval_weeks: s.interval_weeks, next_delivery_date: s.next_delivery_date, paused_at: s.paused_at }))
+    .map(s => ({ id: s.id, status: s.status, items: s.items ?? [], interval_weeks: s.interval_weeks, next_delivery_date: s.next_delivery_date, paused_at: s.paused_at, paused_until: s.paused_until }))
 
   // Most recent cancelled subscription's config — offered as a one-click restore
   // in the empty state (cancelled subs are never listed to the client otherwise).
   const lastCancelled: LastCancelled | null = subs
     .filter(s => s.status === 'cancelled')
     .sort((a, b) => (b.cancelled_at ?? '').localeCompare(a.cancelled_at ?? ''))
-    .map(s => ({ items: s.items ?? [], interval_weeks: s.interval_weeks, delivery_method: s.delivery_method, delivery_address: s.delivery_address }))[0] ?? null
+    .map(s => ({ id: s.id, items: s.items ?? [], interval_weeks: s.interval_weeks, delivery_method: s.delivery_method, delivery_address: s.delivery_address }))[0] ?? null
 
   // Hero subline — smart contextual message by priority.
   const DAY = 86_400_000

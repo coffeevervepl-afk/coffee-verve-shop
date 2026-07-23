@@ -13,21 +13,28 @@ export interface DashSub {
   interval_weeks:     number
   next_delivery_date: string
   paused_at:          string | null
+  paused_until:       string | null
 }
 export interface LastCancelled {
+  id:               string
   items:            SubItem[]
   interval_weeks:   number
   delivery_method:  string | null
   delivery_address: Record<string, unknown> | null
 }
 
+type ReasonCode = 'too_much_coffee' | 'try_others' | 'too_expensive' | 'delivery_issue' | 'forgot_pickup' | 'quality_issue' | 'no_time' | 'other'
+const REASONS: ReasonCode[] = ['too_much_coffee', 'try_others', 'too_expensive', 'delivery_issue', 'forgot_pickup', 'quality_issue', 'no_time', 'other']
+
 const wLabel = (w: number) => (w >= 1000 ? `${w / 1000} кг` : `${w} г`)
 const DATE_LOCALE: Record<Locale, string> = { ru: 'ru-RU', pl: 'pl-PL', ua: 'uk-UA' }
+const SHIMMER_BTN = 'brand-shimmer self-start rounded-full px-6 py-3 text-sm font-medium text-[#3a1f16] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.5)] transition-transform hover:scale-[1.02] disabled:opacity-50'
 
 function ymdPlusWeeks(weeks: number): string {
-  const d = new Date()
-  d.setDate(d.getDate() + weeks * 7)
-  return d.toISOString().slice(0, 10)
+  const d = new Date(); d.setDate(d.getDate() + weeks * 7); return d.toISOString().slice(0, 10)
+}
+function ymdPlusMonths(n: number): string {
+  const d = new Date(); d.setMonth(d.getMonth() + n); return d.toISOString().slice(0, 10)
 }
 
 interface Props {
@@ -40,39 +47,34 @@ interface Props {
 export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled, authUserId }: Props) {
   const t  = useTranslations('account')
   const tp = useTranslations('product')
-  const [subs, setSubs] = useState<DashSub[]>(initialSubs)
-  const [busy, setBusy] = useState<string | null>(null)
-  const [editing, setEditing] = useState<DashSub | null>(null)
+  const [subs, setSubs]         = useState<DashSub[]>(initialSubs)
+  const [busy, setBusy]         = useState<string | null>(null)
+  const [editing, setEditing]   = useState<DashSub | null>(null)
+  const [pausing, setPausing]   = useState<DashSub | null>(null)
+  const [canceling, setCanceling] = useState<DashSub | null>(null)
   const [restoring, setRestoring] = useState(false)
   const [restoredDate, setRestoredDate] = useState<string | null>(null)
 
   const grindLabel = (g: string) => (g === 'ground' ? tp('grind_ground') : tp('grind_whole'))
   const fmtDate = (d: string) => new Date(d).toLocaleDateString(DATE_LOCALE[locale])
 
-  async function setStatus(id: string, status: 'paused' | 'cancelled') {
-    if (status === 'cancelled' && !window.confirm(t('subs_cancel_confirm'))) return
-    setBusy(id)
-    const sb = createClient()
-    const nowIso = new Date().toISOString()
-    const fields: Record<string, unknown> = { status }
-    if (status === 'paused')    fields.paused_at    = nowIso
-    if (status === 'cancelled') fields.cancelled_at = nowIso
-    await sb.from('subscriptions').update(fields).eq('id', id)
-    setBusy(null)
-    setSubs(prev =>
-      status === 'cancelled'
-        ? prev.filter(s => s.id !== id)
-        : prev.map(s => (s.id === id ? { ...s, status, paused_at: nowIso } : s)),
-    )
+  async function doPause(sub: DashSub, pausedUntil: string | null) {
+    setBusy(sub.id)
+    await createClient().from('subscriptions')
+      .update({ status: 'paused', paused_at: new Date().toISOString(), paused_until: pausedUntil })
+      .eq('id', sub.id)
+    setBusy(null); setPausing(null)
+    setSubs(prev => prev.map(s => (s.id === sub.id ? { ...s, status: 'paused', paused_at: new Date().toISOString(), paused_until: pausedUntil } : s)))
   }
 
-  // Resume from pause resets the next delivery to today + interval.
   async function resume(sub: DashSub) {
     setBusy(sub.id)
     const nextDate = ymdPlusWeeks(sub.interval_weeks)
-    await createClient().from('subscriptions').update({ status: 'active', paused_at: null, next_delivery_date: nextDate }).eq('id', sub.id)
+    await createClient().from('subscriptions')
+      .update({ status: 'active', paused_at: null, paused_until: null, next_delivery_date: nextDate })
+      .eq('id', sub.id)
     setBusy(null)
-    setSubs(prev => prev.map(s => (s.id === sub.id ? { ...s, status: 'active', paused_at: null, next_delivery_date: nextDate } : s)))
+    setSubs(prev => prev.map(s => (s.id === sub.id ? { ...s, status: 'active', paused_at: null, paused_until: null, next_delivery_date: nextDate } : s)))
   }
 
   async function saveEdit(id: string, intervalWeeks: number, nextDate: string) {
@@ -83,33 +85,24 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
     setEditing(null)
   }
 
-  // Restore the most recent cancelled subscription's config as a new active one.
   async function restore() {
     if (!lastCancelled) return
     setRestoring(true)
     const weeks = lastCancelled.interval_weeks
     const nextDate = ymdPlusWeeks(weeks)
-    const { data, error } = await createClient()
-      .from('subscriptions')
-      .insert({
-        user_id:            authUserId,
-        status:             'active',
-        items:              lastCancelled.items,
-        interval_weeks:     weeks,
-        next_delivery_date: nextDate,
-        discount_percent:   5,
-        payment_method:     'manual',
-        delivery_method:    lastCancelled.delivery_method,
-        delivery_address:   lastCancelled.delivery_address,
-      })
-      .select('id')
-      .single()
+    const sb = createClient()
+    const { data, error } = await sb.from('subscriptions').insert({
+      user_id: authUserId, status: 'active', items: lastCancelled.items, interval_weeks: weeks,
+      next_delivery_date: nextDate, discount_percent: 5, payment_method: 'manual',
+      delivery_method: lastCancelled.delivery_method, delivery_address: lastCancelled.delivery_address,
+    }).select('id').single()
+    if (!error && data) {
+      // Mark the source cancellation as "returned" for CRM analytics.
+      await sb.rpc('mark_cancellation_returned', { p_subscription_id: lastCancelled.id })
+    }
     setRestoring(false)
     if (error || !data) return
-    setSubs(prev => [...prev, {
-      id: data.id, status: 'active', items: lastCancelled.items,
-      interval_weeks: weeks, next_delivery_date: nextDate, paused_at: null,
-    }])
+    setSubs(prev => [...prev, { id: data.id, status: 'active', items: lastCancelled.items, interval_weeks: weeks, next_delivery_date: nextDate, paused_at: null, paused_until: null }])
     setRestoredDate(fmtDate(nextDate))
   }
 
@@ -153,25 +146,21 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
                   </div>
                   <div className="mt-auto flex flex-wrap items-center gap-4 pt-6">
                     <button type="button" disabled={busy === s.id} onClick={() => setEditing(s)} className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">{t('subs_edit')}</button>
-                    <button type="button" disabled={busy === s.id} onClick={() => setStatus(s.id, 'paused')} className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">{t('subs_pause')}</button>
-                    <button type="button" disabled={busy === s.id} onClick={() => setStatus(s.id, 'cancelled')} className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">{t('subs_cancel')}</button>
+                    <button type="button" disabled={busy === s.id} onClick={() => setPausing(s)} className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">{t('subs_pause')}</button>
+                    <button type="button" disabled={busy === s.id} onClick={() => setCanceling(s)} className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">{t('subs_cancel')}</button>
                   </div>
                 </>
               ) : (
                 <>
-                  {s.paused_at && (
-                    <p className="mt-4 border-t border-gray-200 pt-3 text-sm text-gray-500">{t('subs_paused_since', { date: fmtDate(s.paused_at) })}</p>
-                  )}
-                  <div className="mt-auto pt-6">
-                    <button type="button" disabled={busy === s.id} onClick={() => resume(s)}
-                      className="w-full rounded-full bg-[#412618] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] disabled:opacity-50">
-                      {busy === s.id ? '…' : t('subs_resume_full')}
+                  <p className="mt-4 border-t border-gray-200 pt-3 text-sm text-gray-500">
+                    {s.paused_until
+                      ? t('subs_resume_auto', { date: fmtDate(s.paused_until) })
+                      : (s.paused_at ? t('subs_paused_since', { date: fmtDate(s.paused_at) }) : '')}
+                  </p>
+                  <div className="mt-auto flex flex-col pt-6">
+                    <button type="button" disabled={busy === s.id} onClick={() => resume(s)} className={SHIMMER_BTN}>
+                      {busy === s.id ? '…' : (s.paused_until ? t('subs_resume_now') : t('subs_resume_full'))}
                     </button>
-                    <p className="mt-2 text-center text-xs text-gray-500">{t('subs_resume_from', { date: fmtDate(ymdPlusWeeks(s.interval_weeks)) })}</p>
-                    <div className="mt-3 flex flex-wrap items-center justify-center gap-4">
-                      <button type="button" disabled={busy === s.id} onClick={() => setEditing(s)} className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">{t('subs_edit')}</button>
-                      <button type="button" disabled={busy === s.id} onClick={() => setStatus(s.id, 'cancelled')} className="text-sm font-normal text-gray-500 transition-colors hover:text-gray-700 hover:underline disabled:opacity-50">{t('subs_cancel')}</button>
-                    </div>
                   </div>
                 </>
               )}
@@ -180,8 +169,29 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
         </div>
       )}
 
-      {editing && (
-        <EditModal sub={editing} busy={busy === editing.id} onClose={() => setEditing(null)} onSave={saveEdit} />
+      {editing && <EditModal sub={editing} busy={busy === editing.id} onClose={() => setEditing(null)} onSave={saveEdit} />}
+
+      {pausing && (
+        <PauseModal
+          busy={busy === pausing.id}
+          onClose={() => setPausing(null)}
+          onPick={(months) => doPause(pausing, months == null ? null : ymdPlusMonths(months))}
+        />
+      )}
+
+      {canceling && (
+        <ExitSurvey
+          sub={canceling}
+          onClose={() => setCanceling(null)}
+          onPaused={(pausedUntil) => {
+            setSubs(prev => prev.map(s => (s.id === canceling.id ? { ...s, status: 'paused', paused_at: new Date().toISOString(), paused_until: pausedUntil } : s)))
+            setCanceling(null)
+          }}
+          onCancelled={() => {
+            setSubs(prev => prev.filter(s => s.id !== canceling.id))
+            setCanceling(null)
+          }}
+        />
       )}
 
       {restoredDate && (
@@ -197,9 +207,126 @@ export default function ActiveSubscriptions({ locale, initialSubs, lastCancelled
   )
 }
 
-function EmptyState({
-  locale, hasCancelled, restoring, onRestore,
-}: {
+// ── Pause duration modal ─────────────────────────────────────────────────────
+function PauseModal({ busy, onClose, onPick }: { busy: boolean; onClose: () => void; onPick: (months: number | null) => void }) {
+  const t = useTranslations('account')
+  const opt = 'w-full rounded-full border border-[#412618] px-4 py-2.5 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5 disabled:opacity-50'
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
+      <div className="w-full max-w-sm rounded-2xl bg-white p-6" onClick={e => e.stopPropagation()}>
+        <h3 className="text-lg font-semibold text-[#3A2115]">{t('pause_title')}</h3>
+        <p className="mt-1 text-sm text-gray-600">{t('pause_sub')}</p>
+        <div className="mt-5 space-y-2">
+          <button type="button" disabled={busy} onClick={() => onPick(1)} className={opt}>{t('pause_1m')}</button>
+          <button type="button" disabled={busy} onClick={() => onPick(2)} className={opt}>{t('pause_2m')}</button>
+          <button type="button" disabled={busy} onClick={() => onPick(3)} className={opt}>{t('pause_3m')}</button>
+          <button type="button" disabled={busy} onClick={() => onPick(null)} className={opt}>{t('pause_manual')}</button>
+        </div>
+        <button type="button" onClick={onClose} className="mt-4 w-full text-center text-sm font-normal text-gray-500 hover:text-gray-700">{t('subs_cancel_edit')}</button>
+      </div>
+    </div>
+  )
+}
+
+// ── Exit survey (reason → pause offer → confirm) ─────────────────────────────
+function ExitSurvey({ sub, onClose, onPaused, onCancelled }: {
+  sub: DashSub
+  onClose: () => void
+  onPaused: (pausedUntil: string) => void
+  onCancelled: () => void
+}) {
+  const t = useTranslations('account')
+  const [step, setStep] = useState<'reason' | 'offer' | 'confirm'>('reason')
+  const [reason, setReason] = useState<ReasonCode | null>(null)
+  const [reasonText, setReasonText] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  const offeredPause = reason !== 'no_time'
+
+  async function log(finalAction: 'paused' | 'cancelled' | 'stayed', acceptedPause: boolean, pausedUntil: string | null) {
+    setBusy(true)
+    const { error } = await createClient().rpc('log_subscription_cancellation', {
+      p_subscription_id: sub.id,
+      p_reason_code:     reason,
+      p_reason_text:     reason === 'other' ? (reasonText.trim() || null) : null,
+      p_offered_pause:   offeredPause,
+      p_accepted_pause:  acceptedPause,
+      p_final_action:    finalAction,
+      p_paused_until:    pausedUntil,
+    })
+    setBusy(false)
+    return !error
+  }
+
+  async function acceptPause(months: number) {
+    const pausedUntil = ymdPlusMonths(months)
+    if (await log('paused', true, pausedUntil)) onPaused(pausedUntil)
+  }
+  async function confirmCancel() {
+    if (await log('cancelled', false, null)) onCancelled()
+  }
+  async function stay() {
+    await log('stayed', false, null)
+    onClose()
+  }
+
+  const outlineBtn = 'w-full rounded-full border border-[#412618] px-4 py-2.5 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5 disabled:opacity-50'
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
+      <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl bg-white p-6" onClick={e => e.stopPropagation()}>
+        {step === 'reason' && (
+          <>
+            <h3 className="text-lg font-semibold text-[#3A2115]">{t('exit_title')}</h3>
+            <p className="mt-1 text-sm text-gray-600">{t('exit_sub')}</p>
+            <div className="mt-4 space-y-1.5">
+              {REASONS.map(code => (
+                <label key={code} className={`flex cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 text-sm transition-colors ${reason === code ? 'border-[#412618] bg-[#412618]/5 text-[#3A2115]' : 'border-gray-200 text-[#3A2115] hover:bg-gray-50'}`}>
+                  <input type="radio" name="reason" checked={reason === code} onChange={() => setReason(code)} className="accent-[#412618]" />
+                  <span>{t(`reason_${code}`)}</span>
+                </label>
+              ))}
+            </div>
+            {reason === 'other' && (
+              <textarea value={reasonText} onChange={e => setReasonText(e.target.value)} rows={3} placeholder={t('exit_other_ph')} className="input mt-3 w-full resize-none text-sm" />
+            )}
+            <div className="mt-5 flex justify-end gap-2">
+              <button type="button" onClick={onClose} className="btn btn-outline text-sm">{t('subs_cancel_edit')}</button>
+              <button type="button" disabled={!reason} onClick={() => setStep(reason === 'no_time' ? 'confirm' : 'offer')} className="btn btn-primary text-sm disabled:opacity-50">{t('exit_continue')}</button>
+            </div>
+          </>
+        )}
+
+        {step === 'offer' && (
+          <>
+            <h3 className="text-lg font-semibold text-[#412618]">{t('pause_offer_title')}</h3>
+            <p className="mt-1 text-sm text-gray-600">{t('pause_offer_sub')}</p>
+            <div className="mt-5 space-y-2">
+              <button type="button" disabled={busy} onClick={() => acceptPause(1)} className={outlineBtn}>{t('pause_offer_1m')}</button>
+              <button type="button" disabled={busy} onClick={() => acceptPause(2)} className={outlineBtn}>{t('pause_offer_2m')}</button>
+              <button type="button" disabled={busy} onClick={() => acceptPause(3)} className={outlineBtn}>{t('pause_offer_3m')}</button>
+            </div>
+            <button type="button" disabled={busy} onClick={() => setStep('confirm')} className="mt-4 w-full text-center text-sm font-normal text-gray-500 hover:text-gray-700 disabled:opacity-50">{t('exit_still_cancel')}</button>
+          </>
+        )}
+
+        {step === 'confirm' && (
+          <>
+            <h3 className="text-lg font-semibold text-[#3A2115]">{t('exit_confirm_title')}</h3>
+            <p className="mt-1 text-sm text-gray-600">{t('exit_confirm_sub')}</p>
+            <div className="mt-5 space-y-2">
+              <button type="button" disabled={busy} onClick={confirmCancel} className="w-full rounded-full bg-[#412618] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#2A1810] disabled:opacity-50">{t('exit_confirm_btn')}</button>
+              <button type="button" disabled={busy} onClick={stay} className={outlineBtn}>{t('exit_stay_btn')}</button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ── Empty state (never subscribed / all cancelled) ───────────────────────────
+function EmptyState({ locale, hasCancelled, restoring, onRestore }: {
   locale: Locale
   hasCancelled: boolean
   restoring: boolean
@@ -246,9 +373,8 @@ function EmptyState({
   )
 }
 
-function EditModal({
-  sub, busy, onClose, onSave,
-}: {
+// ── Edit interval / next date ────────────────────────────────────────────────
+function EditModal({ sub, busy, onClose, onSave }: {
   sub: DashSub
   busy: boolean
   onClose: () => void
@@ -273,9 +399,7 @@ function EditModal({
 
         <div className="mt-6 flex justify-end gap-2">
           <button type="button" onClick={onClose} className="btn btn-outline text-sm">{t('subs_cancel_edit')}</button>
-          <button type="button" disabled={busy} onClick={() => onSave(sub.id, weeks, date)} className="btn btn-primary text-sm disabled:opacity-60">
-            {t('subs_save')}
-          </button>
+          <button type="button" disabled={busy} onClick={() => onSave(sub.id, weeks, date)} className="btn btn-primary text-sm disabled:opacity-60">{t('subs_save')}</button>
         </div>
       </div>
     </div>
