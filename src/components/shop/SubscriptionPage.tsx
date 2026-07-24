@@ -312,19 +312,24 @@ export default function SubscriptionPage({ products, locale }: Props) {
         <p className="mx-auto mt-4 max-w-xl text-lg text-brand-muted">{t('hero_subtitle')}</p>
       </Reveal>
 
-      {/* ── Benefits — 4 animated cards (CSS/SVG); the -5% card is the accent
-           (shimmer badge + 2px shimmer top stripe). Copy (b1–b4) unchanged. ── */}
-      <div className="mt-12 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {BENEFIT_GRAPHICS.map((g, i) => (
-          <Reveal key={i} delay={i * 80}>
-            <div className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border-[0.5px] border-[#ebe0cf] bg-white px-5 py-4 shadow-sm transition-all duration-200 ease-out hover:-translate-y-[3px] hover:shadow-[0_14px_30px_-10px_rgba(58,31,22,0.20)]`}>
-              {i === 3 && <span aria-hidden className="brand-shimmer absolute inset-x-0 top-0 h-[2px]" />}
-              <div className="flex h-12 items-center">{g}</div>
-              <h3 className="mt-2 text-[15px] font-semibold leading-snug text-[#3a1f16]">{t(`b${i + 1}_title`)}</h3>
-              <p className="mt-1 text-[13px] leading-relaxed text-gray-500">{t(`b${i + 1}_text`)}</p>
-            </div>
-          </Reveal>
-        ))}
+      {/* ── Benefits — 4 animated cards (CSS/SVG) in a warm "cappuccino" panel;
+           horizontal layout (graphic left, copy right); the -5% card is the
+           accent (shimmer badge + 2px top stripe). Copy (b1–b4) unchanged. ── */}
+      <div className="mb-8 mt-12 rounded-3xl bg-[#faf6f0] p-6 sm:p-8">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {BENEFIT_GRAPHICS.map((g, i) => (
+            <Reveal key={i} delay={i * 80}>
+              <div className="group relative flex h-full items-center gap-3 overflow-hidden rounded-2xl border-[0.5px] border-[#ebe0cf] bg-white p-4 shadow-sm transition-all duration-200 ease-out hover:-translate-y-[3px] hover:shadow-[0_14px_30px_-10px_rgba(58,31,22,0.20)]">
+                {i === 3 && <span aria-hidden className="brand-shimmer absolute inset-x-0 top-0 h-[2px]" />}
+                <div className="flex min-w-[56px] max-w-[80px] shrink-0 basis-[38%] items-center justify-center">{g}</div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-base font-semibold leading-snug text-[#3a1f16]">{t(`b${i + 1}_title`)}</h3>
+                  <p className="mt-0.5 text-xs leading-relaxed text-gray-500">{t(`b${i + 1}_text`)}</p>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
 
       {/* ── Promo banner — light-gray card w/ accent stripe (matches /shop/nabory) ── */}
