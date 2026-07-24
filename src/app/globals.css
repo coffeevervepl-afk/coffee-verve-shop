@@ -255,48 +255,6 @@ p  { line-height: 1.7; }
 }
 
 /* ── /shop/subskrypcja — animated benefit-card graphics ─────────────────────── */
-/* Card 1 — bell rings, then rests between rings; two expanding waves. */
-.sub-bell { transform-origin: 50% 18%; animation: subBellRing 3s ease-in-out infinite; }
-@keyframes subBellRing {
-  0%, 60%, 100% { transform: rotate(0deg); }
-  8%  { transform: rotate(13deg); }
-  16% { transform: rotate(-10deg); }
-  24% { transform: rotate(7deg); }
-  32% { transform: rotate(-5deg); }
-  40% { transform: rotate(3deg); }
-  48% { transform: rotate(0deg); }
-}
-.sub-wave   { transform-origin: center; animation: subWave 3s ease-out infinite; }
-.sub-wave-2 { animation-delay: .6s; }
-@keyframes subWave {
-  0%   { transform: scale(.5); opacity: .5; }
-  70%  { opacity: 0; }
-  100% { transform: scale(1.6); opacity: 0; }
-}
-
-/* Card 2 — draw the ring, then the two cross strokes; hold; retract; repeat. */
-.sub-draw-circle { stroke-dasharray: 126; animation: subDrawCircle 3s ease-in-out infinite; }
-@keyframes subDrawCircle {
-  0%   { stroke-dashoffset: 126; }
-  35%  { stroke-dashoffset: 0; }
-  85%  { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: 126; }
-}
-.sub-draw-x1 { stroke-dasharray: 22; animation: subDrawX1 3s ease-in-out infinite; }
-@keyframes subDrawX1 {
-  0%, 38% { stroke-dashoffset: 22; }
-  52%     { stroke-dashoffset: 0; }
-  85%     { stroke-dashoffset: 0; }
-  100%    { stroke-dashoffset: 22; }
-}
-.sub-draw-x2 { stroke-dasharray: 22; animation: subDrawX2 3s ease-in-out infinite; }
-@keyframes subDrawX2 {
-  0%, 52% { stroke-dashoffset: 22; }
-  66%     { stroke-dashoffset: 0; }
-  85%     { stroke-dashoffset: 0; }
-  100%    { stroke-dashoffset: 22; }
-}
-
 /* Card 3 — bank card breathes (gentle rock + scale). */
 .sub-breathe { transform-origin: center; animation: subBreathe 4s ease-in-out infinite; }
 @keyframes subBreathe {
@@ -319,10 +277,34 @@ p  { line-height: 1.7; }
   overflow: hidden;
 }
 
+/* Calm "running light" that travels around each card's rounded border.
+   Conic gradient masked to a thin ring; the gradient angle (--sub-a) spins. */
+@property --sub-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.sub-runborder::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(from var(--sub-a),
+    transparent 0deg 300deg,
+    rgba(255,255,255,0.15) 320deg,
+    rgba(255,255,255,0.60) 340deg,
+    rgba(255,255,255,0.15) 352deg,
+    transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask-composite: exclude;
+  animation: subBorderSpin 8s linear infinite;
+  pointer-events: none;
+}
+@keyframes subBorderSpin { to { --sub-a: 360deg; } }
+
 @media (prefers-reduced-motion: reduce) {
-  .sub-bell, .sub-wave, .sub-breathe, .sub-badge,
-  .sub-draw-circle, .sub-draw-x1, .sub-draw-x2 { animation: none; }
-  .sub-draw-circle, .sub-draw-x1, .sub-draw-x2 { stroke-dashoffset: 0; } /* show final drawn state */
+  .sub-breathe, .sub-badge { animation: none; }
+  .sub-runborder::before { display: none; }
 }
 
 /* ── Referral share buttons — identical outline + synchronized soft pulse ──── */

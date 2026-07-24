@@ -67,20 +67,18 @@ function Modal({ children, onClose, wide }: { children: ReactNode; onClose: () =
 // Bespoke animated graphics for the 4 subscription benefit cards (keyframes live
 // in globals.css, all gated by prefers-reduced-motion). Order matches b1–b4.
 const BENEFIT_GRAPHICS: React.ReactNode[] = [
-  // b1 — bell rings with two expanding waves (white on brown card)
+  // b1 — static white bell
   <span key="b1" className="relative inline-flex h-16 w-16 items-center justify-center">
-    <span aria-hidden className="sub-wave absolute h-10 w-10 rounded-full border border-white/35" />
-    <span aria-hidden className="sub-wave sub-wave-2 absolute h-10 w-10 rounded-full border border-white/35" />
-    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className="sub-bell relative">
+    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
       <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
       <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
     </svg>
   </span>,
-  // b2 — ring draws, then the cross is stroked in (white)
+  // b2 — static white ring + cross
   <svg key="b2" width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="#ffffff" strokeWidth={2} strokeLinecap="round">
-    <circle cx="24" cy="24" r="20" className="sub-draw-circle" />
-    <line x1="17" y1="17" x2="31" y2="31" className="sub-draw-x1" />
-    <line x1="31" y1="17" x2="17" y2="31" className="sub-draw-x2" />
+    <circle cx="24" cy="24" r="20" />
+    <line x1="17" y1="17" x2="31" y2="31" />
+    <line x1="31" y1="17" x2="17" y2="31" />
   </svg>,
   // b3 — bank card breathing (white face, light-gray details)
   <div key="b3" className="sub-breathe" style={{ filter: 'drop-shadow(0 5px 8px rgba(0,0,0,0.28))' }}>
@@ -320,12 +318,12 @@ export default function SubscriptionPage({ products, locale }: Props) {
         {BENEFIT_GRAPHICS.map((g, i) => (
           <Reveal key={i} delay={i * 80} className="group relative hover:z-10">
             {/* base — white icon + full title (up to 2 lines) on brand brown */}
-            <div className="relative flex h-full min-h-[140px] items-center gap-4 overflow-hidden rounded-2xl border border-[#5a4737] bg-[#6e5945] p-5 shadow-sm">
+            <div className="sub-runborder relative flex h-full min-h-[140px] items-center gap-4 overflow-hidden rounded-2xl border border-[#5a4737] bg-[#634d3a] p-5 shadow-sm">
               <div className="flex w-[88px] shrink-0 items-center justify-center">{g}</div>
               <h3 className="sub-clamp2 min-w-0 flex-1 break-words text-sm font-medium leading-snug text-white">{t(`b${i + 1}_title`)}</h3>
             </div>
             {/* hover overlay — full title + description, slightly lighter brown */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 translate-y-1 overflow-hidden rounded-2xl border border-[#463527] bg-[#574230] opacity-0 shadow-xl transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 translate-y-1 overflow-hidden rounded-2xl border border-[#463527] bg-[#4c3826] opacity-0 shadow-xl transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100">
               <div className="flex min-h-[140px] items-center gap-4 p-5">
                 <div className="flex w-[88px] shrink-0 items-center justify-center">{g}</div>
                 <div className="min-w-0 flex-1">
