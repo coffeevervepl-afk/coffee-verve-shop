@@ -67,28 +67,28 @@ function Modal({ children, onClose, wide }: { children: ReactNode; onClose: () =
 // Bespoke animated graphics for the 4 subscription benefit cards (keyframes live
 // in globals.css, all gated by prefers-reduced-motion). Order matches b1–b4.
 const BENEFIT_GRAPHICS: React.ReactNode[] = [
-  // b1 — bell rings with two expanding waves
+  // b1 — bell rings with two expanding waves (white on brown card)
   <span key="b1" className="relative inline-flex h-16 w-16 items-center justify-center">
-    <span aria-hidden className="sub-wave absolute h-10 w-10 rounded-full border border-[#3a1f16]/25" />
-    <span aria-hidden className="sub-wave sub-wave-2 absolute h-10 w-10 rounded-full border border-[#3a1f16]/25" />
-    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#3a1f16" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className="sub-bell relative">
+    <span aria-hidden className="sub-wave absolute h-10 w-10 rounded-full border border-white/35" />
+    <span aria-hidden className="sub-wave sub-wave-2 absolute h-10 w-10 rounded-full border border-white/35" />
+    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className="sub-bell relative">
       <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
       <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
     </svg>
   </span>,
-  // b2 — ring draws, then the cross is stroked in
-  <svg key="b2" width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="#3a1f16" strokeWidth={2} strokeLinecap="round">
+  // b2 — ring draws, then the cross is stroked in (white)
+  <svg key="b2" width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="#ffffff" strokeWidth={2} strokeLinecap="round">
     <circle cx="24" cy="24" r="20" className="sub-draw-circle" />
     <line x1="17" y1="17" x2="31" y2="31" className="sub-draw-x1" />
     <line x1="31" y1="17" x2="17" y2="31" className="sub-draw-x2" />
   </svg>,
-  // b3 — bank card breathing with a soft shadow
-  <div key="b3" className="sub-breathe" style={{ filter: 'drop-shadow(0 5px 8px rgba(58,31,22,0.16))' }}>
+  // b3 — bank card breathing (white face, light-gray details)
+  <div key="b3" className="sub-breathe" style={{ filter: 'drop-shadow(0 5px 8px rgba(0,0,0,0.28))' }}>
     <svg width="64" height="46" viewBox="0 0 56 40" fill="none">
-      <rect x="1" y="1" width="54" height="38" rx="6" fill="#fff" stroke="#3a1f16" strokeWidth={1.75} />
-      <rect x="1.9" y="9" width="52.2" height="7" fill="#3a1f16" />
-      <rect x="7" y="24" width="12" height="9" rx="2" fill="#3a1f16" fillOpacity="0.14" stroke="#3a1f16" strokeWidth={1} />
-      <line x1="34" y1="30.5" x2="49" y2="30.5" stroke="#3a1f16" strokeWidth={1.75} strokeLinecap="round" />
+      <rect x="1" y="1" width="54" height="38" rx="6" fill="#ffffff" />
+      <rect x="1.9" y="9" width="52.2" height="7" fill="#c9bdb4" />
+      <rect x="7" y="24" width="12" height="9" rx="2" fill="#efe9e3" stroke="#c9bdb4" strokeWidth={1} />
+      <line x1="34" y1="30.5" x2="49" y2="30.5" stroke="#c9bdb4" strokeWidth={1.75} strokeLinecap="round" />
     </svg>
   </div>,
   // b4 — accent: shimmer badge with -5%, gently breathing
@@ -317,30 +317,25 @@ export default function SubscriptionPage({ products, locale }: Props) {
            neighbours (z-raised). The -5% card's top stripe is the brand
            shimmer, the other three solid brown. Copy (b1–b4) unchanged. ── */}
       <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {BENEFIT_GRAPHICS.map((g, i) => {
-          const stripe = i === 3 ? 'brand-shimmer' : 'bg-[#3a1f16]'
-          return (
-            <Reveal key={i} delay={i * 80} className="group relative hover:z-10">
-              {/* base — big icon + full title (up to 2 lines, no ellipsis clip) */}
-              <div className="relative flex h-full min-h-[140px] items-center gap-4 overflow-hidden rounded-2xl border-[0.5px] border-[#ebe0cf] bg-white p-5 shadow-sm">
-                <span aria-hidden className={`pointer-events-none absolute inset-x-0 top-0 h-[2px] ${stripe}`} />
+        {BENEFIT_GRAPHICS.map((g, i) => (
+          <Reveal key={i} delay={i * 80} className="group relative hover:z-10">
+            {/* base — white icon + full title (up to 2 lines) on brand brown */}
+            <div className="relative flex h-full min-h-[140px] items-center gap-4 overflow-hidden rounded-2xl border border-[#4a2f26] bg-[#3a1f16] p-5 shadow-sm">
+              <div className="flex w-[88px] shrink-0 items-center justify-center">{g}</div>
+              <h3 className="sub-clamp2 min-w-0 flex-1 break-words text-sm font-medium leading-snug text-white">{t(`b${i + 1}_title`)}</h3>
+            </div>
+            {/* hover overlay — full title + description, slightly lighter brown */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 translate-y-1 overflow-hidden rounded-2xl border border-[#5a3a30] bg-[#4a2f26] opacity-0 shadow-xl transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+              <div className="flex min-h-[140px] items-center gap-4 p-5">
                 <div className="flex w-[88px] shrink-0 items-center justify-center">{g}</div>
-                <h3 className="sub-clamp2 min-w-0 flex-1 break-words text-sm font-medium leading-snug text-[#3a1f16]">{t(`b${i + 1}_title`)}</h3>
-              </div>
-              {/* hover overlay — full title + description */}
-              <div className="pointer-events-none absolute inset-x-0 top-0 z-20 translate-y-1 overflow-hidden rounded-2xl border-[0.5px] border-[#ebe0cf] bg-white opacity-0 shadow-xl transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-                <span aria-hidden className={`absolute inset-x-0 top-0 h-[2px] ${stripe}`} />
-                <div className="flex min-h-[140px] items-center gap-4 p-5">
-                  <div className="flex w-[88px] shrink-0 items-center justify-center">{g}</div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="break-words text-sm font-medium leading-snug text-[#3a1f16]">{t(`b${i + 1}_title`)}</h3>
-                    <p className="mt-1 text-xs leading-relaxed text-gray-500">{t(`b${i + 1}_text`)}</p>
-                  </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="break-words text-sm font-medium leading-snug text-white">{t(`b${i + 1}_title`)}</h3>
+                  <p className="mt-1 text-xs leading-relaxed text-white/70">{t(`b${i + 1}_text`)}</p>
                 </div>
               </div>
-            </Reveal>
-          )
-        })}
+            </div>
+          </Reveal>
+        ))}
       </div>
 
       {/* ── Promo banner — light-gray card w/ accent stripe (matches /shop/nabory) ── */}
