@@ -320,17 +320,17 @@ export default function SubscriptionPage({ products, locale }: Props) {
         {BENEFIT_GRAPHICS.map((g, i) => (
           <Reveal key={i} delay={i * 80} className="group relative hover:z-10">
             {/* base — white icon + full title (up to 2 lines) on brand brown */}
-            <div className="relative flex h-full min-h-[140px] items-center gap-4 overflow-hidden rounded-2xl border border-[#4a2f26] bg-[#3a1f16] p-5 shadow-sm">
+            <div className="relative flex h-full min-h-[140px] items-center gap-4 overflow-hidden rounded-2xl border border-[#9a8776] bg-[#a89583] p-5 shadow-sm">
               <div className="flex w-[88px] shrink-0 items-center justify-center">{g}</div>
               <h3 className="sub-clamp2 min-w-0 flex-1 break-words text-sm font-medium leading-snug text-white">{t(`b${i + 1}_title`)}</h3>
             </div>
             {/* hover overlay — full title + description, slightly lighter brown */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 translate-y-1 overflow-hidden rounded-2xl border border-[#5a3a30] bg-[#4a2f26] opacity-0 shadow-xl transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 translate-y-1 overflow-hidden rounded-2xl border border-[#8a786d] bg-[#98857a] opacity-0 shadow-xl transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100">
               <div className="flex min-h-[140px] items-center gap-4 p-5">
                 <div className="flex w-[88px] shrink-0 items-center justify-center">{g}</div>
                 <div className="min-w-0 flex-1">
                   <h3 className="break-words text-sm font-medium leading-snug text-white">{t(`b${i + 1}_title`)}</h3>
-                  <p className="mt-1 text-xs leading-relaxed text-white/70">{t(`b${i + 1}_text`)}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-white/80">{t(`b${i + 1}_text`)}</p>
                 </div>
               </div>
             </div>
