@@ -3,7 +3,7 @@ import { useState, useMemo, useEffect, type ReactNode } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import { Bell, XCircle, CreditCard, Percent, Minus, Plus, X } from 'lucide-react'
+import { BellRing, XCircle, ShieldCheck, BadgePercent, Minus, Plus, X } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
 import { getProductName, getProductImage } from '@/lib/product-utils'
@@ -279,23 +279,31 @@ export default function SubscriptionPage({ products, locale }: Props) {
         <p className="mx-auto mt-4 max-w-xl text-lg text-brand-muted">{t('hero_subtitle')}</p>
       </Reveal>
 
-      {/* ── Benefits — unified cards (match /account + /shop/nabory palette) ── */}
-      <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {[
-          { icon: <Bell size={32} strokeWidth={1.6} />,       tk: 'b1' },
-          { icon: <XCircle size={32} strokeWidth={1.6} />,    tk: 'b2' },
-          { icon: <CreditCard size={32} strokeWidth={1.6} />, tk: 'b3' },
-          { icon: <Percent size={32} strokeWidth={1.6} />,    tk: 'b4' },
-        ].map((b, i) => (
-          <Reveal key={b.tk} delay={i * 100}>
-            <div className="flex h-full flex-col rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md">
-              <span className="text-[#412618]">{b.icon}</span>
-              <h3 className="mt-3 text-base font-semibold leading-snug text-[#3A2115] md:text-lg lg:text-base">{t(`${b.tk}_title`)}</h3>
-              <p className="mt-1 text-sm leading-relaxed text-gray-600">{t(`${b.tk}_text`)}</p>
-            </div>
-          </Reveal>
-        ))}
-      </div>
+      {/* ── Benefits — unified off-white panel, hairline dividers (gap-px over a
+           divider-colored bg); the -5% cell carries a shimmer medallion as the
+           single accent. Copy (b1–b4) unchanged. ── */}
+      <Reveal className="mt-14">
+        <div className="overflow-hidden rounded-3xl border border-[#ECEAE6] bg-[#ECEAE6] shadow-sm">
+          <div className="grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { icon: <BellRing size={26} strokeWidth={1.75} />,     tk: 'b1', hero: false },
+              { icon: <XCircle size={26} strokeWidth={1.75} />,      tk: 'b2', hero: false },
+              { icon: <ShieldCheck size={26} strokeWidth={1.75} />,  tk: 'b3', hero: false },
+              { icon: <BadgePercent size={26} strokeWidth={1.75} />, tk: 'b4', hero: true },
+            ].map((b) => (
+              <div key={b.tk} className="group relative flex flex-col bg-[#FAFAF9] p-6 transition-colors duration-200 ease-out hover:bg-white sm:p-7">
+                {b.hero ? (
+                  <span className="brand-shimmer inline-flex h-11 w-11 items-center justify-center rounded-xl text-[#3a1f16] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.6)] transition-transform duration-200 ease-out group-hover:-translate-y-0.5">{b.icon}</span>
+                ) : (
+                  <span className="flex h-11 items-center text-[#3a1f16] transition-transform duration-200 ease-out group-hover:-translate-y-0.5">{b.icon}</span>
+                )}
+                <h3 className="mt-4 text-[15px] font-semibold leading-snug text-[#3a1f16] md:text-base">{t(`${b.tk}_title`)}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-gray-500">{t(`${b.tk}_text`)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Reveal>
 
       {/* ── Promo banner — light-gray card w/ accent stripe (matches /shop/nabory) ── */}
       <Reveal>
