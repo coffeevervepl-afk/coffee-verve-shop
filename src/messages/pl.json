@@ -407,8 +407,8 @@
       "lowacid": "O niskiej kwasowości",
       "new": "Nowości",
       "nabory": "Zestawy",
-      "more": "więcej",
-      "less": "zwiń"
+      "more": "Więcej ({count})",
+      "less": "Mniej"
     },
     "promo_title": "Zarejestruj się i odbieraj rabat na całą kawę",
     "promo_text": "5% rabatu od razu po rejestracji. Im więcej zamówień, tym wyższy poziom: Gold 10%, Platinum 15%.",

@@ -71,9 +71,17 @@ export default function TagFilters({ locale, activeSlug }: Props) {
         <button
           type="button"
           onClick={() => setExpanded(v => !v)}
-          className="rounded-full px-3 py-2 text-[14px] font-medium text-[#8A7A66] transition-colors hover:text-[#4A4540]"
+          aria-expanded={expanded}
+          className="group flex items-center gap-1.5 rounded-full bg-[#F4F3F0] px-4 py-2 text-[14px] font-medium text-[#3A2115] transition-all duration-150 hover:bg-[#E9E7E1]"
         >
-          {expanded ? `${t('tags.less')} ▲` : `${t('tags.more')} ▼`}
+          {expanded ? t('tags.less') : t('tags.more', { count: TAG_CHIPS.length - COLLAPSED_TAGS })}
+          <svg
+            width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden
+            className={`text-[#412618] transition-transform duration-200 group-hover:translate-y-0.5 ${expanded ? 'rotate-180' : ''}`}
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
         </button>
       )}
     </div>
