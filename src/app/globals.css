@@ -279,36 +279,25 @@ p  { line-height: 1.7; }
 
 /* Calm "running light" that travels around each card's rounded border.
    Conic gradient masked to a thin ring; the gradient angle (--sub-a) spins. */
-@property --sub-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
-/* Two aligned layers share the same spinning conic gradient:
-   ::after = crisp 3px bright line, ::before = wider blurred aura. */
-.sub-runborder::before,
-.sub-runborder::after {
+/* Pulsing full-perimeter white frame (fades 0.2 <-> 0.8) with a soft inner glow. */
+.sub-runborder::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
   border-radius: inherit;
+  border: 2px solid #fff;
   pointer-events: none;
-  background: conic-gradient(from var(--sub-a),
-    transparent 0deg 300deg,
-    rgba(255,255,255,0.20) 318deg,
-    rgba(255,255,255,0.85) 340deg,
-    rgba(255,255,255,0.20) 356deg,
-    transparent 360deg);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-          mask-composite: exclude;
-  animation: subBorderSpin 8s linear infinite;
+  animation: subFramePulse 3.5s ease-in-out infinite;
 }
-.sub-runborder::after  { padding: 3px; }                          /* crisp bright line */
-.sub-runborder::before { padding: 8px; filter: blur(5px); opacity: 0.65; } /* soft glow */
-@keyframes subBorderSpin { to { --sub-a: 360deg; } }
+@keyframes subFramePulse {
+  0%, 100% { opacity: 0.2; box-shadow: inset 0 0 6px rgba(255,255,255,0.25); }
+  50%      { opacity: 0.8; box-shadow: inset 0 0 12px rgba(255,255,255,0.45); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .sub-breathe, .sub-badge { animation: none; }
-  .sub-runborder::before, .sub-runborder::after { display: none; }
+  .sub-runborder::before { animation: none; opacity: 0.5; }
 }
 
 /* ── Referral share buttons — identical outline + synchronized soft pulse ──── */
