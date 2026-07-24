@@ -302,19 +302,26 @@ export default function SubscriptionPage({ products, locale }: Props) {
     catch { return s }
   }
 
+  const heroTitle = t('hero_title')
+  const heroFirst = heroTitle.split(' ')[0]
+  const heroRest = heroTitle.slice(heroFirst.length).trim()
+
   return (
     <div className="container pb-24 pt-10">
-      {/* ── Hero ─────────────────────────────────────────────────────────── */}
+      {/* ── Hero — bold first word + lighter remainder for weight contrast ── */}
       <Reveal className="mx-auto max-w-2xl text-center">
-        <h1 className="text-4xl font-semibold tracking-tight text-[#3A2115] md:text-5xl">{t('hero_title')}</h1>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-brand-muted">{t('hero_subtitle')}</p>
+        <h1 className="text-5xl tracking-tight text-[#3A2115] md:text-6xl lg:text-7xl">
+          <span className="font-extrabold">{heroFirst}</span>
+          {heroRest && <> <span className="font-normal">{heroRest}</span></>}
+        </h1>
+        <p className="mx-auto mt-3 max-w-xl text-lg text-gray-500">{t('hero_subtitle')}</p>
       </Reveal>
 
       {/* ── Benefits — 4 compact cards on white (no panel). Big animated icon
            left + 1-line title; on hover a full-text overlay slides in above
            neighbours (z-raised). The -5% card's top stripe is the brand
            shimmer, the other three solid brown. Copy (b1–b4) unchanged. ── */}
-      <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-16 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {BENEFIT_GRAPHICS.map((g, i) => (
           <Reveal key={i} delay={i * 80} className="group relative hover:z-10">
             {/* base — white icon + full title (up to 2 lines) on brand brown */}
@@ -338,7 +345,7 @@ export default function SubscriptionPage({ products, locale }: Props) {
 
       {/* ── Promo banner — light-gray card w/ accent stripe (matches /shop/nabory) ── */}
       <Reveal>
-        <div className="mt-6 flex flex-col items-center gap-4 rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 text-center shadow-sm sm:flex-row sm:items-start sm:text-left">
+        <div className="mt-16 flex flex-col items-center gap-4 rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 text-center shadow-sm sm:flex-row sm:items-start sm:text-left">
           <span className="text-3xl">🎁</span>
           <div>
             <p className="text-lg font-semibold text-[#412618]">{t('promo_title')}</p>
@@ -348,7 +355,7 @@ export default function SubscriptionPage({ products, locale }: Props) {
       </Reveal>
 
       {/* ── Build subscription ───────────────────────────────────────────── */}
-      <Reveal className="mt-16">
+      <Reveal className="mt-20">
         <h2 className="text-2xl font-semibold text-[#3A2115] md:text-3xl">{t('section_title')}</h2>
         <p className="mt-1 text-[15px] text-brand-muted">{t('section_subtitle')}</p>
       </Reveal>
