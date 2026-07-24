@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import StarPicker from '@/components/shop/reviews/StarPicker'
 import ReviewPhotoInput from '@/components/shop/reviews/ReviewPhotoInput'
 import { uploadReviewPhotos } from '@/lib/supabase/uploads'
+import { createClient } from '@/lib/supabase/client'
 import Modal from '@/components/account/Modal'
 
 export interface ReviewTarget {
@@ -36,7 +37,14 @@ export default function ReviewModal({ target, authorName, email, onClose, onSubm
     setErr('')
     setBusy(true)
     try {
-      const imageUrls = photos.length ? await uploadReviewPhotos(photos) : []
+      // Photos need an active Supabase session (RLS: own folder). If it expired,
+      // stop and tell the user — don't silently drop their photos. Text is kept.
+      let imageUrls: string[] = []
+      if (photos.length) {
+        const { data: { session } } = await createClient().auth.getSession()
+        if (!session) { setErr(t('reviews_session_expired')); setBusy(false); return }
+        imageUrls = await uploadReviewPhotos(photos)
+      }
       const res = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -923,6 +923,7 @@
     "reviews_rating_label": "Оцінка",
     "reviews_text_label": "Відгук",
     "reviews_photos_label": "Фото",
+    "reviews_session_expired": "Сесія завершилася — увійдіть знову, щоб додати фото. Текст відгуку збережено.",
     "change_photo": "Змінити фото",
     "reviews_text_placeholder": "Розкажіть про смак, аромат, враження…",
     "reviews_submit": "Надіслати відгук",

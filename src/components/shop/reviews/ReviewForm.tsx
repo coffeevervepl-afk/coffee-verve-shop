@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast'
 import StarPicker from './StarPicker'
 import ReviewPhotoInput from './ReviewPhotoInput'
 import { uploadReviewPhotos } from '@/lib/supabase/uploads'
+import { createClient } from '@/lib/supabase/client'
 
 interface Props {
   productId: string
@@ -26,7 +27,18 @@ export default function ReviewForm({ productId, orderId, email, onSuccess }: Pro
 
     setBusy(true)
     try {
-      const imageUrls = photos.length ? await uploadReviewPhotos(photos) : []
+      // Photos need an active Supabase session (RLS: own folder). If it expired,
+      // stop and tell the user — don't silently drop their photos. Text is kept.
+      let imageUrls: string[] = []
+      if (photos.length) {
+        const { data: { session } } = await createClient().auth.getSession()
+        if (!session) {
+          toast.error('Сессия истекла — войдите заново, чтобы прикрепить фото')
+          setBusy(false)
+          return
+        }
+        imageUrls = await uploadReviewPhotos(photos)
+      }
       const res = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

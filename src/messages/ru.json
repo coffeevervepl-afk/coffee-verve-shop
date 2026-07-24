@@ -923,6 +923,7 @@
     "reviews_rating_label": "Оценка",
     "reviews_text_label": "Отзыв",
     "reviews_photos_label": "Фото",
+    "reviews_session_expired": "Сессия истекла — войдите заново, чтобы прикрепить фото. Текст отзыва сохранён.",
     "change_photo": "Изменить фото",
     "reviews_text_placeholder": "Расскажите о вкусе, аромате, впечатлениях…",
     "reviews_submit": "Отправить отзыв",
