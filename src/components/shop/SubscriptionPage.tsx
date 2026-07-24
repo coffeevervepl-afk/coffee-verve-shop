@@ -321,19 +321,19 @@ export default function SubscriptionPage({ products, locale }: Props) {
           const stripe = i === 3 ? 'brand-shimmer' : 'bg-[#3a1f16]'
           return (
             <Reveal key={i} delay={i * 80} className="group relative hover:z-10">
-              {/* base — big icon + 1-line title */}
-              <div className="relative flex h-[100px] items-center gap-4 overflow-hidden rounded-2xl border-[0.5px] border-[#ebe0cf] bg-white p-4 shadow-sm">
+              {/* base — big icon + full title (up to 2 lines, no ellipsis clip) */}
+              <div className="relative flex h-full min-h-[140px] items-center gap-4 overflow-hidden rounded-2xl border-[0.5px] border-[#ebe0cf] bg-white p-5 shadow-sm">
                 <span aria-hidden className={`pointer-events-none absolute inset-x-0 top-0 h-[2px] ${stripe}`} />
                 <div className="flex w-[88px] shrink-0 items-center justify-center">{g}</div>
-                <h3 className="min-w-0 flex-1 truncate text-sm font-medium text-[#3a1f16]">{t(`b${i + 1}_title`)}</h3>
+                <h3 className="sub-clamp2 min-w-0 flex-1 break-words text-sm font-medium leading-snug text-[#3a1f16]">{t(`b${i + 1}_title`)}</h3>
               </div>
               {/* hover overlay — full title + description */}
               <div className="pointer-events-none absolute inset-x-0 top-0 z-20 translate-y-1 overflow-hidden rounded-2xl border-[0.5px] border-[#ebe0cf] bg-white opacity-0 shadow-xl transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100">
                 <span aria-hidden className={`absolute inset-x-0 top-0 h-[2px] ${stripe}`} />
-                <div className="flex items-center gap-4 p-4">
+                <div className="flex min-h-[140px] items-center gap-4 p-5">
                   <div className="flex w-[88px] shrink-0 items-center justify-center">{g}</div>
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-sm font-medium leading-snug text-[#3a1f16]">{t(`b${i + 1}_title`)}</h3>
+                    <h3 className="break-words text-sm font-medium leading-snug text-[#3a1f16]">{t(`b${i + 1}_title`)}</h3>
                     <p className="mt-1 text-xs leading-relaxed text-gray-500">{t(`b${i + 1}_text`)}</p>
                   </div>
                 </div>
