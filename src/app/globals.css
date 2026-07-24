@@ -279,7 +279,7 @@ p  { line-height: 1.7; }
 
 /* Calm "running light" that travels around each card's rounded border.
    Conic gradient masked to a thin ring; the gradient angle (--sub-a) spins. */
-/* Pulsing full-perimeter white frame (fades 0.2 <-> 0.8) with a soft inner glow. */
+/* Pulsing full-perimeter white frame (fades 0.5 <-> 1.0) with a soft outer glow. */
 .sub-runborder::before {
   content: "";
   position: absolute;
@@ -287,17 +287,18 @@ p  { line-height: 1.7; }
   z-index: 1;
   border-radius: inherit;
   border: 2px solid #fff;
+  box-shadow: 0 0 12px rgba(255,255,255,0.55);
   pointer-events: none;
   animation: subFramePulse 3.5s ease-in-out infinite;
 }
 @keyframes subFramePulse {
-  0%, 100% { opacity: 0.2; box-shadow: inset 0 0 6px rgba(255,255,255,0.25); }
-  50%      { opacity: 0.8; box-shadow: inset 0 0 12px rgba(255,255,255,0.45); }
+  0%, 100% { opacity: 0.5; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+  50%      { opacity: 1;   box-shadow: 0 0 16px rgba(255,255,255,0.7); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .sub-breathe, .sub-badge { animation: none; }
-  .sub-runborder::before { animation: none; opacity: 0.5; }
+  .sub-runborder::before { animation: none; opacity: 0.75; }
 }
 
 /* ── Referral share buttons — identical outline + synchronized soft pulse ──── */

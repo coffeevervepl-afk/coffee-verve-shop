@@ -318,7 +318,7 @@ export default function SubscriptionPage({ products, locale }: Props) {
         {BENEFIT_GRAPHICS.map((g, i) => (
           <Reveal key={i} delay={i * 80} className="group relative hover:z-10">
             {/* base — white icon + full title (up to 2 lines) on brand brown */}
-            <div className="sub-runborder relative flex h-full min-h-[140px] items-center gap-4 overflow-hidden rounded-2xl border border-[#5a4737] bg-[#634d3a] p-5 shadow-sm">
+            <div className="sub-runborder relative flex h-full min-h-[140px] items-center gap-4 rounded-2xl border border-[#5a4737] bg-[#634d3a] p-5 shadow-sm">
               <div className="flex w-[88px] shrink-0 items-center justify-center">{g}</div>
               <h3 className="sub-clamp2 min-w-0 flex-1 break-words text-sm font-medium leading-snug text-white">{t(`b${i + 1}_title`)}</h3>
             </div>
