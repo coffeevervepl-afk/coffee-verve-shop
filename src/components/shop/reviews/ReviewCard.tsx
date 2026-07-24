@@ -1,5 +1,6 @@
 import type { ShopReview } from '@/lib/supabase/reviews'
 import StarDisplay from './StarDisplay'
+import ReviewPhotos from './ReviewPhotos'
 
 interface Props { review: ShopReview }
 
@@ -7,18 +8,24 @@ export default function ReviewCard({ review }: Props) {
   const date = new Date(review.created_at).toLocaleDateString('ru-RU', {
     day: '2-digit', month: 'long', year: 'numeric',
   })
+  const meta = [review.city, date].filter(Boolean).join(' · ')
 
   return (
     <article className="border-b border-brand-border py-5 last:border-0">
       {/* Header */}
       <div className="mb-2 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-accent text-xs font-bold text-white">
-            {review.author_name.charAt(0).toUpperCase()}
-          </div>
+          {review.avatar_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={review.avatar_url} alt="" className="h-8 w-8 shrink-0 rounded-full object-cover" />
+          ) : (
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-accent text-xs font-bold text-white">
+              {review.author_name.charAt(0).toUpperCase()}
+            </div>
+          )}
           <div>
             <p className="text-sm font-semibold">{review.author_name}</p>
-            <p className="text-xs text-brand-muted">{date}</p>
+            <p className="text-xs text-brand-muted">{meta}</p>
           </div>
         </div>
         <StarDisplay rating={review.rating} size="sm" />
@@ -26,6 +33,9 @@ export default function ReviewCard({ review }: Props) {
 
       {/* Review text */}
       <p className="text-sm leading-relaxed text-brand-muted">{review.review_text}</p>
+
+      {/* Photos */}
+      {review.image_urls && review.image_urls.length > 0 && <ReviewPhotos images={review.image_urls} />}
 
       {/* Moderator response */}
       {review.moderator_response && (

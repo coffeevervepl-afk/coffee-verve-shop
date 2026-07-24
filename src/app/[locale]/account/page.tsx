@@ -25,6 +25,7 @@ interface ShopUserRow {
   loyalty_level:             'classic' | 'gold' | 'platinum'
   spent_12m:                 number
   referral_code:             string | null
+  avatar_url:                string | null
 }
 
 interface AddressRow { id: string; street: string | null; postal_code: string | null; city: string | null }
@@ -93,7 +94,7 @@ export default async function AccountPage({ params }: Props) {
   try {
     const [shopUserRes, ordersRes, ordersCountRes, subsRes] = await Promise.all([
       supabase.from('shop_users')
-        .select('id, name, phone, created_at, consent_email_marketing, consent_sms_marketing, loyalty_level, spent_12m, referral_code')
+        .select('id, name, phone, created_at, consent_email_marketing, consent_sms_marketing, loyalty_level, spent_12m, referral_code, avatar_url')
         .eq('email', email)
         .single(),
       supabase.from('shop_orders')
@@ -300,6 +301,7 @@ export default async function AccountPage({ params }: Props) {
       <div className="animate-fade-up" style={{ animationDelay: '300ms' }}>
         <ProfileCard
           initialName={shopUser?.name ?? ''}
+          initialAvatarUrl={shopUser?.avatar_url ?? null}
           email={email}
           phone={shopUser?.phone ?? ''}
           registeredDate={registeredDate}

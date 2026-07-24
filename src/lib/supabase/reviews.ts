@@ -5,12 +5,16 @@ export interface ShopReview {
   product_id:         string
   order_id:           string | null
   author_name:        string
+  author_email:       string | null
   rating:             number
   review_text:        string
+  image_urls:         string[] | null
+  city:               string | null
   moderator_response: string | null
   status:             'pending' | 'approved' | 'rejected'
   created_at:         string
   updated_at:         string
+  avatar_url?:        string | null   // joined from shop_users by author_email
 }
 
 export interface ProductRating {
@@ -38,7 +42,17 @@ export async function getApprovedReviews(
     .range(from, to)
 
   if (error) throw error
-  return { reviews: data ?? [], total: count ?? 0 }
+  const reviews = (data ?? []) as ShopReview[]
+
+  // Attach each author's avatar (shop_reviews has no FK to shop_users → look up by email).
+  const emails = [...new Set(reviews.map(r => r.author_email).filter((e): e is string => !!e))]
+  if (emails.length) {
+    const { data: users } = await sb.from('shop_users').select('email, avatar_url').in('email', emails)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const map = new Map((users ?? []).map((u: any) => [u.email, u.avatar_url as string | null]))
+    reviews.forEach(r => { r.avatar_url = r.author_email ? map.get(r.author_email) ?? null : null })
+  }
+  return { reviews, total: count ?? 0 }
 }
 
 export async function getProductRating(productId: string): Promise<ProductRating> {

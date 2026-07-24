@@ -2,6 +2,8 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import StarPicker from '@/components/shop/reviews/StarPicker'
+import ReviewPhotoInput from '@/components/shop/reviews/ReviewPhotoInput'
+import { uploadReviewPhotos } from '@/lib/supabase/uploads'
 import Modal from '@/components/account/Modal'
 
 export interface ReviewTarget {
@@ -23,6 +25,7 @@ export default function ReviewModal({ target, authorName, email, onClose, onSubm
   const t = useTranslations('dashboard')
   const [rating, setRating] = useState(0)
   const [text, setText]     = useState('')
+  const [photos, setPhotos] = useState<File[]>([])
   const [busy, setBusy]     = useState(false)
   const [err, setErr]       = useState('')
 
@@ -33,6 +36,7 @@ export default function ReviewModal({ target, authorName, email, onClose, onSubm
     setErr('')
     setBusy(true)
     try {
+      const imageUrls = photos.length ? await uploadReviewPhotos(photos) : []
       const res = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -43,6 +47,7 @@ export default function ReviewModal({ target, authorName, email, onClose, onSubm
           email,
           rating,
           reviewText: text,
+          imageUrls,
         }),
       })
       if (!res.ok) {
@@ -81,6 +86,7 @@ export default function ReviewModal({ target, authorName, email, onClose, onSubm
           <textarea rows={4} value={text} onChange={e => setText(e.target.value)}
             placeholder={t('reviews_text_placeholder')} className="input resize-none text-sm" />
         </div>
+        <ReviewPhotoInput files={photos} onChange={setPhotos} label={t('reviews_photos_label')} />
         {err && <p className="text-sm text-[#7A5A3A]">{err}</p>}
       </form>
     </Modal>

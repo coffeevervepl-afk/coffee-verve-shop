@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Pencil } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { toast } from 'react-hot-toast'
+import { uploadAvatar } from '@/lib/supabase/uploads'
 
 interface Address {
   id: string
@@ -14,6 +15,7 @@ interface Address {
 
 interface Props {
   initialName: string
+  initialAvatarUrl: string | null
   email: string
   phone: string
   registeredDate: string
@@ -24,6 +26,7 @@ interface Props {
 
 export default function ProfileCard({
   initialName,
+  initialAvatarUrl,
   email,
   phone,
   registeredDate,
@@ -32,6 +35,34 @@ export default function ProfileCard({
   initialAddress,
 }: Props) {
   const t = useTranslations('dashboard')
+
+  // Avatar
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(initialAvatarUrl)
+  const [uploadingAvatar, setUploadingAvatar] = useState(false)
+  const avatarInputRef = useRef<HTMLInputElement>(null)
+
+  async function onAvatarPick(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (avatarInputRef.current) avatarInputRef.current.value = ''
+    if (!file) return
+    if (file.size > 5 * 1024 * 1024) { toast.error(t('save_error')); return }
+    setUploadingAvatar(true)
+    try {
+      const url = await uploadAvatar(file)
+      const res = await fetch('/api/account/profile', {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ avatar_url: url }),
+      })
+      if (!res.ok) throw new Error()
+      setAvatarUrl(url)
+      window.dispatchEvent(new Event('shop-user-updated'))
+      toast.success(t('saved'))
+    } catch {
+      toast.error(t('save_error'))
+    } finally {
+      setUploadingAvatar(false)
+    }
+  }
 
   // Name inline edit
   const [name, setName] = useState(initialName)
@@ -118,6 +149,23 @@ export default function ProfileCard({
   return (
     <div className="rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md lg:p-8">
       <h2 className="mb-5 text-[18px] font-bold uppercase text-[#3A2115]">{t('profile_title')}</h2>
+
+      {/* Avatar */}
+      <div className="mb-6 flex items-center gap-4">
+        {avatarUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={avatarUrl} alt="" className="h-16 w-16 shrink-0 rounded-full object-cover" />
+        ) : (
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#412618] text-xl font-bold text-white">
+            {(name || email).charAt(0).toUpperCase()}
+          </div>
+        )}
+        <button type="button" onClick={() => avatarInputRef.current?.click()} disabled={uploadingAvatar}
+          className="rounded-full border border-[#412618] px-4 py-1.5 text-sm font-semibold text-[#412618] transition-colors hover:bg-[#412618]/5 disabled:opacity-60">
+          {uploadingAvatar ? '…' : t('change_photo')}
+        </button>
+        <input ref={avatarInputRef} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={onAvatarPick} />
+      </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {/* Column 1 — name + email */}

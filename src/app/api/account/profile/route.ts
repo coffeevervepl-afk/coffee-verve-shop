@@ -12,6 +12,7 @@ export async function PATCH(req: NextRequest) {
   const update: Record<string, unknown> = {}
   if (body.name !== undefined)                    update.name = body.name || null
   if (body.phone !== undefined)                    update.phone = body.phone || null
+  if (body.avatar_url !== undefined)               update.avatar_url = body.avatar_url || null
   if (body.consent_email_marketing !== undefined)  update.consent_email_marketing = !!body.consent_email_marketing
   if (body.consent_sms_marketing !== undefined)    update.consent_sms_marketing = !!body.consent_sms_marketing
 

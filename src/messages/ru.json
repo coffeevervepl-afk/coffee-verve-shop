@@ -922,6 +922,8 @@
     "reviews_modal_title": "Оставить отзыв",
     "reviews_rating_label": "Оценка",
     "reviews_text_label": "Отзыв",
+    "reviews_photos_label": "Фото",
+    "change_photo": "Изменить фото",
     "reviews_text_placeholder": "Расскажите о вкусе, аромате, впечатлениях…",
     "reviews_submit": "Отправить отзыв",
     "reviews_submitting": "Отправляю…",

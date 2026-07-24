@@ -2,6 +2,8 @@
 import { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import StarPicker from './StarPicker'
+import ReviewPhotoInput from './ReviewPhotoInput'
+import { uploadReviewPhotos } from '@/lib/supabase/uploads'
 
 interface Props {
   productId: string
@@ -14,6 +16,7 @@ export default function ReviewForm({ productId, orderId, email, onSuccess }: Pro
   const [name,   setName]   = useState('')
   const [rating, setRating] = useState(0)
   const [text,   setText]   = useState('')
+  const [photos, setPhotos] = useState<File[]>([])
   const [busy,   setBusy]   = useState(false)
 
   async function submit(e: React.FormEvent) {
@@ -23,10 +26,11 @@ export default function ReviewForm({ productId, orderId, email, onSuccess }: Pro
 
     setBusy(true)
     try {
+      const imageUrls = photos.length ? await uploadReviewPhotos(photos) : []
       const res = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId, orderId, authorName: name, email, rating, reviewText: text }),
+        body: JSON.stringify({ productId, orderId, authorName: name, email, rating, reviewText: text, imageUrls }),
       })
       if (!res.ok) {
         const err = await res.json()
@@ -72,6 +76,8 @@ export default function ReviewForm({ productId, orderId, email, onSuccess }: Pro
           className="input resize-none text-sm"
         />
       </div>
+
+      <ReviewPhotoInput files={photos} onChange={setPhotos} />
 
       <button type="submit" disabled={busy} className="btn btn-primary w-full disabled:opacity-60">
         {busy ? 'Отправляю…' : 'Отправить отзыв'}

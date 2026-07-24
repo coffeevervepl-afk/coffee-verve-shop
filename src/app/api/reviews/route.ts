@@ -3,7 +3,12 @@ import { createServerSupabase } from '@/lib/supabase/server'
 import { hasBoughtProduct, hasReviewedProduct } from '@/lib/supabase/reviews'
 
 export async function POST(req: NextRequest) {
-  const { productId, orderId, authorName, email, rating, reviewText } = await req.json()
+  const { productId, orderId, authorName, email, rating, reviewText, imageUrls } = await req.json()
+
+  // Up to 3 photo URLs (already uploaded to the review-photos bucket by the client).
+  const images: string[] = Array.isArray(imageUrls)
+    ? imageUrls.filter((u: unknown): u is string => typeof u === 'string' && u.length > 0).slice(0, 3)
+    : []
 
   if (!productId || !authorName || !rating || !reviewText) {
     return NextResponse.json({ error: 'Обязательные поля отсутствуют' }, { status: 400 })
@@ -28,6 +33,17 @@ export async function POST(req: NextRequest) {
   }
 
   const sb = await createServerSupabase()
+
+  // City snapshot: take it from the buyer's saved address (if any) — stored as-is, not a link.
+  let city: string | null = null
+  if (email) {
+    const { data: su } = await sb.from('shop_users').select('id').eq('email', email).maybeSingle()
+    if (su?.id) {
+      const { data: addr } = await sb.from('shop_addresses').select('city').eq('shop_user_id', su.id).limit(1).maybeSingle()
+      city = addr?.city ?? null
+    }
+  }
+
   const { data, error } = await sb
     .from('shop_reviews')
     .insert({
@@ -37,6 +53,8 @@ export async function POST(req: NextRequest) {
       author_email: email ?? null,
       rating:      Number(rating),
       review_text: reviewText.trim(),
+      image_urls:  images.length ? images : null,
+      city,
       status:      'pending',
     })
     .select('id')
