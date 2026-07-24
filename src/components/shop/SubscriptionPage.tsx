@@ -3,7 +3,7 @@ import { useState, useMemo, useEffect, type ReactNode } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import { BellRing, XCircle, ShieldCheck, BadgePercent, Minus, Plus, X } from 'lucide-react'
+import { Minus, Plus, X } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
 import { getProductName, getProductImage } from '@/lib/product-utils'
@@ -63,6 +63,39 @@ function Modal({ children, onClose, wide }: { children: ReactNode; onClose: () =
     </div>
   )
 }
+
+// Bespoke animated graphics for the 4 subscription benefit cards (keyframes live
+// in globals.css, all gated by prefers-reduced-motion). Order matches b1–b4.
+const BENEFIT_GRAPHICS: React.ReactNode[] = [
+  // b1 — bell rings with two expanding waves (white on brown card)
+  <span key="b1" className="relative inline-flex h-16 w-16 items-center justify-center">
+    <span aria-hidden className="sub-wave absolute h-10 w-10 rounded-full border border-white/35" />
+    <span aria-hidden className="sub-wave sub-wave-2 absolute h-10 w-10 rounded-full border border-white/35" />
+    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className="sub-bell relative">
+      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+    </svg>
+  </span>,
+  // b2 — ring draws, then the cross is stroked in (white)
+  <svg key="b2" width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="#ffffff" strokeWidth={2} strokeLinecap="round">
+    <circle cx="24" cy="24" r="20" className="sub-draw-circle" />
+    <line x1="17" y1="17" x2="31" y2="31" className="sub-draw-x1" />
+    <line x1="31" y1="17" x2="17" y2="31" className="sub-draw-x2" />
+  </svg>,
+  // b3 — bank card breathing (white face, light-gray details)
+  <div key="b3" className="sub-breathe" style={{ filter: 'drop-shadow(0 5px 8px rgba(0,0,0,0.28))' }}>
+    <svg width="64" height="46" viewBox="0 0 56 40" fill="none">
+      <rect x="1" y="1" width="54" height="38" rx="6" fill="#ffffff" />
+      <rect x="1.9" y="9" width="52.2" height="7" fill="#c9bdb4" />
+      <rect x="7" y="24" width="12" height="9" rx="2" fill="#efe9e3" stroke="#c9bdb4" strokeWidth={1} />
+      <line x1="34" y1="30.5" x2="49" y2="30.5" stroke="#c9bdb4" strokeWidth={1.75} strokeLinecap="round" />
+    </svg>
+  </div>,
+  // b4 — accent: shimmer badge with -5%, gently breathing
+  <span key="b4" className="sub-badge inline-flex">
+    <span className="brand-shimmer inline-flex h-14 w-14 items-center justify-center rounded-full text-[15px] font-bold tracking-tight text-[#3a1f16] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.65)]">−5%</span>
+  </span>,
+]
 
 export default function SubscriptionPage({ products, locale }: Props) {
   const t   = useTranslations('subscription')
@@ -279,35 +312,35 @@ export default function SubscriptionPage({ products, locale }: Props) {
         <p className="mx-auto mt-4 max-w-xl text-lg text-brand-muted">{t('hero_subtitle')}</p>
       </Reveal>
 
-      {/* ── Benefits — unified off-white panel, hairline dividers (gap-px over a
-           divider-colored bg); the -5% cell carries a shimmer medallion as the
-           single accent. Copy (b1–b4) unchanged. ── */}
-      <Reveal className="mt-14">
-        <div className="overflow-hidden rounded-3xl border border-[#ECEAE6] bg-[#ECEAE6] shadow-sm">
-          <div className="grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { icon: <BellRing size={26} strokeWidth={1.75} />,     tk: 'b1', hero: false },
-              { icon: <XCircle size={26} strokeWidth={1.75} />,      tk: 'b2', hero: false },
-              { icon: <ShieldCheck size={26} strokeWidth={1.75} />,  tk: 'b3', hero: false },
-              { icon: <BadgePercent size={26} strokeWidth={1.75} />, tk: 'b4', hero: true },
-            ].map((b) => (
-              <div key={b.tk} className="group relative flex flex-col bg-[#FAFAF9] p-6 transition-colors duration-200 ease-out hover:bg-white sm:p-7">
-                {b.hero ? (
-                  <span className="brand-shimmer inline-flex h-11 w-11 items-center justify-center rounded-xl text-[#3a1f16] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.6)] transition-transform duration-200 ease-out group-hover:-translate-y-0.5">{b.icon}</span>
-                ) : (
-                  <span className="flex h-11 items-center text-[#3a1f16] transition-transform duration-200 ease-out group-hover:-translate-y-0.5">{b.icon}</span>
-                )}
-                <h3 className="mt-4 text-[15px] font-semibold leading-snug text-[#3a1f16] md:text-base">{t(`${b.tk}_title`)}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-gray-500">{t(`${b.tk}_text`)}</p>
+      {/* ── Benefits — 4 compact cards on white (no panel). Big animated icon
+           left + 1-line title; on hover a full-text overlay slides in above
+           neighbours (z-raised). The -5% card's top stripe is the brand
+           shimmer, the other three solid brown. Copy (b1–b4) unchanged. ── */}
+      <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {BENEFIT_GRAPHICS.map((g, i) => (
+          <Reveal key={i} delay={i * 80} className="group relative hover:z-10">
+            {/* base — white icon + full title (up to 2 lines) on brand brown */}
+            <div className="relative flex h-full min-h-[140px] items-center gap-4 overflow-hidden rounded-2xl border border-[#5a4737] bg-[#6e5945] p-5 shadow-sm">
+              <div className="flex w-[88px] shrink-0 items-center justify-center">{g}</div>
+              <h3 className="sub-clamp2 min-w-0 flex-1 break-words text-sm font-medium leading-snug text-white">{t(`b${i + 1}_title`)}</h3>
+            </div>
+            {/* hover overlay — full title + description, slightly lighter brown */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 translate-y-1 overflow-hidden rounded-2xl border border-[#463527] bg-[#574230] opacity-0 shadow-xl transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+              <div className="flex min-h-[140px] items-center gap-4 p-5">
+                <div className="flex w-[88px] shrink-0 items-center justify-center">{g}</div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="break-words text-sm font-medium leading-snug text-white">{t(`b${i + 1}_title`)}</h3>
+                  <p className="mt-1 text-xs leading-relaxed text-white/85">{t(`b${i + 1}_text`)}</p>
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </Reveal>
+            </div>
+          </Reveal>
+        ))}
+      </div>
 
       {/* ── Promo banner — light-gray card w/ accent stripe (matches /shop/nabory) ── */}
       <Reveal>
-        <div className="mt-14 flex flex-col items-center gap-4 rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 text-center shadow-sm sm:flex-row sm:items-start sm:text-left">
+        <div className="mt-6 flex flex-col items-center gap-4 rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 text-center shadow-sm sm:flex-row sm:items-start sm:text-left">
           <span className="text-3xl">🎁</span>
           <div>
             <p className="text-lg font-semibold text-[#412618]">{t('promo_title')}</p>
