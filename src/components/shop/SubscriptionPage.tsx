@@ -68,23 +68,23 @@ function Modal({ children, onClose, wide }: { children: ReactNode; onClose: () =
 // in globals.css, all gated by prefers-reduced-motion). Order matches b1–b4.
 const BENEFIT_GRAPHICS: React.ReactNode[] = [
   // b1 — bell rings with two expanding waves
-  <span key="b1" className="relative inline-flex h-14 w-14 items-center justify-center">
-    <span aria-hidden className="sub-wave absolute h-10 w-10 rounded-full border border-[#3a1f16]/25" />
-    <span aria-hidden className="sub-wave sub-wave-2 absolute h-10 w-10 rounded-full border border-[#3a1f16]/25" />
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#3a1f16" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className="sub-bell relative">
+  <span key="b1" className="relative inline-flex h-10 w-10 items-center justify-center">
+    <span aria-hidden className="sub-wave absolute h-7 w-7 rounded-full border border-[#3a1f16]/25" />
+    <span aria-hidden className="sub-wave sub-wave-2 absolute h-7 w-7 rounded-full border border-[#3a1f16]/25" />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3a1f16" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className="sub-bell relative">
       <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
       <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
     </svg>
   </span>,
   // b2 — ring draws, then the cross is stroked in
-  <svg key="b2" width="46" height="46" viewBox="0 0 48 48" fill="none" stroke="#3a1f16" strokeWidth={2} strokeLinecap="round">
+  <svg key="b2" width="36" height="36" viewBox="0 0 48 48" fill="none" stroke="#3a1f16" strokeWidth={2} strokeLinecap="round">
     <circle cx="24" cy="24" r="20" className="sub-draw-circle" />
     <line x1="17" y1="17" x2="31" y2="31" className="sub-draw-x1" />
     <line x1="31" y1="17" x2="17" y2="31" className="sub-draw-x2" />
   </svg>,
   // b3 — bank card breathing with a soft shadow
-  <div key="b3" className="sub-breathe" style={{ filter: 'drop-shadow(0 6px 7px rgba(58,31,22,0.15))' }}>
-    <svg width="56" height="40" viewBox="0 0 56 40" fill="none">
+  <div key="b3" className="sub-breathe" style={{ filter: 'drop-shadow(0 4px 6px rgba(58,31,22,0.15))' }}>
+    <svg width="46" height="33" viewBox="0 0 56 40" fill="none">
       <rect x="1" y="1" width="54" height="38" rx="6" fill="#fff" stroke="#3a1f16" strokeWidth={1.75} />
       <rect x="1.9" y="9" width="52.2" height="7" fill="#3a1f16" />
       <rect x="7" y="24" width="12" height="9" rx="2" fill="#3a1f16" fillOpacity="0.14" stroke="#3a1f16" strokeWidth={1} />
@@ -93,7 +93,7 @@ const BENEFIT_GRAPHICS: React.ReactNode[] = [
   </div>,
   // b4 — accent: shimmer badge with -5%, gently breathing
   <span key="b4" className="sub-badge inline-flex">
-    <span className="brand-shimmer inline-flex h-14 w-14 items-center justify-center rounded-full text-[15px] font-bold tracking-tight text-[#3a1f16] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.65)]">−5%</span>
+    <span className="brand-shimmer inline-flex h-10 w-10 items-center justify-center rounded-full text-[12px] font-bold tracking-tight text-[#3a1f16] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.65)]">−5%</span>
   </span>,
 ]
 
@@ -314,14 +314,14 @@ export default function SubscriptionPage({ products, locale }: Props) {
 
       {/* ── Benefits — 4 animated cards (CSS/SVG); the -5% card is the accent
            (shimmer badge + 2px shimmer top stripe). Copy (b1–b4) unchanged. ── */}
-      <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-12 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {BENEFIT_GRAPHICS.map((g, i) => (
           <Reveal key={i} delay={i * 80}>
-            <div className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border-[0.5px] border-[#ebe0cf] bg-white p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-[3px] hover:shadow-[0_14px_30px_-10px_rgba(58,31,22,0.20)]`}>
+            <div className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border-[0.5px] border-[#ebe0cf] bg-white px-5 py-4 shadow-sm transition-all duration-200 ease-out hover:-translate-y-[3px] hover:shadow-[0_14px_30px_-10px_rgba(58,31,22,0.20)]`}>
               {i === 3 && <span aria-hidden className="brand-shimmer absolute inset-x-0 top-0 h-[2px]" />}
-              <div className="flex h-[72px] items-center">{g}</div>
-              <h3 className="mt-3 text-[15px] font-semibold leading-snug text-[#3a1f16] md:text-base">{t(`b${i + 1}_title`)}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-gray-500">{t(`b${i + 1}_text`)}</p>
+              <div className="flex h-12 items-center">{g}</div>
+              <h3 className="mt-2 text-[15px] font-semibold leading-snug text-[#3a1f16]">{t(`b${i + 1}_title`)}</h3>
+              <p className="mt-1 text-[13px] leading-relaxed text-gray-500">{t(`b${i + 1}_text`)}</p>
             </div>
           </Reveal>
         ))}
