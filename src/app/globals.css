@@ -311,6 +311,14 @@ p  { line-height: 1.7; }
   50%      { transform: scale(1.05); }
 }
 
+/* 2-line clamp for benefit-card copy (version-independent, no Tailwind plugin). */
+.sub-clamp2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sub-bell, .sub-wave, .sub-breathe, .sub-badge,
   .sub-draw-circle, .sub-draw-x1, .sub-draw-x2 { animation: none; }
