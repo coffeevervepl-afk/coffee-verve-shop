@@ -321,7 +321,7 @@ export default function SubscriptionPage({ products, locale }: Props) {
            left + 1-line title; on hover a full-text overlay slides in above
            neighbours (z-raised). The -5% card's top stripe is the brand
            shimmer, the other three solid brown. Copy (b1–b4) unchanged. ── */}
-      <div className="mt-16 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-12 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {BENEFIT_GRAPHICS.map((g, i) => (
           <Reveal key={i} delay={i * 80} className="group relative hover:z-10">
             {/* base — white icon + full title (up to 2 lines) on brand brown */}
@@ -345,7 +345,7 @@ export default function SubscriptionPage({ products, locale }: Props) {
 
       {/* ── Promo banner — light-gray card w/ accent stripe (matches /shop/nabory) ── */}
       <Reveal>
-        <div className="mt-16 flex flex-col items-center gap-4 rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 text-center shadow-sm sm:flex-row sm:items-start sm:text-left">
+        <div className="mt-12 flex flex-col items-center gap-4 rounded-2xl border border-[#E8E7E3] border-t-2 border-t-[#412618] bg-[#F4F3F0] p-6 text-center shadow-sm sm:flex-row sm:items-start sm:text-left">
           <span className="text-3xl">🎁</span>
           <div>
             <p className="text-lg font-semibold text-[#412618]">{t('promo_title')}</p>
